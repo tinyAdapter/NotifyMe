@@ -79,18 +79,18 @@ public class RulesActivity extends AppCompatActivity {
                 break;
             case R.id.btn_execute_csj:
                 rule = new Rule();
-                rule.setName("BILIBILI");
-                rule.setDuration(15);
-                rule.setScript(toExec);
-                rule.setToLoadUrl("https://m.bilibili.com");
-                BackgroundWorker.getInstance().newTask(rule);
-                break;
-            case R.id.btn_execute_bilibili:
-                rule = new Rule();
                 rule.setName("SINA CSJ");
                 rule.setDuration(15);
                 rule.setScript(toExec);
                 rule.setToLoadUrl("https://tech.sina.cn/csj");
+                BackgroundWorker.getInstance().newTask(rule);
+                break;
+            case R.id.btn_execute_bilibili:
+                rule = new Rule();
+                rule.setName("BILIBILI");
+                rule.setDuration(15);
+                rule.setScript(toExec);
+                rule.setToLoadUrl("https://m.bilibili.com");
                 BackgroundWorker.getInstance().newTask(rule);
                 break;
         }

@@ -31,6 +31,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.2-alpha01'
+    androidTestImplementation 'androidx.test:rules:1.1.2-alpha01'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.2-alpha01'
     implementation 'com.blankj:utilcode:1.23.6'
     implementation 'com.jakewharton:butterknife:9.0.0'
