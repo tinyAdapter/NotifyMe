@@ -14,7 +14,9 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 
@@ -28,21 +30,21 @@ import cn.edu.scu.notifyme.event.MessageEvent;
  * 注：该类仅负责执行任务，具体任务列表的维护由TaskManager类负责
  */
 public class BackgroundWorker {
-    private static BackgroundWorker instance = new BackgroundWorker();
-
+    private static final BackgroundWorker instance = new BackgroundWorker();
     public static BackgroundWorker getInstance() {
         return instance;
     }
+    private BackgroundWorker() {}
 
 
     private WebView webview;
 
     private Thread workerThread;
-    private BlockingQueue<Rule> toProcessRules = new LinkedBlockingQueue<>();
-    private Semaphore webviewSemaphore = new Semaphore(1);
+    private BlockingDeque<Rule> toProcessRules = new LinkedBlockingDeque<>();
+    private Semaphore webviewSemaphore;
     private boolean isThreadStopping = false;
 
-    private static long TIMEOUT = 5000;
+    private static long TIMEOUT = 20000;
     private Handler timeoutHandler = new Handler();
     private Runnable timeoutTask;
 
@@ -58,8 +60,10 @@ public class BackgroundWorker {
     }
 
     public void newTask(Rule rule) {
-        this.toProcessRules.add(rule);
+        this.toProcessRules.addLast(rule);
     }
+
+    public void insertTask(Rule rule) { this.toProcessRules.addFirst(rule); }
 
     public void stop() {
         isThreadStopping = true;
@@ -67,6 +71,7 @@ public class BackgroundWorker {
 
         toProcessRules.clear();
         webviewSemaphore.release();
+        webviewSemaphore = null;
     }
 
     public void start() {
@@ -77,12 +82,12 @@ public class BackgroundWorker {
         if (workerThread != null && workerThread.isAlive()) return;
 
         isThreadStopping = false;
-
+        webviewSemaphore = new Semaphore(1);
         workerThread = new Thread(() -> {
             LogUtils.d("Now in worker thread...");
             while (!isThreadStopping) {
                 try {
-                    Rule aRule = toProcessRules.take();
+                    Rule aRule = toProcessRules.takeFirst();
                     LogUtils.d("Take a new task");
                     webviewSemaphore.acquire();
                     LogUtils.d("WebView semaphore acquired");
@@ -120,7 +125,7 @@ public class BackgroundWorker {
                         EventBus.getDefault().post(
                                 new MessageEvent(EventID.EVENT_FETCH_TIMEOUT, msg));
 
-                        webviewSemaphore.release();
+                        if (webviewSemaphore != null) webviewSemaphore.release();
                     });
                 };
                 timeoutHandler.postDelayed(timeoutTask, TIMEOUT);
@@ -131,12 +136,13 @@ public class BackgroundWorker {
                 LogUtils.d(rule.getToLoadUrl() + " loaded");
 
                 webview.evaluateJavascript(rule.getScript(), (String result) -> {
+                    LogUtils.d(rule.getToLoadUrl() + " JS executed");
                     if (!result.startsWith("{")) {
-                        webviewSemaphore.release();
+                        if (webviewSemaphore != null) webviewSemaphore.release();
                         return;
                     }
                     if (BackgroundWorker.this.isThreadStopping) {
-                        webviewSemaphore.release();
+                        if (webviewSemaphore != null) webviewSemaphore.release();
                         return;
                     }
 
@@ -149,7 +155,7 @@ public class BackgroundWorker {
                             new MessageEvent(EventID.EVENT_HAS_FETCHED_RESULT, msg));
 
                     timeoutHandler.removeCallbacks(timeoutTask);
-                    webviewSemaphore.release();
+                    if (webviewSemaphore != null) webviewSemaphore.release();
                 });
             }
         });
