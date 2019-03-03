@@ -30,8 +30,11 @@ import cn.edu.scu.notifyme.event.MessageEvent;
  * 注：该类仅负责执行任务，具体任务列表的维护由TaskManager类负责
  */
 public class BackgroundWorker {
-    private static final BackgroundWorker instance = new BackgroundWorker();
-    public static BackgroundWorker getInstance() {
+    private static BackgroundWorker instance;
+    public static synchronized BackgroundWorker getInstance() {
+        if (instance == null) {
+            instance  = new BackgroundWorker();
+        }
         return instance;
     }
     private BackgroundWorker() {}
@@ -75,10 +78,6 @@ public class BackgroundWorker {
     }
 
     public void start() {
-        if (this.webview == null) {
-            throw new NullPointerException();
-        }
-
         if (workerThread != null && workerThread.isAlive()) return;
 
         isThreadStopping = false;

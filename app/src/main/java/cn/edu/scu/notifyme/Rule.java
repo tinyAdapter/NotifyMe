@@ -1,5 +1,7 @@
 package cn.edu.scu.notifyme;
 
+import androidx.annotation.Nullable;
+
 /**
  * Rule
  * 规则对象
@@ -88,5 +90,23 @@ public class Rule {
 
     public void setToLoadUrl(String toLoadUrl) {
         this.toLoadUrl = toLoadUrl;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.name.hashCode() ^ this.script.hashCode();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj == null) return false;
+        if (!(obj instanceof Rule)) return false;
+        Rule thatRule = (Rule) obj;
+        if (!this.getName().equals(thatRule.getName())) return false;
+        if (this.getDuration() != thatRule.getDuration()) return false;
+        if (!this.getToLoadUrl().equals(thatRule.getToLoadUrl())) return false;
+        if (this.isActive() != thatRule.isActive()) return false;
+        if (!this.getScript().equals(thatRule.getScript())) return false;
+        return true;
     }
 }
