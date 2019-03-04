@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:orientation="vertical">
 
-    <WebView
-        android:id="@+id/wv_worker"
+    <FrameLayout
+        android:id="@+id/fm_main"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-    </WebView>
+        android:layout_weight="1"
+        android:fitsSystemWindows="true"
+        android:background="@color/colorPrimary"/>
 
-    <TextView
-        android:id="@+id/tv_result"
-        android:inputType="textMultiLine"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bn_base"
+        android:layout_gravity="bottom"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_height="56dp"
+        app:menu="@menu/base_bottom_navigation_menu" />
 </LinearLayout>
