@@ -43,6 +43,11 @@ public class RulesActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
         BackgroundWorker.getInstance().bind(this);
         BackgroundWorker.getInstance().start();
+
+        Message msg = new Message();
+        msg.setTitle("AA");
+        msg.setContent("BB");
+        NotificationService.newMessage(this, msg);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
