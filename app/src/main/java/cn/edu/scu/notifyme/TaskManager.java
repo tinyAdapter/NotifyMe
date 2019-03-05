@@ -17,9 +17,11 @@ class TaskManager implements ITaskManager {
     private Iterable<Rule> rules;
     private Timer timer = new Timer();
     private ConcurrentHashMap<Rule, TimerTask> timerTasks = new ConcurrentHashMap<>();
+    private BackgroundWorker backgroundWorker;
 
-    public TaskManager(Iterable<Rule> rules) {
+    public TaskManager(Iterable<Rule> rules, BackgroundWorker backgroundWorker) {
         this.rules = rules;
+        this.backgroundWorker = backgroundWorker;
         filterActiveRules();
         createTimers();
     }
@@ -39,7 +41,7 @@ class TaskManager implements ITaskManager {
             timerTasks.put(rule, new TimerTask() {
                 @Override
                 public void run() {
-                    BackgroundWorker.getInstance().newTask(rule);
+                    TaskManager.this.backgroundWorker.newTask(rule);
                 }
             });
         }
@@ -48,7 +50,7 @@ class TaskManager implements ITaskManager {
     public void start() {
         if (this.timer == null) throw new IllegalStateException();
 
-        BackgroundWorker.getInstance().start();
+        this.backgroundWorker.start();
         for (Rule rule : this.timerTasks.keySet()) {
             this.timer.scheduleAtFixedRate(
                     this.timerTasks.get(rule),
@@ -64,6 +66,6 @@ class TaskManager implements ITaskManager {
         this.timer.cancel();
         this.timer.purge();
         this.timer = null;
-        BackgroundWorker.getInstance().stop();
+        this.backgroundWorker.stop();
     }
 }

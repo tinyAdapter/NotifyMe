@@ -2,10 +2,8 @@ package cn.edu.scu.notifyme;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
 import java.util.ArrayList;
 
 import static org.mockito.Mockito.*;
@@ -15,17 +13,14 @@ import static org.mockito.Mockito.*;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-@RunWith(PowerMockRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class TaskManagerUnitTest {
     @Test
-    @PrepareForTest({BackgroundWorker.class})
-    public void testCreateTimerTasks() throws Exception {
+    public void testCreateTimerTasks() throws InterruptedException {
         BackgroundWorker cttBackgroundWorker = mock(BackgroundWorker.class);
         doNothing().when(cttBackgroundWorker).newTask(any());
         doNothing().when(cttBackgroundWorker).start();
         doNothing().when(cttBackgroundWorker).stop();
-        PowerMockito.whenNew(BackgroundWorker.class).withNoArguments()
-                .thenReturn(cttBackgroundWorker);
 
         ArrayList<Rule> rules = new ArrayList<>();
         cn.edu.scu.notifyme.Rule rule1 = new cn.edu.scu.notifyme.Rule();
@@ -49,8 +44,9 @@ public class TaskManagerUnitTest {
         rules.add(rule1);
         rules.add(rule2);
         rules.add(rule3);
-        TaskManager taskManager = new TaskManager(rules);
+        TaskManager taskManager = new TaskManager(rules, cttBackgroundWorker);
         taskManager.start();
+        Thread.sleep(100);
 
         verify(cttBackgroundWorker, times(3)).newTask(any());
 
@@ -59,13 +55,11 @@ public class TaskManagerUnitTest {
 
     @Test
     @PrepareForTest({BackgroundWorker.class})
-    public void testFilterActiveRules() throws Exception {
+    public void testFilterActiveRules() throws InterruptedException {
         BackgroundWorker farBackgroundWorker = mock(BackgroundWorker.class);
         doNothing().when(farBackgroundWorker).newTask(any());
         doNothing().when(farBackgroundWorker).start();
         doNothing().when(farBackgroundWorker).stop();
-        PowerMockito.whenNew(BackgroundWorker.class).withNoArguments()
-                .thenReturn(farBackgroundWorker);
 
         ArrayList<Rule> rules = new ArrayList<>();
         cn.edu.scu.notifyme.Rule rule1 = new cn.edu.scu.notifyme.Rule();
@@ -89,8 +83,9 @@ public class TaskManagerUnitTest {
         rules.add(rule1);
         rules.add(rule2);
         rules.add(rule3);
-        TaskManager taskManager = new TaskManager(rules);
+        TaskManager taskManager = new TaskManager(rules, farBackgroundWorker);
         taskManager.start();
+        Thread.sleep(100);
 
         verify(farBackgroundWorker, times(2)).newTask(any());
 
