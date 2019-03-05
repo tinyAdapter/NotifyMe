@@ -1,6 +1,6 @@
 package cn.edu.scu.notifyme.event;
 
-import cn.edu.scu.notifyme.Message;
+import cn.edu.scu.notifyme.model.Message;
 
 /**
  * MessageEvent

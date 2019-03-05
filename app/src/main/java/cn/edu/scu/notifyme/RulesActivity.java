@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.edu.scu.notifyme.event.EventID;
 import cn.edu.scu.notifyme.event.MessageEvent;
+import cn.edu.scu.notifyme.model.Rule;
 
 public class RulesActivity extends AppCompatActivity {
 
@@ -53,10 +54,10 @@ public class RulesActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         switch (event.getId()) {
-            case EventID.EVENT_HAS_FETCHED_RESULT:
-                tvTitle.setText(event.getMessage().getTitle());
-                tvResult.setText(event.getMessage().getContent());
-                break;
+//            case EventID.EVENT_HAS_FETCHED_RESULT:
+//                tvTitle.setText(event.getMessage().getTitle());
+//                tvResult.setText(event.getMessage().getContent());
+//                break;
             case EventID.EVENT_FETCH_TIMEOUT:
                 tvTitle.setText(event.getMessage().getTitle());
                 tvResult.setText("请求超时，请稍后再试");

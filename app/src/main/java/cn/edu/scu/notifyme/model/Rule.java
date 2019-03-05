@@ -1,4 +1,13 @@
-package cn.edu.scu.notifyme;
+package cn.edu.scu.notifyme.model;
+
+import org.litepal.LitePal;
+import org.litepal.annotation.Column;
+import org.litepal.crud.LitePalSupport;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.edu.scu.notifyme.model.Message;
 
 import androidx.annotation.Nullable;
 
@@ -6,7 +15,7 @@ import androidx.annotation.Nullable;
  * Rule
  * 规则对象
  */
-public class Rule {
+public class Rule extends LitePalSupport {
     /**
      * ID，数据库主键
      */
@@ -14,6 +23,7 @@ public class Rule {
     /**
      * 规则名
      */
+    @Column(unique = true, nullable = false)
     private String name;
     /**
      * 是否启用
@@ -22,6 +32,7 @@ public class Rule {
     /**
      * 运行间隔
      */
+    @Column(nullable = false)
     private int duration;
     /**
      * 图标URL
@@ -30,11 +41,18 @@ public class Rule {
     /**
      * 要访问的URL
      */
+    @Column(nullable = false)
     private String toLoadUrl;
     /**
      * 运行的脚本字符串
      */
+    @Column(nullable = false)
     private String script;
+
+    @Column(nullable = false)
+    private Category category;
+
+    private List<Message> msg = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -108,5 +126,19 @@ public class Rule {
         if (this.isActive() != thatRule.isActive()) return false;
         if (!this.getScript().equals(thatRule.getScript())) return false;
         return true;
+    public List<Message> getMsg() {
+        return msg;
+    }
+
+    public void setMsg(List<Message> msg) {
+        this.msg = msg;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

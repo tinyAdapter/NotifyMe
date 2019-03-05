@@ -39,6 +39,7 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.1.2-alpha01'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.2-alpha01'
     implementation 'com.blankj:utilcode:1.23.6'
+
     implementation 'com.jakewharton:butterknife:9.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.45-androidx'
@@ -47,4 +48,6 @@ dependencies {
     implementation 'com.ramotion.foldingcell:folding-cell:1.2.3'
     implementation 'com.ramotion.cardslider:card-slider:0.3.1'
     implementation 'com.google.android.material:material:1.0.0'
+
+    implementation 'org.litepal.android:java:3.0.0'
 }

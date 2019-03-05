@@ -1,4 +1,7 @@
-package cn.edu.scu.notifyme;
+package cn.edu.scu.notifyme.model;
+
+import org.litepal.annotation.Column;
+import org.litepal.crud.LitePalSupport;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -11,7 +14,7 @@ import androidx.annotation.Nullable;
  * Message
  * 消息对象
  */
-public class Message implements Parcelable {
+public class Message extends LitePalSupport implements Parcelable {
     /**
      * 消息ID，数据库主键
      */
@@ -19,10 +22,12 @@ public class Message implements Parcelable {
     /**
      * 更新时间
      */
+    @Column(nullable = false)
     private Date updateTime;
     /**
      * 标题
      */
+    @Column(nullable = false)
     private String title;
     /**
      * 正文
@@ -39,6 +44,11 @@ public class Message implements Parcelable {
      */
     @Nullable
     private String targetUrl;
+    /**
+     * 所属Rule
+     */
+    @Column(nullable = false)
+    private Rule rule;
 
     public long getId() {
         return id;
@@ -125,4 +135,12 @@ public class Message implements Parcelable {
             return new Message[size];
         }
     };
+    public Rule getRule() {
+        return rule;
+    }
+
+    public void setRule(Rule rule) {
+        this.rule = rule;
+    }
+
 }

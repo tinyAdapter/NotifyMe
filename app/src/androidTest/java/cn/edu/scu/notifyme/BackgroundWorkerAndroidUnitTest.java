@@ -12,7 +12,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,8 +51,8 @@ public class BackgroundWorkerAndroidUnitTest extends TestCase {
     }
 
     @Test
-    public void testNewTaskBackgroundWorker() throws InterruptedException {
-        cn.edu.scu.notifyme.Rule rule = new cn.edu.scu.notifyme.Rule();
+    public void testExecuteBackgroundWorker() throws InterruptedException {
+        cn.edu.scu.notifyme.model.Rule rule = new cn.edu.scu.notifyme.model.Rule();
         rule.setName("BAIDU");
         rule.setDuration(15);
         rule.setScript("(function() {\n" +
