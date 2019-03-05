@@ -3,6 +3,9 @@ package cn.edu.scu.notifyme.model;
 import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
 import androidx.annotation.Nullable;
@@ -11,7 +14,7 @@ import androidx.annotation.Nullable;
  * Message
  * 消息对象
  */
-public class Message extends LitePalSupport {
+public class Message extends LitePalSupport implements Parcelable {
     /**
      * 消息ID，数据库主键
      */
@@ -98,6 +101,40 @@ public class Message extends LitePalSupport {
         this.targetUrl = targetUrl;
     }
 
+
+    public Message() {}
+
+
+    protected Message(Parcel in) {
+        id = in.readLong();
+        title = in.readString();
+        content = in.readString();
+        imgUrl = in.readString();
+        targetUrl = in.readString();
+    }
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(title);
+        dest.writeString(content);
+        dest.writeString(imgUrl);
+        dest.writeString(targetUrl);
+    }
+    public static final Creator<Message> CREATOR = new Creator<Message>() {
+        @Override
+        public Message createFromParcel(Parcel in) {
+            return new Message(in);
+        }
+
+        @Override
+        public Message[] newArray(int size) {
+            return new Message[size];
+        }
+    };
     public Rule getRule() {
         return rule;
     }

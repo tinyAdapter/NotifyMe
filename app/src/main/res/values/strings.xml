@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">Notify Me</string>
+    <string name="app_name">Notify Me!</string>
+
+    <string name="edit_category">编辑分类</string>
+    <string name="category">分类</string>
+    <string name="notification">通知</string>
+    <string name="share">共享</string>
+    <string name="me">我</string>
 </resources>
