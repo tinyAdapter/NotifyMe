@@ -6,6 +6,7 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 import cn.edu.scu.notifyme.interfaces.ITaskManager;
+import cn.edu.scu.notifyme.model.Rule;
 
 /**
  * TaskManager

@@ -1,5 +1,8 @@
 package cn.edu.scu.notifyme;
 
+import android.content.Context;
+import android.os.Looper;
+
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.Utils;
 
@@ -18,18 +21,21 @@ import cn.edu.scu.notifyme.model.Rule;
 
 public class MessageFilter {
 
+    private Context context;
+
     private Map<Rule, Message> map_rule;
     DatabaseManager databaseManager;
 
     public MessageFilter(Map<Rule, Message> map, DatabaseManager databaseManager) {
         this.map_rule = map;
         this.databaseManager = databaseManager;
+        LogUtils.d("Registering MessageFilter to EventBus...");
         EventBus.getDefault().register(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
-        LogUtils.d("event.getMessage().getRule().getName()  : " + event.getMessage().getRule().getName());
+        LogUtils.d("event: " + event);
         switch (event.getId()) {
             case EventID.EVENT_HAS_FETCHED_RESULT:
                 if (!isEquals(map_rule.get(event.getMessage().getRule()), event.getMessage()))
@@ -56,5 +62,11 @@ public class MessageFilter {
         map_rule.put(msg.getRule(), msg);
         // TODO:消息推送给各个组件,更新数据库和内存数据
         LogUtils.d("Message is new , which is added!!!!!");
+
+        NotificationService.newMessage(context, msg);
+    }
+
+    public void bind(Context context) {
+        this.context = context;
     }
 }

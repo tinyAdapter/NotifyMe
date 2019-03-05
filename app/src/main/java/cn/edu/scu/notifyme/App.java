@@ -1,6 +1,7 @@
 package cn.edu.scu.notifyme;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.Utils;
@@ -17,17 +18,16 @@ import cn.edu.scu.notifyme.model.Message;
 import cn.edu.scu.notifyme.model.Rule;
 
 public class App extends Application {
-
-    Map<Rule, Message> map_latestMsg = new HashMap<>();
-
     @Override
     public void onCreate() {
         super.onCreate();
         Utils.init(this);
         LitePal.initialize(this);
         DatabaseManager.getInstance().initial();
+    }
 
-
+    public static void init(Context context) {
+        Map<Rule, Message> map_latestMsg = new HashMap<>();
         for (Rule rule : DatabaseManager.getInstance().getList_rule()) {
             if (rule.getMsg().isEmpty())
                 continue;
@@ -58,5 +58,6 @@ public class App extends Application {
         map_latestMsg.put(theRule, theMsg);
 
         MessageFilter msgfilter = new MessageFilter(map_latestMsg, DatabaseManager.getInstance());
+        msgfilter.bind(context);
     }
 }

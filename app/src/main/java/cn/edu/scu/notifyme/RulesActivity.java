@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.edu.scu.notifyme.event.EventID;
 import cn.edu.scu.notifyme.event.MessageEvent;
+import cn.edu.scu.notifyme.model.Message;
 import cn.edu.scu.notifyme.model.Rule;
 
 public class RulesActivity extends AppCompatActivity {
@@ -41,14 +42,13 @@ public class RulesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rules);
         ButterKnife.bind(this);
 
+        App.init(this);
+
         EventBus.getDefault().register(this);
         BackgroundWorker.getInstance().bind(this);
         BackgroundWorker.getInstance().start();
 
-        Message msg = new Message();
-        msg.setTitle("AA");
-        msg.setContent("BB");
-        NotificationService.newMessage(this, msg);
+        EventBus.getDefault().post(new MessageEvent(EventID.EVENT_HAS_FETCHED_RESULT, new Message()));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

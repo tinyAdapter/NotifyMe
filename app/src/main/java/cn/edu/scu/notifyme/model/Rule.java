@@ -126,6 +126,8 @@ public class Rule extends LitePalSupport {
         if (this.isActive() != thatRule.isActive()) return false;
         if (!this.getScript().equals(thatRule.getScript())) return false;
         return true;
+    }
+
     public List<Message> getMsg() {
         return msg;
     }

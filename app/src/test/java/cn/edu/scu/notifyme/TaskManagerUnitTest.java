@@ -6,6 +6,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import java.util.ArrayList;
 
+import cn.edu.scu.notifyme.model.Rule;
+
 import static org.mockito.Mockito.*;
 
 /**
@@ -23,19 +25,19 @@ public class TaskManagerUnitTest {
         doNothing().when(cttBackgroundWorker).stop();
 
         ArrayList<Rule> rules = new ArrayList<>();
-        cn.edu.scu.notifyme.Rule rule1 = new cn.edu.scu.notifyme.Rule();
+        cn.edu.scu.notifyme.model.Rule rule1 = new cn.edu.scu.notifyme.model.Rule();
         rule1.setName("BAIDU");
         rule1.setDuration(10);
         rule1.setScript("");
         rule1.setActive(true);
         rule1.setToLoadUrl("https://www.baidu.com");
-        cn.edu.scu.notifyme.Rule rule2 = new cn.edu.scu.notifyme.Rule();
+        cn.edu.scu.notifyme.model.Rule rule2 = new cn.edu.scu.notifyme.model.Rule();
         rule2.setName("SINA CSJ");
         rule2.setDuration(15);
         rule2.setScript("");
         rule2.setActive(true);
         rule2.setToLoadUrl("https://tech.sina.cn/csj");
-        cn.edu.scu.notifyme.Rule rule3 = new cn.edu.scu.notifyme.Rule();
+        cn.edu.scu.notifyme.model.Rule rule3 = new cn.edu.scu.notifyme.model.Rule();
         rule3.setName("BILIBILI");
         rule3.setDuration(20);
         rule3.setScript("");
@@ -62,19 +64,19 @@ public class TaskManagerUnitTest {
         doNothing().when(farBackgroundWorker).stop();
 
         ArrayList<Rule> rules = new ArrayList<>();
-        cn.edu.scu.notifyme.Rule rule1 = new cn.edu.scu.notifyme.Rule();
+        cn.edu.scu.notifyme.model.Rule rule1 = new cn.edu.scu.notifyme.model.Rule();
         rule1.setName("BAIDU");
         rule1.setDuration(10);
         rule1.setScript("");
         rule1.setActive(true);
         rule1.setToLoadUrl("https://www.baidu.com");
-        cn.edu.scu.notifyme.Rule rule2 = new cn.edu.scu.notifyme.Rule();
+        cn.edu.scu.notifyme.model.Rule rule2 = new cn.edu.scu.notifyme.model.Rule();
         rule2.setName("SINA CSJ");
         rule2.setDuration(15);
         rule2.setScript("");
         rule2.setActive(true);
         rule2.setToLoadUrl("https://tech.sina.cn/csj");
-        cn.edu.scu.notifyme.Rule rule3 = new cn.edu.scu.notifyme.Rule();
+        cn.edu.scu.notifyme.model.Rule rule3 = new cn.edu.scu.notifyme.model.Rule();
         rule3.setName("BILIBILI");
         rule3.setDuration(20);
         rule3.setScript("");

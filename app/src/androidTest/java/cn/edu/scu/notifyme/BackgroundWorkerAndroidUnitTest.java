@@ -70,7 +70,7 @@ public class BackgroundWorkerAndroidUnitTest extends TestCase {
 
     @Test
     public void testInsertTaskBackgroundWorker() throws InterruptedException {
-        cn.edu.scu.notifyme.Rule rule = new cn.edu.scu.notifyme.Rule();
+        cn.edu.scu.notifyme.model.Rule rule = new cn.edu.scu.notifyme.model.Rule();
         rule.setName("BAIDU");
         rule.setDuration(15);
         rule.setScript("(function() {\n" +
@@ -88,21 +88,21 @@ public class BackgroundWorkerAndroidUnitTest extends TestCase {
 
     @Test
     public void testInsertTasksBackgroundWorker() throws InterruptedException {
-        cn.edu.scu.notifyme.Rule rule1 = new cn.edu.scu.notifyme.Rule();
+        cn.edu.scu.notifyme.model.Rule rule1 = new cn.edu.scu.notifyme.model.Rule();
         rule1.setName("BAIDU");
         rule1.setDuration(15);
         rule1.setScript("(function() {\n" +
                 "  return { results: document.getElementsByTagName('body')[0].innerHTML };\n" +
                 "})();\n");
         rule1.setToLoadUrl("https://www.baidu.com");
-        cn.edu.scu.notifyme.Rule rule2 = new cn.edu.scu.notifyme.Rule();
+        cn.edu.scu.notifyme.model.Rule rule2 = new cn.edu.scu.notifyme.model.Rule();
         rule2.setName("SINA CSJ");
         rule2.setDuration(15);
         rule2.setScript("(function() {\n" +
                 "  return { results: document.getElementsByTagName('body')[0].innerHTML };\n" +
                 "})();\n");
         rule2.setToLoadUrl("https://tech.sina.cn/csj");
-        cn.edu.scu.notifyme.Rule rule3 = new cn.edu.scu.notifyme.Rule();
+        cn.edu.scu.notifyme.model.Rule rule3 = new cn.edu.scu.notifyme.model.Rule();
         rule3.setName("BILIBILI");
         rule3.setDuration(15);
         rule3.setScript("(function() {\n" +

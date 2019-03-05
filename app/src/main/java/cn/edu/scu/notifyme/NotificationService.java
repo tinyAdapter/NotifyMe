@@ -13,6 +13,7 @@ import android.os.IBinder;
 import com.blankj.utilcode.util.LogUtils;
 
 import androidx.annotation.Nullable;
+import cn.edu.scu.notifyme.model.Message;
 
 /**
  * NotificationService
