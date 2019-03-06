@@ -15,9 +15,9 @@
             android:id="@+id/tb_base"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
             app:title="@string/app_name"
-            app:titleTextColor="@android:color/background_light">
+            app:titleTextColor="@color/white"
+            style="@style/TranslucentToolbar">
 
         </androidx.appcompat.widget.Toolbar>
 

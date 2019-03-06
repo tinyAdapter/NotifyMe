@@ -13,10 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         app:title="新建任务"
-        app:titleTextColor="@android:color/background_light"
-        android:background="@color/colorPrimary">
-
-    </androidx.appcompat.widget.Toolbar>
+        style="@style/TranslucentToolbar"
+        app:titleTextColor="@color/white"/>
 
 
     <ScrollView

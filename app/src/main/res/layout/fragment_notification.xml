@@ -7,8 +7,8 @@
 
     <androidx.appcompat.widget.Toolbar
         app:title="@string/notification"
-        app:titleTextColor="@android:color/background_light"
-        android:background="@color/colorPrimary"
+        app:titleTextColor="@color/white"
+        style="@style/TranslucentToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

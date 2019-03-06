@@ -1,4 +1,5 @@
-<resources>
+<resources
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Base application theme. -->
     <style name="AppBaseTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -28,9 +29,8 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="MyToolbar">
-        <item name="theme">@style/ThemeOverlay.AppCompat.Dark</item>
-        <item name="android:background">?colorPrimary</item>
+    <style name="TranslucentToolbar">
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 
     <style name="MyEditText" parent="Theme.AppCompat.Light">
