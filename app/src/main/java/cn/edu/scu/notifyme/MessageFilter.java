@@ -28,11 +28,17 @@ public class MessageFilter {
 
     int a;
 
-    public MessageFilter(Map<Rule, Message> map, DatabaseManager databaseManager) {
+    public MessageFilter(
+            Map<Rule, Message> map,
+            DatabaseManager databaseManager) {
         map_rule = map;
         this.databaseManager = databaseManager;
         //LogUtils.d("Registering MessageFilter to EventBus...");
         EventBus.getDefault().register(this);
+    }
+
+    public void destroy() {
+        EventBus.getDefault().unregister(this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
