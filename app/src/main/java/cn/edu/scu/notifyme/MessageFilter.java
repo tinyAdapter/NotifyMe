@@ -26,22 +26,30 @@ public class MessageFilter {
     private Map<Rule, Message> map_rule;
     DatabaseManager databaseManager;
 
-    public MessageFilter(Map<Rule, Message> map, DatabaseManager databaseManager) {
-        this.map_rule = map;
+    int a;
+
+    public MessageFilter(
+            Map<Rule, Message> map,
+            DatabaseManager databaseManager) {
+        map_rule = map;
         this.databaseManager = databaseManager;
-        LogUtils.d("Registering MessageFilter to EventBus...");
+        //LogUtils.d("Registering MessageFilter to EventBus...");
         EventBus.getDefault().register(this);
+    }
+
+    public void destroy() {
+        EventBus.getDefault().unregister(this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
-        LogUtils.d("event: " + event);
+        //LogUtils.d("event: " + event);
         switch (event.getId()) {
             case EventID.EVENT_HAS_FETCHED_RESULT:
                 if (!isEquals(map_rule.get(event.getMessage().getRule()), event.getMessage()))
                     pushNotification(event.getMessage());
                 else
-                    LogUtils.d("Message is not changed!!!!!");
+                    a = 3;
                 break;
         }
     }
@@ -61,7 +69,7 @@ public class MessageFilter {
         map_rule.remove(msg.getRule());
         map_rule.put(msg.getRule(), msg);
         // TODO:消息推送给各个组件,更新数据库和内存数据
-        LogUtils.d("Message is new , which is added!!!!!");
+        //LogUtils.d("Message is new , which is added!!!!!");
 
         NotificationService.newMessage(context, msg);
     }

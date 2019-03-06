@@ -57,7 +57,9 @@ public class App extends Application {
 
         map_latestMsg.put(theRule, theMsg);
 
-        MessageFilter msgfilter = new MessageFilter(map_latestMsg, DatabaseManager.getInstance());
+        MessageFilter msgfilter = new MessageFilter(
+                map_latestMsg,
+                DatabaseManager.getInstance());
         msgfilter.bind(context);
     }
 }
