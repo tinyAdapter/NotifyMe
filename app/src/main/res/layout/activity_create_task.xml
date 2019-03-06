@@ -5,16 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".CreateTask">
+    tools:context=".CreateTask"
+    android:fitsSystemWindows="true">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
-        android:title="新建任务"
-        app:titleTextAppearance="@style/ToolbarTextAppearance.Title"
-        app:subtitleTextAppearance="@style/ToolbarTextAppearance.Subtitle"
-        style="@style/MyToolbar" >
+        app:title="新建任务"
+        app:titleTextColor="@android:color/background_light"
+        android:background="@color/colorPrimary">
 
     </androidx.appcompat.widget.Toolbar>
 

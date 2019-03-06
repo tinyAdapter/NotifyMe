@@ -1,30 +1,36 @@
 package cn.edu.scu.notifyme.view;
 
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
+import cn.edu.scu.notifyme.CreateTask;
 import cn.edu.scu.notifyme.R;
 
 public class CategoryRulesFragment extends Fragment {
 
     private Unbinder unbinder;
 
+    @BindView(R.id.fab_add_rule)
+    FloatingActionButton fabAddRule;
     @BindView(R.id.tb_base)
     Toolbar tbBase;
     @BindView(R.id.vp_main)
@@ -59,6 +65,12 @@ public class CategoryRulesFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @OnClick(R.id.fab_add_rule)
+    public void onViewClicked() {
+        Intent intent = new Intent(getContext(), CreateTask.class);
+        startActivity(intent);
     }
 
     private class MainViewPagerAdapter extends PagerAdapter {
