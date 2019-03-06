@@ -28,110 +28,73 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="20dp"
-                android:text="任务名"
-                android:textColor="@color/black20"
-                android:textSize="15sp" />
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/task_inputlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:layout_marginHorizontal="20dp"
-                android:background="@drawable/textbox">
+                android:hint="@string/rule_name"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/task_name"
                     android:layout_width="match_parent"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_height="match_parent"
-                    android:theme="@style/MyEditText"
+                    android:layout_height="wrap_content"
                     android:inputType="text"
                     android:lines="1"
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="20dp"
-                android:text="ToLoad URL"
-                android:textColor="@color/black20"
-                android:textSize="15sp" />
-
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:layout_marginHorizontal="20dp"
-                android:background="@drawable/textbox">
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                android:hint="@string/to_load_url">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/toload_url"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="20dp"
+                    android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:lines="1"
-                    android:theme="@style/MyEditText" />
+                    android:lines="1"/>
 
             </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="20dp"
-                android:text="时间间隔（分钟）"
-                android:textColor="@color/black20"
-                android:textSize="15dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:layout_marginHorizontal="20dp"
-                android:background="@drawable/textbox">
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                android:hint="@string/duration_minutes">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/duration"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="20dp"
+                    android:layout_height="wrap_content"
                     android:digits="1234567890"
                     android:inputType="numberDecimal"
-                    android:lines="1"
-                    android:theme="@style/MyEditText" />
+                    android:lines="1"/>
 
             </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="20dp"
-                android:text="代码"
-                android:textColor="@color/black20"
-                android:textSize="15dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:layout_marginHorizontal="20dp"
-                android:background="#D6D7D7">
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                android:hint="@string/code">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/code"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="20dp"
-                    android:inputType="textMultiLine"
-                    android:theme="@style/MyEditText" />
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"/>
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>

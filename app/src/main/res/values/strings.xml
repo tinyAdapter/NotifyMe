@@ -6,4 +6,8 @@
     <string name="notification">通知</string>
     <string name="share">共享</string>
     <string name="me">我</string>
+    <string name="rule_name">任务名</string>
+    <string name="duration_minutes">时间间隔（分钟）</string>
+    <string name="to_load_url">要加载的URL</string>
+    <string name="code">代码</string>
 </resources>
