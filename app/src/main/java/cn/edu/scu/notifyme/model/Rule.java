@@ -28,7 +28,7 @@ public class Rule extends LitePalSupport {
     /**
      * 是否启用
      */
-    private boolean isActive;
+    private boolean isActive = false;
     /**
      * 运行间隔
      */

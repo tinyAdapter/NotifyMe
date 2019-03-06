@@ -165,12 +165,23 @@ public class CreateTask extends AppCompatActivity {
     }
 
     private void create() {
-        if (inputcode.getText().length() < 1 ||
-                inputtoloadurl.getText().length() < 1 ||
-                inputduration.getText().length() < 1 ||
-                inputtaskName.length() < 1) {
+
+        String code = inputcode.getText().toString();
+        String loadurl = inputtoloadurl.getText().toString();
+        int duration = Integer.parseInt(inputduration.getText().toString());
+        String taskname = inputtaskName.getText().toString();
+
+        if (code.length() < 1 || loadurl.length() < 1 ||
+                duration < 1 || taskname.length() < 1) {
             ToastUtils.showShort("不能为空");
             return;
         }
+
+        Rule rule = new Rule();
+        rule.setName(taskname);
+        rule.setScript(code);
+        rule.setDuration(duration);
+
+        DatabaseManager.getInstance().addRule(rule);
     }
 }

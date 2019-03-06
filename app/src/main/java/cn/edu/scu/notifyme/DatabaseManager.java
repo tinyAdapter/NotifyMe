@@ -24,9 +24,9 @@ public class DatabaseManager {
     }
 
     public void initial() {
-        list_category = LitePal.findAll(Category.class);
-        list_rule = LitePal.findAll(Rule.class);
-        list_msg = LitePal.findAll(Message.class);
+        list_category = LitePal.order("id").find(Category.class);
+        list_rule = LitePal.order("id").find(Rule.class);
+        list_msg = LitePal.order("id").find(Message.class);
 
         for (int i = 0; i < list_category.size(); i++) {
             if (list_category.get(i).getName().equals("Default"))
@@ -38,7 +38,7 @@ public class DatabaseManager {
         addCategory(category);
     }
 
-    public void updataList(){
+    public void updataList() {
         list_category = LitePal.findAll(Category.class);
         list_rule = LitePal.findAll(Rule.class);
         list_msg = LitePal.findAll(Message.class);
@@ -54,6 +54,22 @@ public class DatabaseManager {
 
     public List<Message> getList_msg() {
         return list_msg;
+    }
+
+    public Category getDefultCategory() {
+        for (Category category : list_category)
+            if (category.getName().equals("Default"))
+                return category;
+
+        return null;
+    }
+
+    public Category getCategoryByName(String name) {
+        for (Category category : list_category)
+            if (category.getName().equals(name))
+                return category;
+
+        return null;
     }
 
     public void addCategory(Category category) {
