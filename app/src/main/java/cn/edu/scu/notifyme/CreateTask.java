@@ -3,32 +3,39 @@ package cn.edu.scu.notifyme;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
+import com.google.android.material.snackbar.Snackbar;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.edu.scu.notifyme.event.EventID;
 import cn.edu.scu.notifyme.event.MessageEvent;
+import cn.edu.scu.notifyme.model.Category;
 import cn.edu.scu.notifyme.model.Message;
 import cn.edu.scu.notifyme.model.Rule;
 
 public class CreateTask extends AppCompatActivity {
 
+    public static final String PARAM_CATEGORY = "category";
+
     private AlertDialog testprogress;
     private AlertDialog testresult;
     private AlertDialog testtimeout;
+
+    private Category category;
 
     @BindView(R.id.task_name)
     EditText inputtaskName;
@@ -38,12 +45,28 @@ public class CreateTask extends AppCompatActivity {
     EditText inputduration;
     @BindView(R.id.code)
     EditText inputcode;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.ms_category)
+    MaterialSpinner msCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
         ButterKnife.bind(this);
+
+        category = getIntent().getParcelableExtra(PARAM_CATEGORY);
+        if (category.getName() != null) {
+            //TODO: 从数据库获取分类（现在没有对分类的操作）
+//            DatabaseManager.getInstance().getList_category();
+        }
+
+        msCategory.setBackgroundColor(getResources().getColor(R.color.ms_background));
+        msCategory.setItems("Ice Cream Sandwich", "Jelly Bean", "KitKat", "Lollipop", "Marshmallow");
+        msCategory.setOnItemSelectedListener(
+                (MaterialSpinner.OnItemSelectedListener<String>) (view, position, id, item) ->
+                        Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show());
 
         EventBus.getDefault().register(this);
         BackgroundWorker.getInstance().bind(this);
