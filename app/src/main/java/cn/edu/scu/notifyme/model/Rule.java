@@ -1,5 +1,8 @@
 package cn.edu.scu.notifyme.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.litepal.LitePal;
 import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
@@ -15,7 +18,7 @@ import androidx.annotation.Nullable;
  * Rule
  * 规则对象
  */
-public class Rule extends LitePalSupport {
+public class Rule extends LitePalSupport implements Parcelable {
     /**
      * ID，数据库主键
      */
@@ -53,6 +56,8 @@ public class Rule extends LitePalSupport {
     private Category category;
 
     private List<Message> msg = new ArrayList<>();
+
+    public Rule() {}
 
     public long getId() {
         return id;
@@ -142,5 +147,46 @@ public class Rule extends LitePalSupport {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+
+    protected Rule(Parcel in) {
+        id = in.readLong();
+        name = in.readString();
+        isActive = in.readByte() != 0;
+        duration = in.readInt();
+        iconUrl = in.readString();
+        toLoadUrl = in.readString();
+        script = in.readString();
+        msg = in.createTypedArrayList(Message.CREATOR);
+    }
+
+    public static final Creator<Rule> CREATOR = new Creator<Rule>() {
+        @Override
+        public Rule createFromParcel(Parcel in) {
+            return new Rule(in);
+        }
+
+        @Override
+        public Rule[] newArray(int size) {
+            return new Rule[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(name);
+        dest.writeByte((byte) (isActive ? 1 : 0));
+        dest.writeInt(duration);
+        dest.writeString(iconUrl);
+        dest.writeString(toLoadUrl);
+        dest.writeString(script);
+        dest.writeTypedList(msg);
     }
 }
