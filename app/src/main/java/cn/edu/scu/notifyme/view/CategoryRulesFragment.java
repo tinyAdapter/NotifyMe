@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +30,6 @@ import cn.edu.scu.notifyme.CreateOrEditTaskActivity;
 import cn.edu.scu.notifyme.DatabaseManager;
 import cn.edu.scu.notifyme.R;
 import cn.edu.scu.notifyme.model.Category;
-import cn.edu.scu.notifyme.model.Rule;
-
-import static android.app.Activity.RESULT_OK;
 
 public class CategoryRulesFragment extends Fragment {
 
@@ -42,6 +42,8 @@ public class CategoryRulesFragment extends Fragment {
     Toolbar tbBase;
     @BindView(R.id.vp_main)
     ViewPager vpMain;
+    @BindView(R.id.tl_categories)
+    TabLayout tlCategories;
 
     @Nullable
     @Override
@@ -59,8 +61,29 @@ public class CategoryRulesFragment extends Fragment {
 
         adapter = new MainFragmentPagerAdapter(getChildFragmentManager());
         vpMain.setAdapter(adapter);
+        tlCategories.setupWithViewPager(vpMain);
+
+        LinearLayout categoryTabs = (LinearLayout) tlCategories.getChildAt(0);
+        for (int i = 1; i < categoryTabs.getChildCount(); i++) {
+            categoryTabs.getChildAt(i).setOnLongClickListener(new TabOnLongClickListener(i));
+        }
 
         return view;
+    }
+
+    private class TabOnLongClickListener implements View.OnLongClickListener {
+
+        private int index;
+
+        public TabOnLongClickListener(int index) {
+            this.index = index;
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            ToastUtils.showShort("Long clicked " + index);
+            return true;
+        }
     }
 
     private void uiReconstructFragments() {

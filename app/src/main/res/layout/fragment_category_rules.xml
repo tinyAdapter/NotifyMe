@@ -21,21 +21,23 @@
 
         </androidx.appcompat.widget.Toolbar>
 
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tl_categories"
+            style="@style/Widget.MaterialComponents.TabLayout.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabMinWidth="90dp"
+            app:tabMode="scrollable">
+
+        </com.google.android.material.tabs.TabLayout>
+
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/vp_main"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tl_categories"
-                style="@style/Widget.MaterialComponents.TabLayout.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:tabMinWidth="90dp"
-                app:tabMode="scrollable">
-
-            </com.google.android.material.tabs.TabLayout>
         </androidx.viewpager.widget.ViewPager>
     </LinearLayout>
 
