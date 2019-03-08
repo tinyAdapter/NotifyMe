@@ -27,7 +27,7 @@ import cn.edu.scu.notifyme.model.Category;
 import cn.edu.scu.notifyme.model.Message;
 import cn.edu.scu.notifyme.model.Rule;
 
-public class CreateTask extends AppCompatActivity {
+public class CreateTaskActivity extends AppCompatActivity {
 
     public static final String PARAM_CATEGORY = "category";
 
@@ -59,7 +59,7 @@ public class CreateTask extends AppCompatActivity {
         category = getIntent().getParcelableExtra(PARAM_CATEGORY);
         if (category.getName() != null) {
             //TODO: 从数据库获取分类（现在没有对分类的操作）
-//            DatabaseManager.getInstance().getList_category();
+//            DatabaseManager.getInstance().getCategories();
         }
 
         msCategory.setBackgroundColor(getResources().getColor(R.color.ms_background));
@@ -125,7 +125,7 @@ public class CreateTask extends AppCompatActivity {
         testrule.setToLoadUrl(String.valueOf(inputtoloadurl.getText()));
         BackgroundWorker.getInstance().insertTask(testrule);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(CreateTask.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateTaskActivity.this);
         LayoutInflater inflater = this.getLayoutInflater();
         View v = inflater.inflate(R.layout.test_progress, null);
         TextView tv_cancel = v.findViewById(R.id.cancel);
@@ -143,7 +143,7 @@ public class CreateTask extends AppCompatActivity {
     }
 
     private void showresult(Message msg) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(CreateTask.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateTaskActivity.this);
         LayoutInflater inflater = this.getLayoutInflater();
         View v = inflater.inflate(R.layout.test_result, null);
         TextView tv_title = v.findViewById(R.id.result_title);
@@ -170,7 +170,7 @@ public class CreateTask extends AppCompatActivity {
     }
 
     private void timeout() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(CreateTask.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateTaskActivity.this);
         LayoutInflater inflater = this.getLayoutInflater();
         View v = inflater.inflate(R.layout.test_timeout, null);
         TextView tv_confirm = v.findViewById(R.id.confirm);

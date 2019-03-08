@@ -12,9 +12,9 @@ public class DatabaseManager {
 
     private static DatabaseManager instence = new DatabaseManager();
 
-    private List<Category> list_category;
-    private List<Rule> list_rule;
-    private List<Message> list_msg;
+    private List<Category> categories;
+    private List<Rule> rules;
+    private List<Message> messages;
 
     private DatabaseManager() {
     }
@@ -24,10 +24,10 @@ public class DatabaseManager {
     }
 
     public void initial() {
-        this.updataList();
+        this.updateList();
 
-        for (int i = 0; i < list_category.size(); i++) {
-            if (list_category.get(i).getName().equals("Default"))
+        for (int i = 0; i < categories.size(); i++) {
+            if (categories.get(i).getName().equals("Default"))
                 return;
         }
 
@@ -45,26 +45,23 @@ public class DatabaseManager {
         rule.setToLoadUrl("https://m.bilibili.com");
         rule.setActive(true);
         rule.setDuration(15);
-        rule.setCategory(defaultCategory);
-        addRule(rule);
+        addRule(defaultCategory, rule);
 
         rule = new Rule();
         rule.setName("Baidu主页代码");
         rule.setScript("(function() { return { results: document.getElementsByTagName('html')[0].innerHTML.substring(0, 100) }; })();");
         rule.setToLoadUrl("https://www.baidu.com");
-        rule.setCategory(codeCategory);
         rule.setActive(true);
         rule.setDuration(20);
-        addRule(rule);
+        addRule(codeCategory, rule);
 
         rule = new Rule();
         rule.setName("Sina CSJ代码");
         rule.setScript("(function() { return { results: document.getElementsByTagName('html')[0].innerHTML.substring(0, 100) }; })();");
         rule.setToLoadUrl("https://tech.sina.cn/csj");
-        rule.setCategory(codeCategory);
         rule.setActive(true);
         rule.setDuration(12);
-        addRule(rule);
+        addRule(codeCategory, rule);
 
         rule = new Rule();
         rule.setName("Bing主页代码");
@@ -73,81 +70,85 @@ public class DatabaseManager {
         rule.setCategory(defaultCategory);
         rule.setActive(false);
         rule.setDuration(10);
-        addRule(rule);
+        addRule(defaultCategory, rule);
     }
 
-    public void updataList(){
-        list_category = LitePal.findAll(Category.class, true);
-        list_rule = LitePal.findAll(Rule.class, true);
-        list_msg = LitePal.findAll(Message.class,true);
+    public void updateList(){
+        categories = LitePal.findAll(Category.class, true);
+        rules = LitePal.findAll(Rule.class, true);
+        messages = LitePal.findAll(Message.class,true);
     }
 
-    public List<Category> getList_category() {
-        return list_category;
+    public List<Category> getCategories() {
+        return categories;
     }
 
-    public List<Rule> getList_rule() {
-        return list_rule;
+    public List<Rule> getRules() {
+        return rules;
     }
 
-    public List<Message> getList_msg() {
-        return list_msg;
+    public List<Message> getMessages() {
+        return messages;
     }
 
     public void addCategory(Category category) {
-        list_category.add(category);
+        categories.add(category);
         category.save();
     }
 
     public void deleteCategory(String name) {
         if (name.equals("Default"))
             return;
-        for (int i = 0; i < list_category.size(); i++) {
-            if (list_category.get(i).getName().equals(name)) {
+        for (int i = 0; i < categories.size(); i++) {
+            if (categories.get(i).getName().equals(name)) {
                 Category category =
                         LitePal.where("name = ?", "Default").find(Category.class).get(0);
-                for (int j = 0; j < list_category.get(i).getRule().size(); j++)
-                    list_category.get(i).getRule().get(j).setCategory(category);
-                LitePal.delete(Category.class, list_category.get(i).getId());
-                list_category.remove(i);
+                for (int j = 0; j < categories.get(i).getRule().size(); j++)
+                    categories.get(i).getRule().get(j).setCategory(category);
+                LitePal.delete(Category.class, categories.get(i).getId());
+                categories.remove(i);
                 break;
             }
         }
     }
 
-    public void updataCategory(Category category) {
+    public void updateCategory(Category category) {
         category.save();
     }
 
-    public void addRule(Rule rule) {
-        list_rule.add(rule);
+    public void addRule(Category category, Rule rule) {
+        rule.setCategory(category);
+        rules.add(rule);
         rule.save();
     }
 
     public void deleteRule(String name) {
-        for (int i = 0; i < list_rule.size(); i++) {
-            if (list_rule.get(i).getName().equals(name)) {
-                LitePal.delete(Rule.class, list_rule.get(i).getId());
-                list_rule.remove(i);
+        for (int i = 0; i < rules.size(); i++) {
+            if (rules.get(i).getName().equals(name)) {
+                LitePal.delete(Rule.class, rules.get(i).getId());
+                rules.remove(i);
                 break;
             }
         }
     }
 
-    public void updataRule(Rule rule) {
+    public void updateRule(Category category, Rule rule) {
+        // 必需：激进查询只能递归一层
+        rule.setCategory(category);
         rule.save();
     }
 
-    public void addMessage(Message message) {
-        list_msg.add(message);
+    public void addMessage(Rule rule, Message message) {
+        message.setRule(rule);
+        messages.add(message);
         message.save();
     }
 
     public void deleteMessage(long id) {
-        for (int i = 0; i < list_msg.size(); i++) {
-            if (list_msg.get(i).getId() == id) {
+        for (int i = 0; i < messages.size(); i++) {
+            if (messages.get(i).getId() == id) {
                 LitePal.delete(Message.class, id);
-                list_msg.remove(i);
+                messages.remove(i);
                 break;
             }
         }

@@ -64,7 +64,7 @@ public class MessageFilter {
 
     private void pushNotification(Message msg) {
 
-        databaseManager.addMessage(msg);
+        databaseManager.addMessage(msg.getRule(), msg);
 
         map_rule.remove(msg.getRule());
         map_rule.put(msg.getRule(), msg);

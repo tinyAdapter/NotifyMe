@@ -24,7 +24,7 @@ public class App extends Application {
 
     public static void init(Context context) {
         Map<Rule, Message> map_latestMsg = new HashMap<>();
-        for (Rule rule : DatabaseManager.getInstance().getList_rule()) {
+        for (Rule rule : DatabaseManager.getInstance().getRules()) {
             if (rule.getMsg().isEmpty())
                 continue;
             Message latestMsg = rule.getMsg().get(0);
