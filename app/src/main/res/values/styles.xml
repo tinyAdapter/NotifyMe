@@ -10,6 +10,7 @@
 
     <style name="Widget.NotifyMe.Button" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
 
