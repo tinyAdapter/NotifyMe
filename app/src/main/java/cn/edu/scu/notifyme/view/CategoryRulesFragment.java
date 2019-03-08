@@ -27,7 +27,6 @@ import cn.edu.scu.notifyme.CreateTask;
 import cn.edu.scu.notifyme.DatabaseManager;
 import cn.edu.scu.notifyme.R;
 import cn.edu.scu.notifyme.model.Category;
-import cn.edu.scu.notifyme.model.Rule;
 
 public class CategoryRulesFragment extends Fragment {
 
@@ -50,7 +49,7 @@ public class CategoryRulesFragment extends Fragment {
         tbBase.getOverflowIcon().setColorFilter(
                 getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
 
-        this.categories = DatabaseManager.getInstance().getList_category();
+        this.categories = DatabaseManager.getInstance().getCategories();
         this.fragments = new ArrayList<>();
 
         for (int i = 0; i < this.categories.size(); i++) {

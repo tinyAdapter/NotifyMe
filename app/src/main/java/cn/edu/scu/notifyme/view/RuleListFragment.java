@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.blankj.utilcode.util.ToastUtils;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.List;
 
@@ -18,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cn.edu.scu.notifyme.DatabaseManager;
 import cn.edu.scu.notifyme.R;
 import cn.edu.scu.notifyme.adapter.RulesAdapter;
 import cn.edu.scu.notifyme.model.Category;
@@ -30,9 +30,6 @@ public class RuleListFragment extends Fragment {
     @BindView(R.id.rv_rules)
     RecyclerView rvRules;
 
-//    @BindView(R.id.tv_text_from_args)
-//    TextView tvTextFromArgs;
-
     private Unbinder unbinder;
 
     @Nullable
@@ -40,8 +37,6 @@ public class RuleListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_rules, container, false);
         unbinder = ButterKnife.bind(this, view);
-
-//        tvTextFromArgs.setText(this.getArguments().getString(RuleListFragment.PARAM_TEXT));
 
         Category category = this.getArguments().getParcelable(PARAM_CATEGORY);
         this.rules = category.getRule();
@@ -52,6 +47,8 @@ public class RuleListFragment extends Fragment {
                 this.getContext());
 
         adapter.setOnItemChildClickListener((adap, v, position) -> {
+            Rule theRule = this.rules.get(position);
+
             switch (v.getId()) {
                 case R.id.btn_edit:
                     ToastUtils.showShort("你点击了编辑按钮" + (position + 1));
@@ -60,12 +57,13 @@ public class RuleListFragment extends Fragment {
                     ToastUtils.showShort("你点击了删除按钮" + (position + 1));
                     break;
                 case R.id.ss_active:
-                    if (this.rules.get(position).isActive()) {
+                    if (theRule.isActive()) {
                         ToastUtils.showShort("反激活" + (position + 1));
                     } else {
                         ToastUtils.showShort("激活" + (position + 1));
                     }
-                    this.rules.get(position).setActive(!this.rules.get(position).isActive());
+                    theRule.setActive(!theRule.isActive());
+                    DatabaseManager.getInstance().updateRule(category, theRule);
                     break;
             }
         });
