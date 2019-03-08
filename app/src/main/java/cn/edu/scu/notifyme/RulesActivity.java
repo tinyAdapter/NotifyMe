@@ -25,21 +25,21 @@ public class RulesActivity extends AppCompatActivity {
             "})();\n";
 
 
-    @BindView(R.id.tv_result)
-    TextView tvResult;
-    @BindView(R.id.btn_execute_baidu)
-    Button btnExecuteBaidu;
-    @BindView(R.id.btn_execute_csj)
-    Button btnExecuteCsj;
-    @BindView(R.id.btn_execute_bilibili)
-    Button btnExecuteBilibili;
-    @BindView(R.id.tv_title)
-    TextView tvTitle;
+//    @BindView(R.id.tv_result)
+//    TextView tvResult;
+//    @BindView(R.id.btn_execute_baidu)
+//    Button btnExecuteBaidu;
+//    @BindView(R.id.btn_execute_csj)
+//    Button btnExecuteCsj;
+//    @BindView(R.id.btn_execute_bilibili)
+//    Button btnExecuteBilibili;
+//    @BindView(R.id.tv_title)
+//    TextView tvTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rules);
+        setContentView(R.layout.fragment_rules);
         ButterKnife.bind(this);
 
         App.init(this);
@@ -59,8 +59,8 @@ public class RulesActivity extends AppCompatActivity {
 //                tvResult.setText(event.getMessage().getContent());
 //                break;
             case EventID.EVENT_FETCH_TIMEOUT:
-                tvTitle.setText(event.getMessage().getTitle());
-                tvResult.setText("请求超时，请稍后再试");
+//                tvTitle.setText(event.getMessage().getTitle());
+//                tvResult.setText("请求超时，请稍后再试");
                 break;
         }
     }
@@ -71,34 +71,34 @@ public class RulesActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    @OnClick({R.id.btn_execute_baidu, R.id.btn_execute_csj, R.id.btn_execute_bilibili})
-    public void onViewClicked(View view) {
-        Rule rule;
-        switch (view.getId()) {
-            case R.id.btn_execute_baidu:
-                rule = new Rule();
-                rule.setName("BAIDU");
-                rule.setDuration(15);
-                rule.setScript(toExec);
-                rule.setToLoadUrl("https://www.baidu.com");
-                BackgroundWorker.getInstance().newTask(rule);
-                break;
-            case R.id.btn_execute_csj:
-                rule = new Rule();
-                rule.setName("SINA CSJ");
-                rule.setDuration(15);
-                rule.setScript(toExec);
-                rule.setToLoadUrl("https://tech.sina.cn/csj");
-                BackgroundWorker.getInstance().newTask(rule);
-                break;
-            case R.id.btn_execute_bilibili:
-                rule = new Rule();
-                rule.setName("BILIBILI");
-                rule.setDuration(15);
-                rule.setScript(toExec);
-                rule.setToLoadUrl("https://m.bilibili.com");
-                BackgroundWorker.getInstance().newTask(rule);
-                break;
-        }
-    }
+//    @OnClick({R.id.btn_execute_baidu, R.id.btn_execute_csj, R.id.btn_execute_bilibili})
+//    public void onViewClicked(View view) {
+//        Rule rule;
+//        switch (view.getId()) {
+//            case R.id.btn_execute_baidu:
+//                rule = new Rule();
+//                rule.setName("BAIDU");
+//                rule.setDuration(15);
+//                rule.setScript(toExec);
+//                rule.setToLoadUrl("https://www.baidu.com");
+//                BackgroundWorker.getInstance().newTask(rule);
+//                break;
+//            case R.id.btn_execute_csj:
+//                rule = new Rule();
+//                rule.setName("SINA CSJ");
+//                rule.setDuration(15);
+//                rule.setScript(toExec);
+//                rule.setToLoadUrl("https://tech.sina.cn/csj");
+//                BackgroundWorker.getInstance().newTask(rule);
+//                break;
+//            case R.id.btn_execute_bilibili:
+//                rule = new Rule();
+//                rule.setName("BILIBILI");
+//                rule.setDuration(15);
+//                rule.setScript(toExec);
+//                rule.setToLoadUrl("https://m.bilibili.com");
+//                BackgroundWorker.getInstance().newTask(rule);
+//                break;
+//        }
+//    }
 }
