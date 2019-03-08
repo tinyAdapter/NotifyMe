@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.edu.scu.notifyme.CreateTask;
+import cn.edu.scu.notifyme.DatabaseManager;
 import cn.edu.scu.notifyme.R;
 import cn.edu.scu.notifyme.model.Category;
 import cn.edu.scu.notifyme.model.Rule;
@@ -50,24 +51,29 @@ public class CategoryRulesFragment extends Fragment {
                 getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
 
         //TODO: 修改为真实分类
-        this.categories = new ArrayList<>();
-        this.fragments = new ArrayList<>();
-        this.createDummyFragment(this.createDummyRule("未分类"));
-        for (int i = 0; i < 7; i++) {
-            this.createDummyFragment(this.createDummyRule(String.valueOf(i)));
+//        this.categories = new ArrayList<>();
+//        this.fragments = new ArrayList<>();
+//        this.createDummyFragment(this.createDummyRule("未分类"));
+//        for (int i = 0; i < 7; i++) {
+//            this.createDummyFragment(this.createDummyRule(String.valueOf(i)));
+//        }
+        this.categories = DatabaseManager.getInstance().getList_category();
+        for (int i = 0; i < this.categories.size(); i++) {
+            this.createDummyFragment(this.categories.get(i));
         }
+
         vpMain.setAdapter(new MainFragmentPagerAdapter(getChildFragmentManager()));
 
         return view;
     }
 
-    private List<Fragment> fragments;
+    private List<Fragment> fragments = new ArrayList<>();
     private List<Category> categories;
 
     private void createDummyFragment(Category category) {
         RuleListFragment ruleListFragment = new RuleListFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(RuleListFragment.PARAM_TEXT, category.getName());
+        bundle.putParcelable(RuleListFragment.PARAM_CATEGORY, category);
         ruleListFragment.setArguments(bundle);
         this.fragments.add(ruleListFragment);
     }
