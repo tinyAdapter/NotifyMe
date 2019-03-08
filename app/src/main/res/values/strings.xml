@@ -10,4 +10,5 @@
     <string name="duration_minutes">时间间隔（分钟）</string>
     <string name="to_load_url">要加载的URL</string>
     <string name="code">代码</string>
+    <string name="setting">设置</string>
 </resources>
