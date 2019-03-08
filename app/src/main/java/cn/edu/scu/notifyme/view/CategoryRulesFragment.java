@@ -56,13 +56,15 @@ public class CategoryRulesFragment extends Fragment {
             this.createDummyFragment(this.categories.get(i));
         }
 
-        vpMain.setAdapter(new MainFragmentPagerAdapter(getChildFragmentManager()));
+        adapter = new MainFragmentPagerAdapter(getChildFragmentManager());
+        vpMain.setAdapter(adapter);
 
         return view;
     }
 
     private List<Fragment> fragments;
     private List<Category> categories;
+    private MainFragmentPagerAdapter adapter;
 
     private void createDummyFragment(Category category) {
         RuleListFragment ruleListFragment = new RuleListFragment();

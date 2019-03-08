@@ -1,7 +1,10 @@
 package cn.edu.scu.notifyme.view;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +46,7 @@ public class RuleListFragment extends Fragment {
         this.category = this.getArguments().getParcelable(PARAM_CATEGORY);
         this.rules = category.getRule();
 
-        RulesAdapter adapter = new RulesAdapter(
+         adapter = new RulesAdapter(
                 R.layout.item_rule_card,
                 this.rules,
                 this.getContext());
@@ -56,7 +59,7 @@ public class RuleListFragment extends Fragment {
                     this.redirectToEditRulePage(theRule);
                     break;
                 case R.id.btn_delete:
-                    ToastUtils.showShort("你点击了删除按钮" + (position + 1));
+                    this.showDeleteRuleConfirmDialog(theRule);
                     break;
                 case R.id.ss_active:
                     if (theRule.isActive()) {
@@ -76,8 +79,25 @@ public class RuleListFragment extends Fragment {
         return view;
     }
 
+    private void showDeleteRuleConfirmDialog(Rule theRule) {
+        new AlertDialog.Builder(this.getContext())
+                .setTitle("确认")
+                .setMessage("确认要删除规则 " + theRule.getName() + " ?")
+                .setNegativeButton("否", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .setPositiveButton("是", (dialog, which) -> {
+                    DatabaseManager.getInstance().deleteRule(theRule.getName());
+                    this.rules.remove(theRule);
+                    this.adapter.notifyDataSetChanged();
+                    dialog.dismiss();
+                })
+                .show();
+    }
+
     private List<Rule> rules;
     private Category category;
+    private RulesAdapter adapter;
 
     private void redirectToEditRulePage(Rule rule) {
         Intent intent = new Intent(getContext(), CreateOrEditTaskActivity.class);

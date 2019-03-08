@@ -4,9 +4,15 @@
     <!-- Base application theme. -->
     <style name="AppBaseTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
+        <item name="materialButtonStyle">@style/Widget.NotifyMe.Button</item>
     </style>
+
+    <style name="Widget.NotifyMe.Button" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/white</item>
+    </style>
+
+
 
     <style name="AppTheme" parent="AppBaseTheme">
 
