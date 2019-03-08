@@ -80,20 +80,30 @@ public class DatabaseManager {
     }
 
     public List<Category> getCategories() {
-        return categories;
+        this.updateList();
+        return this.categories;
     }
 
     public List<Rule> getRules() {
-        return rules;
+        this.updateList();
+        return this.rules;
     }
 
     public List<Message> getMessages() {
-        return messages;
+        this.updateList();
+        return this.messages;
     }
 
     public void addCategory(Category category) {
         categories.add(category);
         category.save();
+    }
+
+    public Category getCategoryById(long id) {
+        List<Category> result = LitePal.where("id = ?", String.valueOf(id)).find(
+                Category.class, true);
+        if (result.size() <= 0) return null;
+        else return result.get(0);
     }
 
     public void deleteCategory(String name) {
@@ -102,7 +112,8 @@ public class DatabaseManager {
         for (int i = 0; i < categories.size(); i++) {
             if (categories.get(i).getName().equals(name)) {
                 Category category =
-                        LitePal.where("name = ?", "Default").find(Category.class).get(0);
+                        LitePal.where("name = ?", "Default").find(
+                                Category.class, true).get(0);
                 for (int j = 0; j < categories.get(i).getRule().size(); j++)
                     categories.get(i).getRule().get(j).setCategory(category);
                 LitePal.delete(Category.class, categories.get(i).getId());
@@ -122,9 +133,16 @@ public class DatabaseManager {
         rule.save();
     }
 
-    public void deleteRule(String name) {
+    public Rule getRuleById(long id) {
+        List<Rule> result = LitePal.where("id = ?", String.valueOf(id)).find(
+                Rule.class, true);
+        if (result.size() <= 0) return null;
+        else return result.get(0);
+    }
+
+    public void deleteRule(long id) {
         for (int i = 0; i < rules.size(); i++) {
-            if (rules.get(i).getName().equals(name)) {
+            if (rules.get(i).getId() == id) {
                 LitePal.delete(Rule.class, rules.get(i).getId());
                 rules.remove(i);
                 break;

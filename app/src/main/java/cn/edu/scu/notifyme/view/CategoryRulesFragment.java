@@ -27,9 +27,13 @@ import cn.edu.scu.notifyme.CreateOrEditTaskActivity;
 import cn.edu.scu.notifyme.DatabaseManager;
 import cn.edu.scu.notifyme.R;
 import cn.edu.scu.notifyme.model.Category;
+import cn.edu.scu.notifyme.model.Rule;
+
+import static android.app.Activity.RESULT_OK;
 
 public class CategoryRulesFragment extends Fragment {
 
+    private static final int REQUEST_CREATE_RULE = 30001;
     private Unbinder unbinder;
 
     @BindView(R.id.fab_add_rule)
@@ -50,16 +54,20 @@ public class CategoryRulesFragment extends Fragment {
                 getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
 
         this.categories = DatabaseManager.getInstance().getCategories();
-        this.fragments = new ArrayList<>();
 
-        for (int i = 0; i < this.categories.size(); i++) {
-            this.createDummyFragment(this.categories.get(i));
-        }
+        uiReconstructFragments();
 
         adapter = new MainFragmentPagerAdapter(getChildFragmentManager());
         vpMain.setAdapter(adapter);
 
         return view;
+    }
+
+    private void uiReconstructFragments() {
+        this.fragments = new ArrayList<>();
+        for (int i = 0; i < this.categories.size(); i++) {
+            this.createDummyFragment(this.categories.get(i));
+        }
     }
 
     private List<Fragment> fragments;
@@ -69,7 +77,7 @@ public class CategoryRulesFragment extends Fragment {
     private void createDummyFragment(Category category) {
         RuleListFragment ruleListFragment = new RuleListFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(RuleListFragment.PARAM_CATEGORY, category);
+        bundle.putLong(RuleListFragment.PARAM_CATEGORY_ID, category.getId());
         ruleListFragment.setArguments(bundle);
         this.fragments.add(ruleListFragment);
     }

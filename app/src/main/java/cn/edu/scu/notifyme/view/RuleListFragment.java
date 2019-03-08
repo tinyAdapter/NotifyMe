@@ -11,6 +11,11 @@ import android.view.ViewGroup;
 
 import com.blankj.utilcode.util.ToastUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -25,13 +30,14 @@ import cn.edu.scu.notifyme.CreateOrEditTaskActivity;
 import cn.edu.scu.notifyme.DatabaseManager;
 import cn.edu.scu.notifyme.R;
 import cn.edu.scu.notifyme.adapter.RulesAdapter;
+import cn.edu.scu.notifyme.event.EventID;
+import cn.edu.scu.notifyme.event.MessageEvent;
 import cn.edu.scu.notifyme.model.Category;
 import cn.edu.scu.notifyme.model.Rule;
 
 public class RuleListFragment extends Fragment {
 
-    public static final String PARAM_TEXT = "text";
-    public static final String PARAM_CATEGORY = "category";
+    public static final String PARAM_CATEGORY_ID = "categoryId";
     @BindView(R.id.rv_rules)
     RecyclerView rvRules;
 
@@ -43,15 +49,17 @@ public class RuleListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_rules, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        this.category = this.getArguments().getParcelable(PARAM_CATEGORY);
+        this.category = DatabaseManager.getInstance().getCategoryById(
+                this.getArguments().getLong(PARAM_CATEGORY_ID)
+        );
         this.rules = category.getRule();
 
-         adapter = new RulesAdapter(
+        this.adapter = new RulesAdapter(
                 R.layout.item_rule_card,
                 this.rules,
                 this.getContext());
 
-        adapter.setOnItemChildClickListener((adap, v, position) -> {
+        this.adapter.setOnItemChildClickListener((adap, v, position) -> {
             Rule theRule = this.rules.get(position);
 
             switch (v.getId()) {
@@ -72,11 +80,26 @@ public class RuleListFragment extends Fragment {
                     break;
             }
         });
-        adapter.openLoadAnimation();
+        this.adapter.openLoadAnimation();
         rvRules.setLayoutManager(new LinearLayoutManager(this.getContext()));
         rvRules.setAdapter(adapter);
 
+        EventBus.getDefault().register(this);
+
         return view;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        switch (event.getId()) {
+            case EventID.EVENT_HAS_UPDATED_DATA:
+                this.category = DatabaseManager.getInstance().getCategoryById(
+                        this.getArguments().getLong(PARAM_CATEGORY_ID)
+                );
+                this.adapter.setItems(this.category.getRule());
+                this.adapter.notifyDataSetChanged();
+                break;
+        }
     }
 
     private void showDeleteRuleConfirmDialog(Rule theRule) {
@@ -87,7 +110,7 @@ public class RuleListFragment extends Fragment {
                     dialog.dismiss();
                 })
                 .setPositiveButton("是", (dialog, which) -> {
-                    DatabaseManager.getInstance().deleteRule(theRule.getName());
+                    DatabaseManager.getInstance().deleteRule(theRule.getId());
                     this.rules.remove(theRule);
                     this.adapter.notifyDataSetChanged();
                     dialog.dismiss();
@@ -101,9 +124,8 @@ public class RuleListFragment extends Fragment {
 
     private void redirectToEditRulePage(Rule rule) {
         Intent intent = new Intent(getContext(), CreateOrEditTaskActivity.class);
-        rule.setCategory(category);
-        intent.putExtra(CreateOrEditTaskActivity.PARAM_CATEGORY, category);
-        intent.putExtra(CreateOrEditTaskActivity.PARAM_RULE_TO_EDIT, rule);
+        intent.putExtra(CreateOrEditTaskActivity.PARAM_CATEGORY_ID, category.getId());
+        intent.putExtra(CreateOrEditTaskActivity.PARAM_RULE_TO_EDIT_ID, rule.getId());
         startActivity(intent);
     }
 

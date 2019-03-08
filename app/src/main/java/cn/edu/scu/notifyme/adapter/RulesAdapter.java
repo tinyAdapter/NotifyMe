@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.edu.scu.notifyme.R;
@@ -33,6 +35,10 @@ public class RulesAdapter extends BaseQuickAdapter<Rule, BaseViewHolder> {
                 .addOnClickListener(R.id.ss_active);
 
         Glide.with(context).load(item.getIconUrl()).into((ImageView) helper.getView(R.id.logo_pic));
+    }
+
+    public void setItems(List<Rule> rules) {
+        this.replaceData(new ArrayList<>(rules));
     }
 }
 

@@ -1,5 +1,6 @@
 package cn.edu.scu.notifyme;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,8 +33,8 @@ import cn.edu.scu.notifyme.model.Rule;
 
 public class CreateOrEditTaskActivity extends AppCompatActivity {
 
-    public static final String PARAM_CATEGORY = "category";
-    public static final String PARAM_RULE_TO_EDIT = "ruleToEdit";
+    public static final String PARAM_CATEGORY_ID = "categoryId";
+    public static final String PARAM_RULE_TO_EDIT_ID = "ruleToEditId";
 
     private AlertDialog testprogress;
     private AlertDialog testresult;
@@ -41,6 +42,8 @@ public class CreateOrEditTaskActivity extends AppCompatActivity {
 
     private Category category;
     private Rule ruleToEdit;
+    private boolean isEdit;
+    private Category categorySelected;
 
     @BindView(R.id.task_name)
     EditText inputtaskName;
@@ -63,13 +66,18 @@ public class CreateOrEditTaskActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_or_edit_task);
         ButterKnife.bind(this);
 
-        this.category = getIntent().getParcelableExtra(PARAM_CATEGORY);
-        this.ruleToEdit = getIntent().getParcelableExtra(PARAM_RULE_TO_EDIT);
+        this.category = DatabaseManager.getInstance().getCategoryById(
+                getIntent().getLongExtra(PARAM_CATEGORY_ID, 0));
+        this.ruleToEdit = DatabaseManager.getInstance().getRuleById(
+                getIntent().getLongExtra(PARAM_RULE_TO_EDIT_ID, 0)
+        );
         if (this.ruleToEdit != null && this.category != null) { // 编辑任务
+            isEdit = true;
             toolbar.setTitle("编辑任务");
             this.uiSetRule(ruleToEdit);
             createOrSave.setText("保存");
         } else { // 新建任务
+            isEdit = false;
             toolbar.setTitle("新建任务");
             createOrSave.setText("创建");
         }
@@ -90,6 +98,10 @@ public class CreateOrEditTaskActivity extends AppCompatActivity {
         }
         msCategory.setItems(categoryNames);
         msCategory.setSelectedIndex(indexOfCategoryTheRuleBelongsTo);
+        categorySelected = allCategories.get(indexOfCategoryTheRuleBelongsTo);
+        msCategory.setOnItemSelectedListener((view, position, id, item) -> {
+            categorySelected = allCategories.get(position);
+        });
 
         EventBus.getDefault().register(this);
         BackgroundWorker.getInstance().bind(this);
@@ -218,12 +230,36 @@ public class CreateOrEditTaskActivity extends AppCompatActivity {
     }
 
     private void createOrSave() {
-        if (inputcode.getText().length() < 1 ||
-                inputtoloadurl.getText().length() < 1 ||
-                inputduration.getText().length() < 1 ||
-                inputtaskName.length() < 1) {
+        String name = inputtaskName.getText().toString();
+        String toLoadUrl = inputtoloadurl.getText().toString();
+        String script = inputcode.getText().toString();
+        String durationString = inputduration.getText().toString();
+        if (script.length() < 1 || toLoadUrl.length() < 1 ||
+                name.length() < 1 || durationString.length() < 1) {
             ToastUtils.showShort("不能为空");
             return;
         }
+
+        int duration = Integer.parseInt(durationString);
+        Rule rule;
+        if (isEdit) {
+            rule = ruleToEdit;
+        } else {
+            rule = new Rule();
+            rule.setActive(true);
+        }
+        rule.setName(name);
+        rule.setToLoadUrl(toLoadUrl);
+        rule.setScript(script);
+        rule.setDuration(duration);
+        if (isEdit) {
+            DatabaseManager.getInstance().updateRule(categorySelected, rule);
+        } else {
+            DatabaseManager.getInstance().addRule(categorySelected, rule);
+        }
+
+        setResult(RESULT_OK);
+        EventBus.getDefault().post(new MessageEvent(EventID.EVENT_HAS_UPDATED_DATA, null));
+        this.finish();
     }
 }
