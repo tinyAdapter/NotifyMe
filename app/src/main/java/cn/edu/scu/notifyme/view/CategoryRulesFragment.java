@@ -50,14 +50,9 @@ public class CategoryRulesFragment extends Fragment {
         tbBase.getOverflowIcon().setColorFilter(
                 getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
 
-        //TODO: 修改为真实分类
-//        this.categories = new ArrayList<>();
-//        this.fragments = new ArrayList<>();
-//        this.createDummyFragment(this.createDummyRule("未分类"));
-//        for (int i = 0; i < 7; i++) {
-//            this.createDummyFragment(this.createDummyRule(String.valueOf(i)));
-//        }
         this.categories = DatabaseManager.getInstance().getList_category();
+        this.fragments = new ArrayList<>();
+
         for (int i = 0; i < this.categories.size(); i++) {
             this.createDummyFragment(this.categories.get(i));
         }
@@ -67,7 +62,7 @@ public class CategoryRulesFragment extends Fragment {
         return view;
     }
 
-    private List<Fragment> fragments = new ArrayList<>();
+    private List<Fragment> fragments;
     private List<Category> categories;
 
     private void createDummyFragment(Category category) {
