@@ -24,24 +24,62 @@ public class DatabaseManager {
     }
 
     public void initial() {
-        list_category = LitePal.findAll(Category.class);
-        list_rule = LitePal.findAll(Rule.class);
-        list_msg = LitePal.findAll(Message.class);
+        this.updataList();
 
         for (int i = 0; i < list_category.size(); i++) {
             if (list_category.get(i).getName().equals("Default"))
                 return;
         }
 
-        Category category = new Category();
-        category.setName("Default");
-        addCategory(category);
+        Category defaultCategory = new Category();
+        defaultCategory.setName("Default");
+        addCategory(defaultCategory);
+        Category codeCategory = new Category();
+        codeCategory.setName("主页代码");
+        addCategory(codeCategory);
+
+        Rule rule;
+        rule = new Rule();
+        rule.setName("bilibili主页代码");
+        rule.setScript("(function() { return { results: document.getElementsByTagName('html')[0].innerHTML.substring(0, 100) }; })();");
+        rule.setToLoadUrl("https://m.bilibili.com");
+        rule.setActive(true);
+        rule.setDuration(15);
+        rule.setCategory(defaultCategory);
+        addRule(rule);
+
+        rule = new Rule();
+        rule.setName("Baidu主页代码");
+        rule.setScript("(function() { return { results: document.getElementsByTagName('html')[0].innerHTML.substring(0, 100) }; })();");
+        rule.setToLoadUrl("https://www.baidu.com");
+        rule.setCategory(codeCategory);
+        rule.setActive(true);
+        rule.setDuration(20);
+        addRule(rule);
+
+        rule = new Rule();
+        rule.setName("Sina CSJ代码");
+        rule.setScript("(function() { return { results: document.getElementsByTagName('html')[0].innerHTML.substring(0, 100) }; })();");
+        rule.setToLoadUrl("https://tech.sina.cn/csj");
+        rule.setCategory(codeCategory);
+        rule.setActive(true);
+        rule.setDuration(12);
+        addRule(rule);
+
+        rule = new Rule();
+        rule.setName("Bing主页代码");
+        rule.setScript("(function() { return { results: document.getElementsByTagName('html')[0].innerHTML.substring(0, 100) }; })();");
+        rule.setToLoadUrl("https://cn.bing.com");
+        rule.setCategory(defaultCategory);
+        rule.setActive(false);
+        rule.setDuration(10);
+        addRule(rule);
     }
 
     public void updataList(){
-        list_category = LitePal.findAll(Category.class);
-        list_rule = LitePal.findAll(Rule.class);
-        list_msg = LitePal.findAll(Message.class);
+        list_category = LitePal.findAll(Category.class, true);
+        list_rule = LitePal.findAll(Rule.class, true);
+        list_msg = LitePal.findAll(Message.class,true);
     }
 
     public List<Category> getList_category() {
