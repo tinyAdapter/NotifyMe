@@ -53,8 +53,6 @@ public class BackgroundWorker {
     private Handler timeoutHandler = new Handler();
     private Runnable timeoutTask;
 
-    private Rule theRule;
-
     public void bind(Context context) {
         if (this.webview != null) {
             this.webview.destroy();
@@ -124,6 +122,7 @@ public class BackgroundWorker {
                         msg.setUpdateTime(new Date());
                         msg.setTitle(rule.getName());
                         msg.setContent("");
+                        msg.setRule(rule);
                         EventBus.getDefault().post(
                                 new MessageEvent(EventID.EVENT_FETCH_TIMEOUT, msg));
 
@@ -153,7 +152,7 @@ public class BackgroundWorker {
                     msg.setUpdateTime(new Date());
                     msg.setTitle(rule.getName());
                     msg.setContent(result);
-                    msg.setRule(theRule);
+                    msg.setRule(rule);
                     EventBus.getDefault().post(
                             new MessageEvent(EventID.EVENT_HAS_FETCHED_RESULT, msg));
 
@@ -164,9 +163,5 @@ public class BackgroundWorker {
         });
         webview.loadUrl(rule.getToLoadUrl());
         LogUtils.d("Loading " + rule.getToLoadUrl() + " ...");
-    }
-
-    public void setRule(Rule rule){
-        theRule = rule;
     }
 }
