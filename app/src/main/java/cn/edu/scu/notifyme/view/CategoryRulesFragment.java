@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -16,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
@@ -23,10 +27,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.edu.scu.notifyme.CreateTask;
+import cn.edu.scu.notifyme.MainActivity;
 import cn.edu.scu.notifyme.R;
+import cn.edu.scu.notifyme.event.Task_data;
+import cn.edu.scu.notifyme.model.Brvahadapter;
 
 public class CategoryRulesFragment extends Fragment {
-
+    RecyclerView rv;
+    List<Task_data> mTask_data = new ArrayList<>();
     private Unbinder unbinder;
 
     @BindView(R.id.fab_add_rule)
@@ -57,6 +65,30 @@ public class CategoryRulesFragment extends Fragment {
         views.add(View.inflate(this.getContext(), R.layout.fragment_dummy, null));
         views.add(View.inflate(this.getContext(), R.layout.fragment_dummy, null));
         vpMain.setAdapter(new MainViewPagerAdapter(views));
+
+        rv = views.get(0).findViewById(R.id.task_add);//选择分段
+
+        Task_data test = new Task_data(R.mipmap.logo,"ffff","ffffffff");//获取数据
+        mTask_data.add(test);
+
+        Brvahadapter adapter = new Brvahadapter(R.layout.task_pattern,mTask_data);
+
+        adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                switch (view.getId()){
+                    case R.id._edit:
+                        Toast.makeText(getActivity(),"你点击了编辑按钮"+(position+1),Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id._delete:
+                        Toast.makeText(getActivity(),"你点击了删除按钮"+(position+1),Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
+        adapter.openLoadAnimation();
+        rv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rv.setAdapter(adapter);
 
         return view;
     }

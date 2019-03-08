@@ -13,11 +13,11 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tb_base"
+            style="@style/TranslucentToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:title="@string/app_name"
-            app:titleTextColor="@color/white"
-            style="@style/TranslucentToolbar">
+            app:titleTextColor="@color/white">
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -36,6 +36,8 @@
                 app:tabMode="scrollable">
 
             </com.google.android.material.tabs.TabLayout>
+
+
         </androidx.viewpager.widget.ViewPager>
     </LinearLayout>
 
