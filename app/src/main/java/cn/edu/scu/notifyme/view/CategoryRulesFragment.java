@@ -21,6 +21,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,8 +31,8 @@ import butterknife.Unbinder;
 import cn.edu.scu.notifyme.CreateTask;
 import cn.edu.scu.notifyme.MainActivity;
 import cn.edu.scu.notifyme.R;
-import cn.edu.scu.notifyme.event.Task_data;
-import cn.edu.scu.notifyme.model.Brvahadapter;
+import cn.edu.scu.notifyme.model.Category;
+import cn.edu.scu.notifyme.model.Rule;
 
 public class CategoryRulesFragment extends Fragment {
     RecyclerView rv;
@@ -54,17 +56,14 @@ public class CategoryRulesFragment extends Fragment {
         tbBase.getOverflowIcon().setColorFilter(
                 getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
 
-        List<View> views = new ArrayList<>();
         //TODO: 修改为真实分类
-        views.add(View.inflate(this.getContext(), R.layout.fragment_dummy, null));
-        views.add(View.inflate(this.getContext(), R.layout.fragment_dummy, null));
-        views.add(View.inflate(this.getContext(), R.layout.fragment_dummy, null));
-        views.add(View.inflate(this.getContext(), R.layout.fragment_dummy, null));
-        views.add(View.inflate(this.getContext(), R.layout.fragment_dummy, null));
-        views.add(View.inflate(this.getContext(), R.layout.fragment_dummy, null));
-        views.add(View.inflate(this.getContext(), R.layout.fragment_dummy, null));
-        views.add(View.inflate(this.getContext(), R.layout.fragment_dummy, null));
-        vpMain.setAdapter(new MainViewPagerAdapter(views));
+        this.categories = new ArrayList<>();
+        this.fragments = new ArrayList<>();
+        this.createDummyFragment(this.createDummyRule("未分类"));
+        for (int i = 0; i < 7; i++) {
+            this.createDummyFragment(this.createDummyRule(String.valueOf(i)));
+        }
+        vpMain.setAdapter(new MainFragmentPagerAdapter(getChildFragmentManager()));
 
         rv = views.get(0).findViewById(R.id.task_add);//选择分段
 
@@ -93,6 +92,24 @@ public class CategoryRulesFragment extends Fragment {
         return view;
     }
 
+    private List<Fragment> fragments;
+    private List<Category> categories;
+
+    private void createDummyFragment(Category category) {
+        RuleListFragment ruleListFragment = new RuleListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(RuleListFragment.PARAM_TEXT, category.getName());
+        ruleListFragment.setArguments(bundle);
+        this.fragments.add(ruleListFragment);
+    }
+
+    private Category createDummyRule(String name) {
+        Category category = new Category();
+        category.setName(name);
+        this.categories.add(category);
+        return category;
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -101,46 +118,33 @@ public class CategoryRulesFragment extends Fragment {
 
     @OnClick(R.id.fab_add_rule)
     public void onViewClicked() {
+        Category category = categories.get(vpMain.getCurrentItem());
         Intent intent = new Intent(getContext(), CreateTask.class);
+        intent.putExtra(CreateTask.PARAM_CATEGORY, category);
         startActivity(intent);
     }
 
-    private class MainViewPagerAdapter extends PagerAdapter {
+    private class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 
-        private List<View> views;
-        private String[] titles = {"未分类", "STEAM", "直播", "BILIBILI", "5", "6", "7", "8"};
-
-        public MainViewPagerAdapter(List<View> views) {
-            this.views = views;
+        public MainFragmentPagerAdapter(@NonNull FragmentManager fm) {
+            super(fm);
         }
 
         @Override
         public int getCount() {
-            return views.size();
-        }
-
-        @Override
-        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-            return view == object;
+            return fragments.size();
         }
 
         @NonNull
         @Override
-        public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            View view = views.get(position);
-            container.addView(view);
-            return view;
-        }
-
-        @Override
-        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-            container.removeView(views.get(position));
+        public Fragment getItem(int position) {
+            return fragments.get(position);
         }
 
         @Nullable
         @Override
         public CharSequence getPageTitle(int position) {
-            return this.titles[position];
+            return categories.get(position).getName();
         }
     }
 }
