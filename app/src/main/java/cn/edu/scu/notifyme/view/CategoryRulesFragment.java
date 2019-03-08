@@ -23,7 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import cn.edu.scu.notifyme.CreateTaskActivity;
+import cn.edu.scu.notifyme.CreateOrEditTaskActivity;
 import cn.edu.scu.notifyme.DatabaseManager;
 import cn.edu.scu.notifyme.R;
 import cn.edu.scu.notifyme.model.Category;
@@ -87,9 +87,7 @@ public class CategoryRulesFragment extends Fragment {
 
     @OnClick(R.id.fab_add_rule)
     public void onViewClicked() {
-        Category category = categories.get(vpMain.getCurrentItem());
-        Intent intent = new Intent(getContext(), CreateTaskActivity.class);
-        intent.putExtra(CreateTaskActivity.PARAM_CATEGORY, category);
+        Intent intent = new Intent(getContext(), CreateOrEditTaskActivity.class);
         startActivity(intent);
     }
 

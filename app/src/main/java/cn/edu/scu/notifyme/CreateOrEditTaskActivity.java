@@ -3,17 +3,20 @@ package cn.edu.scu.notifyme;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
-import com.google.android.material.snackbar.Snackbar;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,15 +30,17 @@ import cn.edu.scu.notifyme.model.Category;
 import cn.edu.scu.notifyme.model.Message;
 import cn.edu.scu.notifyme.model.Rule;
 
-public class CreateTaskActivity extends AppCompatActivity {
+public class CreateOrEditTaskActivity extends AppCompatActivity {
 
     public static final String PARAM_CATEGORY = "category";
+    public static final String PARAM_RULE_TO_EDIT = "ruleToEdit";
 
     private AlertDialog testprogress;
     private AlertDialog testresult;
     private AlertDialog testtimeout;
 
     private Category category;
+    private Rule ruleToEdit;
 
     @BindView(R.id.task_name)
     EditText inputtaskName;
@@ -49,28 +54,53 @@ public class CreateTaskActivity extends AppCompatActivity {
     Toolbar toolbar;
     @BindView(R.id.ms_category)
     MaterialSpinner msCategory;
+    @BindView(R.id.create_or_save)
+    Button createOrSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_task);
+        setContentView(R.layout.activity_create_or_edit_task);
         ButterKnife.bind(this);
 
-        category = getIntent().getParcelableExtra(PARAM_CATEGORY);
-        if (category.getName() != null) {
-            //TODO: 从数据库获取分类（现在没有对分类的操作）
-//            DatabaseManager.getInstance().getCategories();
+        this.category = getIntent().getParcelableExtra(PARAM_CATEGORY);
+        this.ruleToEdit = getIntent().getParcelableExtra(PARAM_RULE_TO_EDIT);
+        if (this.ruleToEdit != null && this.category != null) { // 编辑任务
+            toolbar.setTitle("编辑任务");
+            this.uiSetRule(ruleToEdit);
+            createOrSave.setText("保存");
+        } else { // 新建任务
+            toolbar.setTitle("新建任务");
+            createOrSave.setText("创建");
         }
 
         msCategory.setBackgroundColor(getResources().getColor(R.color.ms_background));
-        msCategory.setItems("Ice Cream Sandwich", "Jelly Bean", "KitKat", "Lollipop", "Marshmallow");
-        msCategory.setOnItemSelectedListener(
-                (MaterialSpinner.OnItemSelectedListener<String>) (view, position, id, item) ->
-                        Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show());
+
+        List<Category> allCategories = DatabaseManager.getInstance().getCategories();
+        List<String> categoryNames = new ArrayList<>();
+        int indexOfCategoryTheRuleBelongsTo = 0;
+        for (int i = 0; i < allCategories.size(); i++) {
+            Category ctgry = allCategories.get(i);
+            categoryNames.add(ctgry.getName());
+            if (this.ruleToEdit != null) {
+                if (ctgry.getName().equals(this.category.getName())) {
+                    indexOfCategoryTheRuleBelongsTo = i;
+                }
+            }
+        }
+        msCategory.setItems(categoryNames);
+        msCategory.setSelectedIndex(indexOfCategoryTheRuleBelongsTo);
 
         EventBus.getDefault().register(this);
         BackgroundWorker.getInstance().bind(this);
         BackgroundWorker.getInstance().start();
+    }
+
+    private void uiSetRule(Rule rule) {
+        inputtaskName.setText(rule.getName());
+        inputtoloadurl.setText(rule.getToLoadUrl());
+        inputcode.setText(rule.getScript());
+        inputduration.setText(String.valueOf(rule.getDuration()));
     }
 
     @Override
@@ -97,7 +127,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick({R.id.test, R.id.cancel, R.id.create})
+    @OnClick({R.id.test, R.id.cancel, R.id.create_or_save})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.test:
@@ -106,8 +136,8 @@ public class CreateTaskActivity extends AppCompatActivity {
             case R.id.cancel:
                 finish();
                 break;
-            case R.id.create:
-                create();
+            case R.id.create_or_save:
+                createOrSave();
                 break;
         }
     }
@@ -125,7 +155,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         testrule.setToLoadUrl(String.valueOf(inputtoloadurl.getText()));
         BackgroundWorker.getInstance().insertTask(testrule);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(CreateTaskActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateOrEditTaskActivity.this);
         LayoutInflater inflater = this.getLayoutInflater();
         View v = inflater.inflate(R.layout.test_progress, null);
         TextView tv_cancel = v.findViewById(R.id.cancel);
@@ -143,7 +173,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     }
 
     private void showresult(Message msg) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(CreateTaskActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateOrEditTaskActivity.this);
         LayoutInflater inflater = this.getLayoutInflater();
         View v = inflater.inflate(R.layout.test_result, null);
         TextView tv_title = v.findViewById(R.id.result_title);
@@ -170,7 +200,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     }
 
     private void timeout() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(CreateTaskActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateOrEditTaskActivity.this);
         LayoutInflater inflater = this.getLayoutInflater();
         View v = inflater.inflate(R.layout.test_timeout, null);
         TextView tv_confirm = v.findViewById(R.id.confirm);
@@ -187,7 +217,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         testtimeout.show();
     }
 
-    private void create() {
+    private void createOrSave() {
         if (inputcode.getText().length() < 1 ||
                 inputtoloadurl.getText().length() < 1 ||
                 inputduration.getText().length() < 1 ||

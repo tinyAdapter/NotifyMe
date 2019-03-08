@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".RulesActivity"></activity>
-        <activity android:name=".CreateTaskActivity"></activity>
+        <activity android:name=".CreateOrEditTaskActivity"></activity>
         <activity android:name=".BackgroundWorkerAndroidUnitTest$TestActivity" />
 
         <service android:name=".NotificationService" />

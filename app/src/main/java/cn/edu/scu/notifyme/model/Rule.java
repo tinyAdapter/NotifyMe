@@ -158,7 +158,6 @@ public class Rule extends LitePalSupport implements Parcelable {
         iconUrl = in.readString();
         toLoadUrl = in.readString();
         script = in.readString();
-        msg = in.createTypedArrayList(Message.CREATOR);
     }
 
     public static final Creator<Rule> CREATOR = new Creator<Rule>() {
@@ -187,6 +186,5 @@ public class Rule extends LitePalSupport implements Parcelable {
         dest.writeString(iconUrl);
         dest.writeString(toLoadUrl);
         dest.writeString(script);
-        dest.writeTypedList(msg);
     }
 }

@@ -1,5 +1,6 @@
 package cn.edu.scu.notifyme.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cn.edu.scu.notifyme.CreateOrEditTaskActivity;
 import cn.edu.scu.notifyme.DatabaseManager;
 import cn.edu.scu.notifyme.R;
 import cn.edu.scu.notifyme.adapter.RulesAdapter;
@@ -38,7 +40,7 @@ public class RuleListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_rules, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        Category category = this.getArguments().getParcelable(PARAM_CATEGORY);
+        this.category = this.getArguments().getParcelable(PARAM_CATEGORY);
         this.rules = category.getRule();
 
         RulesAdapter adapter = new RulesAdapter(
@@ -51,7 +53,7 @@ public class RuleListFragment extends Fragment {
 
             switch (v.getId()) {
                 case R.id.btn_edit:
-                    ToastUtils.showShort("你点击了编辑按钮" + (position + 1));
+                    this.redirectToEditRulePage(theRule);
                     break;
                 case R.id.btn_delete:
                     ToastUtils.showShort("你点击了删除按钮" + (position + 1));
@@ -75,6 +77,15 @@ public class RuleListFragment extends Fragment {
     }
 
     private List<Rule> rules;
+    private Category category;
+
+    private void redirectToEditRulePage(Rule rule) {
+        Intent intent = new Intent(getContext(), CreateOrEditTaskActivity.class);
+        rule.setCategory(category);
+        intent.putExtra(CreateOrEditTaskActivity.PARAM_CATEGORY, category);
+        intent.putExtra(CreateOrEditTaskActivity.PARAM_RULE_TO_EDIT, rule);
+        startActivity(intent);
+    }
 
     @Override
     public void onDestroyView() {

@@ -49,7 +49,6 @@ public class Category extends LitePalSupport implements Parcelable {
     protected Category(Parcel in) {
         id = in.readLong();
         name = in.readString();
-        rule = in.createTypedArrayList(Rule.CREATOR);
     }
 
     public static final Creator<Category> CREATOR = new Creator<Category>() {
@@ -73,6 +72,5 @@ public class Category extends LitePalSupport implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
         dest.writeString(name);
-        dest.writeTypedList(rule);
     }
 }
