@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
@@ -95,12 +96,10 @@ public class NotificationService extends Service {
     }
 
     private void pushNotificationOnOneMessage(Message msg) {
-        //TODO: 引导至正确的网页链接
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(msg.getTargetUrl()));
         PendingIntent contentIntent = PendingIntent.getActivity(
-                this,
-                0,
-                new Intent(this, RulesActivity.class),
-                0);
+                this, 0, intent, 0);
 
         Rule rule = DatabaseManager.getInstance().getRuleByMessageId(msg.getId());
         msg.setRule(rule);
