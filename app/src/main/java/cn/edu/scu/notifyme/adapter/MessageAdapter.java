@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -38,12 +39,12 @@ public class MessageAdapter extends BaseQuickAdapter<Message, BaseViewHolder> {
         if (item.getImgUrl().length() > 0)
             Glide.with(context)
                     .load(item.getImgUrl())
-                    .error(R.drawable.msg_pic_notfound)
+                    .apply(new RequestOptions().error(R.drawable.msg_pic_notfound))
                     .into((ImageView) helper.getView(R.id.msg_image));
         if (item.getRule().getIconUrl().length() > 0)
             Glide.with(context)
                     .load(item.getRule().getIconUrl())
-                    .error(R.mipmap.ic_launcher)
+                    .apply(new RequestOptions().error(R.mipmap.ic_launcher))
                     .into((ImageView) helper.getView(R.id.msg_icon));
 
         TextView targetUrl = helper.getView(R.id.msg_toloadurl);
