@@ -4,14 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.RelativeLayout;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -26,15 +20,13 @@ import cn.edu.scu.notifyme.DatabaseManager;
 import cn.edu.scu.notifyme.R;
 import cn.edu.scu.notifyme.adapter.MessageAdapter;
 import cn.edu.scu.notifyme.model.Message;
-import cn.edu.scu.notifyme.model.Rule;
 
 public class NotificationFragment extends Fragment {
 
+    @BindView(R.id.no_card_hint)
+    RelativeLayout noCardHint;
     private List<Message> messages;
     private MessageAdapter adapter;
-
-
-
 
 
     @BindView(R.id.rv_messages)
@@ -84,8 +76,17 @@ public class NotificationFragment extends Fragment {
         rvMessages.setLayoutManager(new LinearLayoutManager(this.getContext()));
         rvMessages.setAdapter(this.adapter);
 
-        return view;
+        uiUpdateNoCardHint();
 
+        return view;
+    }
+
+    private void uiUpdateNoCardHint() {
+        if (this.messages.size() > 0) {
+            noCardHint.setVisibility(View.INVISIBLE);
+        } else {
+            noCardHint.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

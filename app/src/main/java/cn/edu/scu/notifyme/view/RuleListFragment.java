@@ -1,13 +1,12 @@
 package cn.edu.scu.notifyme.view;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.blankj.utilcode.util.ToastUtils;
 
@@ -15,7 +14,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -40,6 +38,8 @@ public class RuleListFragment extends Fragment {
     public static final String PARAM_CATEGORY_ID = "categoryId";
     @BindView(R.id.rv_rules)
     RecyclerView rvRules;
+    @BindView(R.id.no_card_hint)
+    RelativeLayout noCardHint;
 
     private Unbinder unbinder;
 
@@ -86,6 +86,8 @@ public class RuleListFragment extends Fragment {
         rvRules.setLayoutManager(new LinearLayoutManager(this.getContext()));
         rvRules.setAdapter(adapter);
 
+        uiUpdateNoCardHint();
+
         EventBus.getDefault().register(this);
 
         return view;
@@ -100,7 +102,16 @@ public class RuleListFragment extends Fragment {
                 );
                 this.adapter.setItems(this.category.getRule());
                 this.adapter.notifyDataSetChanged();
+                uiUpdateNoCardHint();
                 break;
+        }
+    }
+
+    private void uiUpdateNoCardHint() {
+        if (this.category.getRule().size() > 0) {
+            noCardHint.setVisibility(View.INVISIBLE);
+        } else {
+            noCardHint.setVisibility(View.VISIBLE);
         }
     }
 
@@ -116,6 +127,7 @@ public class RuleListFragment extends Fragment {
                     this.rules.remove(theRule);
                     this.adapter.notifyDataSetChanged();
                     dialog.dismiss();
+                    uiUpdateNoCardHint();
                 })
                 .show();
     }
