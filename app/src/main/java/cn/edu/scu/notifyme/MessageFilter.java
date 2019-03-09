@@ -59,7 +59,7 @@ public class MessageFilter implements IStateMachine {
     }
 
     private void updateIconOfRule(Rule rule) {
-        databaseManager.updateRule(databaseManager.getCategoryByRuleId(rule), rule);
+        databaseManager.updateRule(databaseManager.getCategoryByRuleId(rule.getId()), rule);
     }
 
     public boolean isEquals(Message msg1, Message msg2) {
@@ -79,6 +79,7 @@ public class MessageFilter implements IStateMachine {
 
         databaseManager.addMessage(msg.getRule(), msg);
 
+        msg.setRule(databaseManager.getRuleById(msg.getRule().getId()));
         NotificationService.newMessage(context, msg);
     }
 

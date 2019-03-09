@@ -7,13 +7,21 @@ import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.target.NotificationTarget;
+
+import java.util.concurrent.ExecutionException;
 
 import androidx.annotation.Nullable;
 import cn.edu.scu.notifyme.model.Message;
+import cn.edu.scu.notifyme.model.Rule;
 
 /**
  * NotificationService
@@ -94,6 +102,17 @@ public class NotificationService extends Service {
                 new Intent(this, RulesActivity.class),
                 0);
 
+        Rule rule = DatabaseManager.getInstance().getRuleByMessageId(msg.getId());
+        msg.setRule(rule);
+
+        if(msg.getRule().getIconUrl() == null) {
+            notifyWithNoIcon(contentIntent, msg);
+        } else {
+            notifyWithIcon(contentIntent, msg);
+        }
+    }
+    
+    private void notifyWithNoIcon(PendingIntent contentIntent, Message msg) {
         Notification notification =
                 new Notification.Builder(this)
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -104,6 +123,27 @@ public class NotificationService extends Service {
                         .build();
 
         this.notificationManager.notify(this.NOTIFICATION_ID, notification);
+    }
+
+    private void notifyWithIcon(PendingIntent contentIntent, Message msg) {
+        FutureTarget futureTarget =
+                Glide.with(getApplicationContext()).asBitmap()
+                        .load(msg.getRule().getIconUrl()).submit();
+
+        LoadImageTask task = new LoadImageTask(icon -> {
+            Notification notification =
+                    new Notification.Builder(this)
+                            .setSmallIcon(R.drawable.ic_launcher_foreground)
+                            .setContentTitle(msg.getTitle())
+                            .setContentText(msg.getContent())
+                            .setContentIntent(contentIntent)
+                            .setLargeIcon(icon)
+                            .setDeleteIntent(this.dismissIntent)
+                            .build();
+
+            this.notificationManager.notify(this.NOTIFICATION_ID, notification);
+        });
+        task.execute(futureTarget);
     }
 
     private void pushNotificationOnMultipleMessages(int messageCount) {
@@ -130,5 +170,35 @@ public class NotificationService extends Service {
         Intent intent = new Intent(context, NotificationService.class);
         intent.putExtra("message", msg);
         context.startService(intent);
+    }
+
+    private static class LoadImageTask extends AsyncTask<FutureTarget<Bitmap>, Void, Bitmap> {
+        private OnSuccess onSuccess;
+
+        interface OnSuccess {
+            void onSuccess(Bitmap bitmap);
+        }
+
+        LoadImageTask(OnSuccess onSuccess) {
+            this.onSuccess = onSuccess;
+        }
+
+        @SafeVarargs @Override
+        protected final Bitmap doInBackground(FutureTarget<Bitmap>... futureTargets) {
+            try {
+                return futureTargets[0].get();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            if (bitmap != null)
+                onSuccess.onSuccess(bitmap);
+        }
     }
 }

@@ -156,7 +156,18 @@ public class DatabaseManager {
         }
     }
 
-    public Category getCategoryByRuleId(Rule rule) {
-        return this.getRuleById(rule.getId()).getCategory();
+    public Category getCategoryByRuleId(long ruleId) {
+        return this.getRuleById(ruleId).getCategory();
+    }
+
+    public Rule getRuleByMessageId(long messageId) {
+        return this.getMessageById(messageId).getRule();
+    }
+
+    private Message getMessageById(long id) {
+        List<Message> result = LitePal.where("id = ?", String.valueOf(id)).find(
+                Message.class, true);
+        if (result.size() <= 0) return null;
+        else return result.get(0);
     }
 }
