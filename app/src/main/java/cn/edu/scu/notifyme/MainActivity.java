@@ -3,6 +3,8 @@ package cn.edu.scu.notifyme;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -14,6 +16,9 @@ import butterknife.ButterKnife;
 import cn.edu.scu.notifyme.view.*;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String
+            NAVIGATE_TO_NOTIFICATION_FRAGMENT = "navigateToNotificationFragment";
 
     @BindView(R.id.bn_base)
     BottomNavigationView bnBase;
@@ -36,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         shareFragment = new ShareFragment();
         meFragment = new MeFragment();
 
-        setMainFragment(categoryRulesFragment);
+        uiCheckNavigation();
 
         bnBase.setOnNavigationItemSelectedListener(menuItem -> {
             LogUtils.d("Selected navigation item " + menuItem.getItemId());
@@ -58,6 +63,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void uiCheckNavigation() {
+        if (getIntent().getBooleanExtra(NAVIGATE_TO_NOTIFICATION_FRAGMENT, false)) {
+            setMainFragment(notificationFragment);
+            bnBase.setSelectedItemId(R.id.navigation_notification);
+        } else {
+            setMainFragment(categoryRulesFragment);
+            bnBase.setSelectedItemId(R.id.navigation_category);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+
+        uiCheckNavigation();
+    }
+
     private void setMainFragment(Fragment fragment)
     {
         FragmentManager fm = getSupportFragmentManager();
@@ -65,6 +88,4 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.fm_main, fragment);
         transaction.commit();
     }
-
-
 }

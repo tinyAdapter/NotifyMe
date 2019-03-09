@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -104,13 +105,13 @@ public class NotificationService extends Service {
         Rule rule = DatabaseManager.getInstance().getRuleByMessageId(msg.getId());
         msg.setRule(rule);
 
-        if(msg.getRule().getIconUrl() == null) {
+        if (msg.getRule().getIconUrl() == null) {
             notifyWithNoIcon(contentIntent, msg);
         } else {
             notifyWithIcon(contentIntent, msg);
         }
     }
-    
+
     private void notifyWithNoIcon(PendingIntent contentIntent, Message msg) {
         Notification notification =
                 new Notification.Builder(this)
@@ -147,11 +148,10 @@ public class NotificationService extends Service {
 
     private void pushNotificationOnMultipleMessages(int messageCount) {
         //TODO: 引导至正确的Activity
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra(MainActivity.NAVIGATE_TO_NOTIFICATION_FRAGMENT, true);
         PendingIntent contentIntent = PendingIntent.getActivity(
-                this,
-                0,
-                new Intent(this, RulesActivity.class),
-                0);
+                this, 0, intent, 0);
 
         Notification notification =
                 new Notification.Builder(this)
@@ -182,7 +182,8 @@ public class NotificationService extends Service {
             this.onSuccess = onSuccess;
         }
 
-        @SafeVarargs @Override
+        @SafeVarargs
+        @Override
         protected final Bitmap doInBackground(FutureTarget<Bitmap>... futureTargets) {
             try {
                 return futureTargets[0].get();
@@ -194,7 +195,8 @@ public class NotificationService extends Service {
             return null;
         }
 
-        @Override protected void onPostExecute(Bitmap bitmap) {
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
             if (bitmap != null)
                 onSuccess.onSuccess(bitmap);
