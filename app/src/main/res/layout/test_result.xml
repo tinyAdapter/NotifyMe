@@ -83,7 +83,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginTop="5dp"
                 android:contentDescription="抓取的图片"
-                android:src="@drawable/pic_notfound" />
+                android:src="@drawable/test_pic_notfound" />
         </LinearLayout>
 
     </ScrollView>
