@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        App.init(this);
+
         categoryRulesFragment = new CategoryRulesFragment();
         notificationFragment = new NotificationFragment();
         shareFragment = new ShareFragment();

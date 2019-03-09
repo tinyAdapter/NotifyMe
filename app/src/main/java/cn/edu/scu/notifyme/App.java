@@ -8,8 +8,10 @@ import com.blankj.utilcode.util.Utils;
 import org.litepal.LitePal;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import cn.edu.scu.notifyme.interfaces.IStateMachine;
 import cn.edu.scu.notifyme.model.Message;
 import cn.edu.scu.notifyme.model.Rule;
 
@@ -19,8 +21,10 @@ public class App extends Application {
         super.onCreate();
         Utils.init(this);
         LitePal.initialize(this);
-        DatabaseManager.getInstance().initial();
     }
+
+    private static IStateMachine messageFilter;
+    private static IStateMachine taskManager;
 
     public static void init(Context context) {
         Map<Rule, Message> map_latestMsg = new HashMap<>();
@@ -35,11 +39,34 @@ public class App extends Application {
             map_latestMsg.put(rule, latestMsg);
         }
 
-        MessageFilter msgfilter = new MessageFilter(
-                map_latestMsg,
-                DatabaseManager.getInstance());
-        msgfilter.bind(context);
-
+        BackgroundWorker.getInstance().bind(context);
         DatabaseManager.getInstance().initial();
+        messageFilter = new MessageFilter(map_latestMsg)
+                .bind(DatabaseManager.getInstance(), context);
+        messageFilter.start();
+//        startTasks(DatabaseManager.getInstance().getRules());
+    }
+
+    public static void startTasks(List<Rule> rules) {
+        if (taskManager != null) return;
+
+        taskManager = new TaskManager(rules)
+                .bind(BackgroundWorker.getInstance());
+        taskManager.start();
+    }
+
+    public static void stopTasks() {
+        if (taskManager == null) return;
+
+        taskManager.destroy();
+        taskManager = null;
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+
+        stopTasks();
+        messageFilter.destroy();
     }
 }

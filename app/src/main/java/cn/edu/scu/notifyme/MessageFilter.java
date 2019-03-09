@@ -16,27 +16,26 @@ import java.util.Map;
 
 import cn.edu.scu.notifyme.event.EventID;
 import cn.edu.scu.notifyme.event.MessageEvent;
+import cn.edu.scu.notifyme.interfaces.IStateMachine;
 import cn.edu.scu.notifyme.model.Message;
 import cn.edu.scu.notifyme.model.Rule;
 
-public class MessageFilter {
-
-    private Context context;
+public class MessageFilter implements IStateMachine {
 
     private Map<Rule, Message> map_rule;
-    DatabaseManager databaseManager;
+
+    private Context context;
+    private DatabaseManager databaseManager;
 
     int a;
 
     public MessageFilter(
-            Map<Rule, Message> map,
-            DatabaseManager databaseManager) {
+            Map<Rule, Message> map) {
         map_rule = map;
-        this.databaseManager = databaseManager;
         //LogUtils.d("Registering MessageFilter to EventBus...");
-        EventBus.getDefault().register(this);
     }
 
+    public void start() { EventBus.getDefault().register(this); }
     public void destroy() {
         EventBus.getDefault().unregister(this);
     }
@@ -46,6 +45,10 @@ public class MessageFilter {
         //LogUtils.d("event: " + event);
         switch (event.getId()) {
             case EventID.EVENT_HAS_FETCHED_RESULT:
+                if (event.getMessage().getRule().getIconUrl() != null) {
+                    updateIconOfRule(event.getMessage().getRule());
+                }
+
                 if (!isEquals(map_rule.get(event.getMessage().getRule()), event.getMessage()))
                     pushNotification(event.getMessage());
                 else
@@ -54,27 +57,33 @@ public class MessageFilter {
         }
     }
 
+    private void updateIconOfRule(Rule rule) {
+        databaseManager.updateRule(databaseManager.getCategoryByRuleId(rule), rule);
+    }
+
     public boolean isEquals(Message msg1, Message msg2) {
-        if (msg1.getTitle() != null && msg1.getContent() != null) {
-            if (msg1.getTitle().equals(msg2.getTitle()) && msg1.getContent().equals(msg2.getContent()))
-                return true;
-        }
+        if (msg1 == null) return false;
+        if (msg1.getTitle() == null || msg1.getContent() == null) return false;
+        if (msg1.getTitle().equals(msg2.getTitle())
+                && msg1.getContent().equals(msg2.getContent()))
+            return true;
         return false;
     }
 
     private void pushNotification(Message msg) {
-
-        databaseManager.addMessage(msg.getRule(), msg);
-
         map_rule.remove(msg.getRule());
         map_rule.put(msg.getRule(), msg);
         // TODO:消息推送给各个组件,更新数据库和内存数据
         //LogUtils.d("Message is new , which is added!!!!!");
 
+        databaseManager.addMessage(msg.getRule(), msg);
+
         NotificationService.newMessage(context, msg);
     }
 
-    public void bind(Context context) {
+    public IStateMachine bind(DatabaseManager databaseManager, Context context) {
+        this.databaseManager = databaseManager;
         this.context = context;
+        return this;
     }
 }

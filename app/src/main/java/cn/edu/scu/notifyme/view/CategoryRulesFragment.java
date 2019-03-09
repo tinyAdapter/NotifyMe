@@ -3,7 +3,11 @@ package cn.edu.scu.notifyme.view;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -65,10 +69,23 @@ public class CategoryRulesFragment extends Fragment {
 
         LinearLayout categoryTabs = (LinearLayout) tlCategories.getChildAt(0);
         for (int i = 1; i < categoryTabs.getChildCount(); i++) {
-            categoryTabs.getChildAt(i).setOnLongClickListener(new TabOnLongClickListener(i));
+//            categoryTabs.getChildAt(i).setOnLongClickListener(new TabOnLongClickListener(i));
+            registerForContextMenu(categoryTabs.getChildAt(i));
         }
 
         return view;
+    }
+
+    @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add("编辑");
+        menu.add("删除");
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        return true;
     }
 
     private class TabOnLongClickListener implements View.OnLongClickListener {

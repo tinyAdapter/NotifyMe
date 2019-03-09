@@ -4,10 +4,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.blankj.utilcode.util.JsonUtils;
 import com.blankj.utilcode.util.LogUtils;
+import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -24,6 +27,7 @@ import cn.edu.scu.notifyme.event.EventID;
 import cn.edu.scu.notifyme.event.MessageEvent;
 import cn.edu.scu.notifyme.model.Message;
 import cn.edu.scu.notifyme.model.Rule;
+import cn.edu.scu.notifyme.model.TaskResult;
 
 /**
  * BackgroundWorker
@@ -43,6 +47,7 @@ public class BackgroundWorker {
 
 
     private WebView webview;
+    private JSInterface jsInterface;
 
     private Thread workerThread;
     private BlockingDeque<Rule> toProcessRules = new LinkedBlockingDeque<>();
@@ -61,6 +66,48 @@ public class BackgroundWorker {
         this.webview = new WebView(context);
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setLoadsImagesAutomatically(false);
+        jsInterface = new JSInterface();
+        webview.addJavascriptInterface(jsInterface, "App");
+    }
+
+    private class JSInterface {
+        private Rule currentRule;
+
+        void setRule(Rule rule) {
+            currentRule = rule;
+        }
+
+        @JavascriptInterface
+        public void Return(String result) {
+            LogUtils.d(currentRule.getToLoadUrl() + " JS executed");
+            if (!result.startsWith("{")) {
+                if (webviewSemaphore != null) webviewSemaphore.release();
+                return;
+            }
+            if (BackgroundWorker.this.isThreadStopping) {
+                if (webviewSemaphore != null) webviewSemaphore.release();
+                return;
+            }
+
+            TaskResult taskResult = new Gson().fromJson(result, TaskResult.class);
+
+            if (taskResult.getIconUrl() != null) {
+                currentRule.setIconUrl(taskResult.getIconUrl());
+            }
+
+            Message msg = new Message();
+            msg.setUpdateTime(new Date());
+            msg.setTitle(taskResult.getTitle());
+            msg.setContent(taskResult.getContent());
+            msg.setImgUrl(taskResult.getImgUrl());
+            msg.setTargetUrl(taskResult.getTargetUrl());
+            msg.setRule(currentRule);
+            EventBus.getDefault().post(
+                    new MessageEvent(EventID.EVENT_HAS_FETCHED_RESULT, msg));
+
+            timeoutHandler.removeCallbacks(timeoutTask);
+            if (webviewSemaphore != null) webviewSemaphore.release();
+        }
     }
 
     public void newTask(Rule rule) {
@@ -136,29 +183,8 @@ public class BackgroundWorker {
             public void onPageFinished(WebView view, String url) {
                 LogUtils.d(rule.getToLoadUrl() + " loaded");
 
-                webview.evaluateJavascript(rule.getScript(), (String result) -> {
-                    LogUtils.d(rule.getToLoadUrl() + " JS executed");
-                    if (!result.startsWith("{")) {
-                        if (webviewSemaphore != null) webviewSemaphore.release();
-                        return;
-                    }
-                    if (BackgroundWorker.this.isThreadStopping) {
-                        if (webviewSemaphore != null) webviewSemaphore.release();
-                        return;
-                    }
-
-                    //TODO: 按照规范构造消息对象
-                    Message msg = new Message();
-                    msg.setUpdateTime(new Date());
-                    msg.setTitle(rule.getName());
-                    msg.setContent(result);
-                    msg.setRule(rule);
-                    EventBus.getDefault().post(
-                            new MessageEvent(EventID.EVENT_HAS_FETCHED_RESULT, msg));
-
-                    timeoutHandler.removeCallbacks(timeoutTask);
-                    if (webviewSemaphore != null) webviewSemaphore.release();
-                });
+                jsInterface.setRule(rule);
+                webview.loadUrl("javascript:" + rule.getScript());
             }
         });
         webview.loadUrl(rule.getToLoadUrl());

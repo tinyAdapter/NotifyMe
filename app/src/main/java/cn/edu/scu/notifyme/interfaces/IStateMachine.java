@@ -1,6 +1,6 @@
 package cn.edu.scu.notifyme.interfaces;
 
-public interface ITaskManager {
+public interface IStateMachine {
     void start();
     void destroy();
 }

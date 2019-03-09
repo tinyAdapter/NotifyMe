@@ -15,6 +15,7 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,7 +122,7 @@ public class CreateOrEditTaskActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         switch (event.getId()) {
             case EventID.EVENT_HAS_FETCHED_RESULT:
@@ -155,17 +156,10 @@ public class CreateOrEditTaskActivity extends AppCompatActivity {
     }
 
     private void test() {
+        Rule rule = buildRule();
+        if (rule == null) return;
 
-        if (inputcode.getText().length() < 1 || inputtoloadurl.getText().length() < 1) {
-            ToastUtils.showShort("URL或者代码为空");
-            return;
-        }
-
-        Rule testrule = new Rule();
-        testrule.setName(String.valueOf(inputtaskName.getText()));
-        testrule.setScript(String.valueOf(inputcode.getText()));
-        testrule.setToLoadUrl(String.valueOf(inputtoloadurl.getText()));
-        BackgroundWorker.getInstance().insertTask(testrule);
+        BackgroundWorker.getInstance().insertTask(rule);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(CreateOrEditTaskActivity.this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -230,14 +224,29 @@ public class CreateOrEditTaskActivity extends AppCompatActivity {
     }
 
     private void createOrSave() {
+        Rule rule = buildRule();
+        if (rule == null) return;
+
+        if (isEdit) {
+            DatabaseManager.getInstance().updateRule(categorySelected, rule);
+        } else {
+            DatabaseManager.getInstance().addRule(categorySelected, rule);
+        }
+
+        setResult(RESULT_OK);
+        EventBus.getDefault().post(new MessageEvent(EventID.EVENT_HAS_UPDATED_DATA, null));
+        this.finish();
+    }
+
+    private Rule buildRule() {
         String name = inputtaskName.getText().toString();
         String toLoadUrl = inputtoloadurl.getText().toString();
         String script = inputcode.getText().toString();
         String durationString = inputduration.getText().toString();
         if (script.length() < 1 || toLoadUrl.length() < 1 ||
                 name.length() < 1 || durationString.length() < 1) {
-            ToastUtils.showShort("不能为空");
-            return;
+            ToastUtils.showShort("请输入完整的规则");
+            return null;
         }
 
         int duration = Integer.parseInt(durationString);
@@ -252,14 +261,7 @@ public class CreateOrEditTaskActivity extends AppCompatActivity {
         rule.setToLoadUrl(toLoadUrl);
         rule.setScript(script);
         rule.setDuration(duration);
-        if (isEdit) {
-            DatabaseManager.getInstance().updateRule(categorySelected, rule);
-        } else {
-            DatabaseManager.getInstance().addRule(categorySelected, rule);
-        }
 
-        setResult(RESULT_OK);
-        EventBus.getDefault().post(new MessageEvent(EventID.EVENT_HAS_UPDATED_DATA, null));
-        this.finish();
+        return rule;
     }
 }

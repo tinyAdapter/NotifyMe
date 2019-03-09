@@ -60,7 +60,9 @@ public class RuleListFragment extends Fragment {
                 this.getContext());
 
         this.adapter.setOnItemChildClickListener((adap, v, position) -> {
-            Rule theRule = this.rules.get(position);
+            Rule theRule = DatabaseManager.getInstance().getRuleById(
+                    this.rules.get(position).getId()
+            );
 
             switch (v.getId()) {
                 case R.id.btn_edit:

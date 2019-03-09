@@ -39,37 +39,13 @@ public class DatabaseManager {
         addCategory(codeCategory);
 
         Rule rule;
-        rule = new Rule();
-        rule.setName("bilibili主页代码");
-        rule.setScript("(function() { return { results: document.getElementsByTagName('html')[0].innerHTML.substring(0, 100) }; })();");
-        rule.setToLoadUrl("https://m.bilibili.com");
-        rule.setActive(true);
-        rule.setDuration(15);
-        addRule(defaultCategory, rule);
 
         rule = new Rule();
-        rule.setName("Baidu主页代码");
-        rule.setScript("(function() { return { results: document.getElementsByTagName('html')[0].innerHTML.substring(0, 100) }; })();");
+        rule.setName("Hitokoto - 一言");
+        rule.setScript("fetch(\"https://v1.hitokoto.cn\").then((response) => {return response.json();}).then((json) => {return {iconUrl: 'https://hitokoto.cn/favicon.ico',title: 'Hitokoto',imgUrl: 'https://piccdn.freejishu.com/images/2016/09/25/930f5212c99ccc71accd4615cb03e255.jpg',content: `${json.hitokoto} - ${json.from}`,targetUrl: 'https://hitokoto.cn'};}).then((result) => {App.Return(JSON.stringify(result));});");
         rule.setToLoadUrl("https://www.baidu.com");
         rule.setActive(true);
-        rule.setDuration(20);
-        addRule(codeCategory, rule);
-
-        rule = new Rule();
-        rule.setName("Sina CSJ代码");
-        rule.setScript("(function() { return { results: document.getElementsByTagName('html')[0].innerHTML.substring(0, 100) }; })();");
-        rule.setToLoadUrl("https://tech.sina.cn/csj");
-        rule.setActive(true);
-        rule.setDuration(12);
-        addRule(codeCategory, rule);
-
-        rule = new Rule();
-        rule.setName("Bing主页代码");
-        rule.setScript("(function() { return { results: document.getElementsByTagName('html')[0].innerHTML.substring(0, 100) }; })();");
-        rule.setToLoadUrl("https://cn.bing.com");
-        rule.setCategory(defaultCategory);
-        rule.setActive(false);
-        rule.setDuration(10);
+        rule.setDuration(1);
         addRule(defaultCategory, rule);
     }
 
@@ -170,5 +146,9 @@ public class DatabaseManager {
                 break;
             }
         }
+    }
+
+    public Category getCategoryByRuleId(Rule rule) {
+        return this.getRuleById(rule.getId()).getCategory();
     }
 }

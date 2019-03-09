@@ -5,7 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
-import cn.edu.scu.notifyme.interfaces.ITaskManager;
+import cn.edu.scu.notifyme.interfaces.IStateMachine;
 import cn.edu.scu.notifyme.model.Rule;
 
 /**
@@ -14,17 +14,21 @@ import cn.edu.scu.notifyme.model.Rule;
  * 传入原始规则列表，调用start函数开始维护，调用destroy函数停止并销毁
  * 一旦调用destroy函数，则无法再次调用start函数，必须重新创建新的TaskManager对象
  */
-class TaskManager implements ITaskManager {
+class TaskManager implements IStateMachine {
     private Iterable<Rule> rules;
     private Timer timer = new Timer();
     private ConcurrentHashMap<Rule, TimerTask> timerTasks = new ConcurrentHashMap<>();
     private BackgroundWorker backgroundWorker;
 
-    public TaskManager(Iterable<Rule> rules, BackgroundWorker backgroundWorker) {
+    public TaskManager(Iterable<Rule> rules) {
         this.rules = rules;
-        this.backgroundWorker = backgroundWorker;
         filterActiveRules();
         createTimers();
+    }
+
+    public IStateMachine bind(BackgroundWorker backgroundWorker) {
+        this.backgroundWorker = backgroundWorker;
+        return this;
     }
 
     private void filterActiveRules() {
