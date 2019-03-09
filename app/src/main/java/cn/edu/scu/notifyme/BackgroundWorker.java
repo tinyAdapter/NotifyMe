@@ -97,8 +97,8 @@ public class BackgroundWorker {
 
             Message msg = new Message();
             msg.setUpdateTime(new Date());
-            msg.setTitle(taskResult.getTitle());
-            msg.setContent(taskResult.getContent());
+            msg.setTitle(taskResult.getTitle().trim());
+            msg.setContent(taskResult.getContent().trim());
             msg.setImgUrl(taskResult.getImgUrl());
             msg.setTargetUrl(taskResult.getTargetUrl());
             msg.setRule(currentRule);

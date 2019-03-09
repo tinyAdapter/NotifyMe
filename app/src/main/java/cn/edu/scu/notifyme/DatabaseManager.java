@@ -45,7 +45,15 @@ public class DatabaseManager {
         rule.setScript("fetch(\"https://v1.hitokoto.cn\").then((response) => {return response.json();}).then((json) => {return {iconUrl: 'https://hitokoto.cn/favicon.ico',title: 'Hitokoto',imgUrl: 'https://piccdn.freejishu.com/images/2016/09/25/930f5212c99ccc71accd4615cb03e255.jpg',content: `${json.hitokoto} - ${json.from}`,targetUrl: 'https://hitokoto.cn'};}).then((result) => {App.Return(JSON.stringify(result));});");
         rule.setToLoadUrl("https://www.baidu.com");
         rule.setActive(true);
-        rule.setDuration(1);
+        rule.setDuration(15);
+        addRule(defaultCategory, rule);
+
+        rule = new Rule();
+        rule.setName("机核网 - 最新资讯");
+        rule.setScript("var articleDiv = document.querySelector(\".showcase-article\");App.Return(JSON.stringify({title: articleDiv.querySelector(\"h4 a\").innerHTML,content: articleDiv.querySelector(\".showcase_info\").innerHTML,imgUrl: articleDiv.querySelector(\".showcase_img a img\").src,targetUrl: articleDiv.querySelector(\"h4 a\").href,iconUrl: document.querySelector(\".navbar_brand-affix_white\").src}));");
+        rule.setToLoadUrl("https://www.gcores.com");
+        rule.setActive(true);
+        rule.setDuration(10);
         addRule(defaultCategory, rule);
     }
 
