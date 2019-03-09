@@ -60,7 +60,7 @@ public class DatabaseManager {
     public void updateList(){
         categories = LitePal.findAll(Category.class, true);
         rules = LitePal.findAll(Rule.class, true);
-        messages = LitePal.findAll(Message.class,true);
+        messages = LitePal.order("updatetime DESC").find(Message.class,true);
     }
 
     public List<Category> getCategories() {
