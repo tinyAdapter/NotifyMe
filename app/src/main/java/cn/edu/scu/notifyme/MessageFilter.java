@@ -45,7 +45,8 @@ public class MessageFilter implements IStateMachine {
         //LogUtils.d("event: " + event);
         switch (event.getId()) {
             case EventID.EVENT_HAS_FETCHED_RESULT:
-                if (event.getMessage().getRule().getIconUrl() != null) {
+                if (event.getMessage().getRule().getId() != 0
+                    && event.getMessage().getRule().getIconUrl() != null) {
                     updateIconOfRule(event.getMessage().getRule());
                 }
 
