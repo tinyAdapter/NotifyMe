@@ -33,4 +33,7 @@
     <string name="content">正文</string>
     <string name="image">图像</string>
     <string name="ok">确定</string>
+    <string name="rename">请输入新名称</string>
+    <string name="category_name">分类名称</string>
+    <string name="new_category_name">请输入新分组的名称</string>
 </resources>

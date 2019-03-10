@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/task_inputlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="20dp"
+        android:hint="@string/rename"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tv_category_new_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:lines="1" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginHorizontal="20dp">
+
+        <Button
+            android:id="@+id/save_rename_category"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="保存"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:textSize="20dp"/>
+
+        <Button
+            android:id="@+id/cancel_rename_category"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="取消"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:textSize="20dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

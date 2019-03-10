@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/popup_edit_category"
+        android:icon="@mipmap/ic_launcher"
+        android:title="重命名"/>
+
+    <item
+        android:id="@+id/popup_delete_category"
+        android:icon="@mipmap/ic_launcher"
+        android:title="删除"/>
+
+</menu>

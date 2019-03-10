@@ -17,9 +17,11 @@ public class Category extends LitePalSupport implements Parcelable {
     private String name;
 
     @Column(unique = true)
-    private List<Rule> rule = new ArrayList<>();
+    private List<Rule> rule;
 
-    public Category() {}
+    public Category() {
+        rule = new ArrayList<>();
+    }
 
     public long getId() {
         return id;
