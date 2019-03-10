@@ -48,7 +48,7 @@ public class MessageAdapter extends BaseQuickAdapter<Message, BaseViewHolder> {
 
         TextView targetUrl = helper.getView(R.id.msg_toloadurl);
 
-        targetUrl.setOnClickListener(view -> {
+        helper.itemView.setOnClickListener(view -> {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(String.valueOf(targetUrl.getText())));
             context.startActivity(intent);
