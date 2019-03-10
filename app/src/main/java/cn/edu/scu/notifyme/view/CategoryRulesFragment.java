@@ -4,10 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,8 +80,9 @@ public class CategoryRulesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_category_rules, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        // tbBase.inflateMenu(R.menu.base_toolbar_menu);
-        tbBase.getOverflowIcon().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+        //tbBase.inflateMenu(R.menu.base_toolbar_menu);
+        tbBase.getOverflowIcon().setColorFilter(
+                getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
 
         this.categories = DatabaseManager.getInstance().getCategories();
 
@@ -96,33 +94,18 @@ public class CategoryRulesFragment extends Fragment {
 
         LinearLayout categoryTabs = (LinearLayout) tlCategories.getChildAt(0);
         for (int i = 1; i < categoryTabs.getChildCount(); i++) {
-            // categoryTabs.getChildAt(i).setOnLongClickListener(new
-            // TabOnLongClickListener(i));
-            registerForContextMenu(categoryTabs.getChildAt(i));
+            categoryTabs.getChildAt(i).setOnLongClickListener(new TabOnLongClickListener(i));
         }
 
         mTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // ToastUtils.showShort("add category");
+                //ToastUtils.showShort("add category");
                 showAddDialog();
             }
         });
 
         return view;
-    }
-
-    @Override
-    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v,
-            @Nullable ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add("编辑");
-        menu.add("删除");
-    }
-
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
-        return true;
     }
 
     private class TabOnLongClickListener implements View.OnLongClickListener {
@@ -209,10 +192,10 @@ public class CategoryRulesFragment extends Fragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.popup_edit_category) {
-                    // ToastUtils.showShort("Rename " + index);
+                    //ToastUtils.showShort("Rename " + index);
                     showRenameDialog(index);
                 } else if (item.getItemId() == R.id.popup_delete_category) {
-                    // ToastUtils.showShort("Delete " + index);
+                    //ToastUtils.showShort("Delete " + index);
                     showDeleteDialog(index);
                 }
                 return true;
@@ -234,11 +217,12 @@ public class CategoryRulesFragment extends Fragment {
                 String name = editText.getText().toString();
                 if (name.length() > 0) {
                     if (DatabaseManager.getInstance().getCategoryByName(name) == null) {
-                        Category category = DatabaseManager.getInstance()
-                                .getCategoryById(categories.get(index).getId());
+                        Category category = DatabaseManager.getInstance().getCategoryById(
+                                categories.get(index).getId());
                         category.setName(name);
                         DatabaseManager.getInstance().updateCategory(category);
-                        EventBus.getDefault().post(new MessageEvent(EventID.CATEGORY_HAS_UPDATED, null));
+                        EventBus.getDefault().post(new MessageEvent(
+                                EventID.CATEGORY_HAS_UPDATED, null));
                         renameDialog.dismiss();
                         return;
                     } else {
@@ -267,16 +251,20 @@ public class CategoryRulesFragment extends Fragment {
     }
 
     private void showDeleteDialog(int index) {
-        new AlertDialog.Builder(this.getContext()).setTitle("确认")
+        new AlertDialog.Builder(this.getContext())
+                .setTitle("确认")
                 .setMessage("确认要删除分组 " + categories.get(index).getName() + " ?")
                 .setNegativeButton("否", (dialog, which) -> {
                     dialog.dismiss();
-                }).setPositiveButton("是", (dialog, which) -> {
+                })
+                .setPositiveButton("是", (dialog, which) -> {
                     DatabaseManager.getInstance().deleteCategory(categories.get(index).getName());
                     fragments.remove(index);
-                    EventBus.getDefault().post(new MessageEvent(EventID.CATEGORY_HAS_DELETE, null));
+                    EventBus.getDefault().post(new MessageEvent(
+                            EventID.CATEGORY_HAS_DELETE, null));
                     dialog.dismiss();
-                }).show();
+                })
+                .show();
     }
 
     private void showAddDialog() {
@@ -297,7 +285,8 @@ public class CategoryRulesFragment extends Fragment {
                         Category category = new Category();
                         category.setName(name);
                         DatabaseManager.getInstance().addCategory(category);
-                        EventBus.getDefault().post(new MessageEvent(EventID.CATEGORY_HAS_ADDED, null));
+                        EventBus.getDefault().post(new MessageEvent(
+                                EventID.CATEGORY_HAS_ADDED, null));
                         renameDialog.dismiss();
                     } else {
                         ToastUtils.showShort("名称重复");
@@ -328,37 +317,37 @@ public class CategoryRulesFragment extends Fragment {
     public void onMessageEvent(MessageEvent event) {
         LinearLayout categoryTabs;
         switch (event.getId()) {
-        case EventID.CATEGORY_HAS_UPDATED:
-            DatabaseManager.getInstance().updateList();
-            categories = new ArrayList<>(DatabaseManager.getInstance().getCategories());
-            adapter.notifyDataSetChanged();
+            case EventID.CATEGORY_HAS_UPDATED:
+                DatabaseManager.getInstance().updateList();
+                categories = new ArrayList<>(DatabaseManager.getInstance().getCategories());
+                adapter.notifyDataSetChanged();
 
-            categoryTabs = (LinearLayout) tlCategories.getChildAt(0);
-            for (int i = 1; i < categoryTabs.getChildCount(); i++) {
-                categoryTabs.getChildAt(i).setOnLongClickListener(new TabOnLongClickListener(i));
-            }
-            break;
-        case EventID.CATEGORY_HAS_DELETE:
-            DatabaseManager.getInstance().updateList();
-            categories = DatabaseManager.getInstance().getCategories();
-            adapter.notifyDataSetChanged();
+                categoryTabs = (LinearLayout) tlCategories.getChildAt(0);
+                for (int i = 1; i < categoryTabs.getChildCount(); i++) {
+                    categoryTabs.getChildAt(i).setOnLongClickListener(new TabOnLongClickListener(i));
+                }
+                break;
+            case EventID.CATEGORY_HAS_DELETE:
+                DatabaseManager.getInstance().updateList();
+                categories = DatabaseManager.getInstance().getCategories();
+                adapter.notifyDataSetChanged();
 
-            categoryTabs = (LinearLayout) tlCategories.getChildAt(0);
-            for (int i = 1; i < categoryTabs.getChildCount(); i++) {
-                categoryTabs.getChildAt(i).setOnLongClickListener(new TabOnLongClickListener(i));
-            }
-            break;
-        case EventID.CATEGORY_HAS_ADDED:
-            DatabaseManager.getInstance().updateList();
-            categories = new ArrayList<>(DatabaseManager.getInstance().getCategories());
-            createDummyFragment(categories.get(categories.size() - 1));
-            adapter.notifyDataSetChanged();
+                categoryTabs = (LinearLayout) tlCategories.getChildAt(0);
+                for (int i = 1; i < categoryTabs.getChildCount(); i++) {
+                    categoryTabs.getChildAt(i).setOnLongClickListener(new TabOnLongClickListener(i));
+                }
+                break;
+            case EventID.CATEGORY_HAS_ADDED:
+                DatabaseManager.getInstance().updateList();
+                categories = new ArrayList<>(DatabaseManager.getInstance().getCategories());
+                createDummyFragment(categories.get(categories.size() - 1));
+                adapter.notifyDataSetChanged();
 
-            categoryTabs = (LinearLayout) tlCategories.getChildAt(0);
-            for (int i = 1; i < categoryTabs.getChildCount(); i++) {
-                categoryTabs.getChildAt(i).setOnLongClickListener(new TabOnLongClickListener(i));
-            }
-            break;
+                categoryTabs = (LinearLayout) tlCategories.getChildAt(0);
+                for (int i = 1; i < categoryTabs.getChildCount(); i++) {
+                    categoryTabs.getChildAt(i).setOnLongClickListener(new TabOnLongClickListener(i));
+                }
+                break;
         }
     }
 

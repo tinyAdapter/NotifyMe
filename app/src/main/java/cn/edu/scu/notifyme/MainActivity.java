@@ -1,9 +1,5 @@
 package cn.edu.scu.notifyme;
 
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -42,18 +38,18 @@ public class MainActivity extends AppCompatActivity {
         bnBase.setOnNavigationItemSelectedListener(menuItem -> {
             LogUtils.d("Selected navigation item " + menuItem.getItemId());
             switch (menuItem.getItemId()) {
-            case R.id.navigation_category:
-                setMainFragment(new CategoryRulesFragment());
-                break;
-            case R.id.navigation_notification:
-                setMainFragment(new NotificationFragment());
-                break;
-            case R.id.navigation_share:
-                setMainFragment(new ShareFragment());
-                break;
-            case R.id.navigation_me:
-                setMainFragment(new MeFragment());
-                break;
+                case R.id.navigation_category:
+                    setMainFragment(new CategoryRulesFragment());
+                    break;
+                case R.id.navigation_notification:
+                    setMainFragment(new NotificationFragment());
+                    break;
+                case R.id.navigation_share:
+                    setMainFragment(new ShareFragment());
+                    break;
+                case R.id.navigation_me:
+                    setMainFragment(new MeFragment());
+                    break;
             }
             return true;
         });
@@ -61,10 +57,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void uiCheckNavigation() {
         if (getIntent().getBooleanExtra(NAVIGATE_TO_NOTIFICATION_FRAGMENT, false)) {
-            setMainFragment(notificationFragment);
+            setMainFragment(new NotificationFragment());
             bnBase.setSelectedItemId(R.id.navigation_notification);
         } else {
-            setMainFragment(categoryRulesFragment);
+            setMainFragment(new CategoryRulesFragment());
             bnBase.setSelectedItemId(R.id.navigation_category);
         }
     }

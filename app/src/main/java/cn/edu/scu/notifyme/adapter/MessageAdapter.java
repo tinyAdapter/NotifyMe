@@ -3,7 +3,6 @@ package cn.edu.scu.notifyme.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,7 +40,7 @@ public class MessageAdapter extends BaseQuickAdapter<Message, BaseViewHolder> {
                     .load(item.getImgUrl())
                     .apply(new RequestOptions().error(R.drawable.msg_pic_notfound))
                     .into((ImageView) helper.getView(R.id.msg_image));
-        if (item.getRule().getIconUrl().length() > 0)
+        if (item.getRule() != null && item.getRule().getIconUrl().length() > 0)
             Glide.with(context)
                     .load(item.getRule().getIconUrl())
                     .apply(new RequestOptions().error(R.mipmap.ic_launcher))
