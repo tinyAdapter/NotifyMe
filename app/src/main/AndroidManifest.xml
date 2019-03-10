@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,13 +24,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RulesActivity"></activity>
-        <activity android:name=".CreateOrEditTaskActivity"></activity>
+        <activity android:name=".RulesActivity" />
+        <activity android:name=".CreateOrEditTaskActivity" />
         <activity android:name=".BackgroundWorkerAndroidUnitTest$TestActivity" />
 
         <service android:name=".NotificationService" />
 
         <receiver android:name=".NotificationService$NotificationDismissedBroadcastReceiver" />
+
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>

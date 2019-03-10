@@ -1,17 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/design_default_color_primary_dark">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        app:title="@string/me"
-        app:titleTextColor="@color/white"
-        style="@style/TranslucentToolbar"
+    <RelativeLayout
+        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="160dp">
 
-    </androidx.appcompat.widget.Toolbar>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/iv_avatar"
+                android:src="@mipmap/ic_launcher"
+                android:layout_width="64dp"
+                android:layout_height="64dp" />
+
+            <TextView
+                android:id="@+id/tv_username"
+                android:textAlignment="center"
+                android:text="@string/not_logged_in"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <cn.edu.scu.notifyme.view.SingleLineListItem
+        android:id="@+id/slli_settings"
+        android:layout_height="56dp"
+        android:layout_width="match_parent"
+        app:itemIcon="@drawable/ic_settings_black_24dp"
+        app:itemText="@string/settings" />
 
 </LinearLayout>
