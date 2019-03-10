@@ -43,6 +43,20 @@ public class RuleListFragment extends Fragment {
 
     private Unbinder unbinder;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        EventBus.getDefault().unregister(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -87,9 +101,7 @@ public class RuleListFragment extends Fragment {
         rvRules.setAdapter(adapter);
 
         uiUpdateNoCardHint();
-
-        EventBus.getDefault().register(this);
-
+        
         return view;
     }
 

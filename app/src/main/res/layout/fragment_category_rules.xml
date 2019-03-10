@@ -21,16 +21,36 @@
 
         </androidx.appcompat.widget.Toolbar>
 
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tl_categories"
-            style="@style/Widget.MaterialComponents.TabLayout.Colored"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabMinWidth="90dp"
-            app:tabMode="scrollable">
+            android:orientation="horizontal"
+            android:background="@color/colorPrimary">
 
-        </com.google.android.material.tabs.TabLayout>
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tl_categories"
+                style="@style/Widget.MaterialComponents.TabLayout.Colored"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:tabMinWidth="90dp"
+                app:tabMode="scrollable"
+                android:layout_weight="8">
+
+            </com.google.android.material.tabs.TabLayout>
+
+            <TextView
+                android:id="@+id/tv_add_category"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="+"
+                android:textSize="25dp"
+                android:textColor="@color/white"
+                android:clickable="true"
+                android:gravity="center"/>
+
+
+        </LinearLayout>
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/vp_main"

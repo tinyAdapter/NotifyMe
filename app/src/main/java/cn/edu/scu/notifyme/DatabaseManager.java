@@ -90,6 +90,13 @@ public class DatabaseManager {
         else return result.get(0);
     }
 
+    public Category getCategoryByName(String name){
+        List<Category> result = LitePal.where("name = ?", name).find(
+                Category.class, false);
+        if(result.size() == 0) return null;
+        else return result.get(0);
+    }
+
     public void deleteCategory(String name) {
         if (name.equals("Default"))
             return;
