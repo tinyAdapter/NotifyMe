@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -31,7 +30,6 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
@@ -40,7 +38,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.edu.scu.notifyme.CreateOrEditTaskActivity;
 import cn.edu.scu.notifyme.DatabaseManager;
-import cn.edu.scu.notifyme.MainActivity;
 import cn.edu.scu.notifyme.R;
 import cn.edu.scu.notifyme.event.EventID;
 import cn.edu.scu.notifyme.event.MessageEvent;
@@ -219,7 +216,7 @@ public class CategoryRulesFragment extends Fragment {
             public void onClick(View v) {
                 String name = editText.getText().toString();
                 if (name.length() > 0) {
-                    if(DatabaseManager.getInstance().getCategoryByName(name) == null){
+                    if (DatabaseManager.getInstance().getCategoryByName(name) == null) {
                         Category category = DatabaseManager.getInstance().getCategoryById(
                                 categories.get(index).getId());
                         category.setName(name);
@@ -324,12 +321,21 @@ public class CategoryRulesFragment extends Fragment {
                 DatabaseManager.getInstance().updateList();
                 categories = new ArrayList<>(DatabaseManager.getInstance().getCategories());
                 adapter.notifyDataSetChanged();
+
+                categoryTabs = (LinearLayout) tlCategories.getChildAt(0);
+                for (int i = 1; i < categoryTabs.getChildCount(); i++) {
+                    categoryTabs.getChildAt(i).setOnLongClickListener(new TabOnLongClickListener(i));
+                }
                 break;
             case EventID.CATEGORY_HAS_DELETE:
                 DatabaseManager.getInstance().updateList();
                 categories = DatabaseManager.getInstance().getCategories();
                 adapter.notifyDataSetChanged();
 
+                categoryTabs = (LinearLayout) tlCategories.getChildAt(0);
+                for (int i = 1; i < categoryTabs.getChildCount(); i++) {
+                    categoryTabs.getChildAt(i).setOnLongClickListener(new TabOnLongClickListener(i));
+                }
                 break;
             case EventID.CATEGORY_HAS_ADDED:
                 DatabaseManager.getInstance().updateList();
