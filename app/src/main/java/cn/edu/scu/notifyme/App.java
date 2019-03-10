@@ -21,6 +21,7 @@ public class App extends Application {
         super.onCreate();
         Utils.init(this);
         LitePal.initialize(this);
+        LocaleUtils.initLocale(getBaseContext());
     }
 
     private static IStateMachine messageFilter;

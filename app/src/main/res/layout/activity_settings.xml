@@ -16,6 +16,29 @@
         android:layout_height="wrap_content">
 
     </androidx.appcompat.widget.Toolbar>
-    
 
+    <LinearLayout
+        android:id="@+id/dlli_language"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="64dp">
+
+        <TextView
+            android:text="@string/language"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="@string/simplified_chinese"
+            android:id="@+id/tv_language"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </LinearLayout>
