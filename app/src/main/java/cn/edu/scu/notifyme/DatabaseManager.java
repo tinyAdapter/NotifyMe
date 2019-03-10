@@ -57,10 +57,10 @@ public class DatabaseManager {
         addRule(defaultCategory, rule);
     }
 
-    public void updateList(){
+    public void updateList() {
         categories = LitePal.findAll(Category.class, true);
         rules = LitePal.findAll(Rule.class, true);
-        messages = LitePal.order("updatetime DESC").find(Message.class,true);
+        messages = LitePal.order("updatetime DESC").find(Message.class, true);
     }
 
     public List<Category> getCategories() {
@@ -90,10 +90,10 @@ public class DatabaseManager {
         else return result.get(0);
     }
 
-    public Category getCategoryByName(String name){
+    public Category getCategoryByName(String name) {
         List<Category> result = LitePal.where("name = ?", name).find(
                 Category.class, false);
-        if(result.size() == 0) return null;
+        if (result.size() == 0) return null;
         else return result.get(0);
     }
 
@@ -176,5 +176,12 @@ public class DatabaseManager {
                 Message.class, true);
         if (result.size() <= 0) return null;
         else return result.get(0);
+    }
+
+    public List<Message> getMessageByRuleId(long ruleId) {
+        List<Message> result = LitePal.order("updatetime DESC").where("rule_id = ?",
+                String.valueOf(ruleId)).find(Message.class, false);
+        if (result.size() < 1) return null;
+        else return result;
     }
 }

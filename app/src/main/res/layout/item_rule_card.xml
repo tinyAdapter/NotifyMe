@@ -8,6 +8,7 @@
     android:layout_marginRight="8dp">
 
     <LinearLayout
+        android:id="@+id/layout_rule_card"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">

@@ -32,7 +32,8 @@ public class RulesAdapter extends BaseQuickAdapter<Rule, BaseViewHolder> {
                 .setChecked(R.id.ss_active, item.isActive())
                 .addOnClickListener(R.id.btn_edit)
                 .addOnClickListener(R.id.btn_delete)
-                .addOnClickListener(R.id.ss_active);
+                .addOnClickListener(R.id.ss_active)
+                .addOnClickListener(R.id.layout_rule_card);
 
         Glide.with(context).load(item.getIconUrl()).into((ImageView) helper.getView(R.id.logo_pic));
     }
