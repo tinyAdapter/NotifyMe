@@ -27,6 +27,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -36,6 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import cn.edu.scu.notifyme.App;
 import cn.edu.scu.notifyme.CreateOrEditTaskActivity;
 import cn.edu.scu.notifyme.DatabaseManager;
 import cn.edu.scu.notifyme.LocaleUtils;
@@ -47,6 +49,8 @@ import cn.edu.scu.notifyme.model.Category;
 public class CategoryRulesFragment extends Fragment {
 
     private static final int REQUEST_CREATE_RULE = 30001;
+    @BindView(R.id.switch_total)
+    SwitchCompat switchTotal;
     private Unbinder unbinder;
     private AlertDialog renameDialog;
 
@@ -106,7 +110,26 @@ public class CategoryRulesFragment extends Fragment {
             }
         });
 
+        switchTotal.setChecked(App.isTasksRunning());
+
         return view;
+    }
+
+    @OnClick({R.id.switch_total, R.id.fab_add_rule})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.switch_total:
+                if (App.isTasksRunning()) {
+                    App.stopTasks();
+                } else {
+                    App.startTasks();
+                }
+                break;
+            case R.id.fab_add_rule:
+                Intent intent = new Intent(getContext(), CreateOrEditTaskActivity.class);
+                startActivity(intent);
+                break;
+        }
     }
 
     private class TabOnLongClickListener implements View.OnLongClickListener {
@@ -147,12 +170,6 @@ public class CategoryRulesFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @OnClick(R.id.fab_add_rule)
-    public void onViewClicked() {
-        Intent intent = new Intent(getContext(), CreateOrEditTaskActivity.class);
-        startActivity(intent);
     }
 
     private class MainFragmentPagerAdapter extends FragmentStatePagerAdapter {

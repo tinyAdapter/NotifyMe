@@ -1,5 +1,4 @@
-<resources
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Base application theme. -->
     <style name="AppBaseTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -12,7 +11,6 @@
         <item name="backgroundTint">@color/white</item>
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
-
 
 
     <style name="AppTheme" parent="AppBaseTheme">
@@ -70,6 +68,17 @@
         <item name="contentPaddingLeft">16dp</item>
         <item name="contentPaddingRight">16dp</item>
         <item name="cardBackgroundColor">#ffffff</item>
+    </style>
+
+    <style name="SCBSwitch" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">#69f0ae</item>
+
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">#fafafa</item>
+
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">#eeeeee</item>
     </style>
 
 </resources>
