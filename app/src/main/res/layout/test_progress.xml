@@ -15,9 +15,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="测试中"
+        android:text="@string/testing"
         android:textStyle="bold"
-        android:textSize="25sp"/>
+        android:textSize="25sp" />
 
     <ProgressBar
 
@@ -25,7 +25,7 @@
         android:layout_height="100dp"
         android:layout_gravity="center"
         android:theme="@style/CircularProgress"
-        style="@style/Widget.AppCompat.ProgressBar"/>
+        style="@style/Widget.AppCompat.ProgressBar" />
 
     <TextView
         android:id="@+id/cancel"
@@ -34,8 +34,8 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="20dp"
-        android:text="取消"
+        android:text="@string/cancel"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@color/purple"/>
+        android:textColor="@color/purple" />
 </LinearLayout>

@@ -1,6 +1,5 @@
 package cn.edu.scu.notifyme;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,13 +73,13 @@ public class CreateOrEditTaskActivity extends AppCompatActivity {
         );
         if (this.ruleToEdit != null && this.category != null) { // 编辑任务
             isEdit = true;
-            toolbar.setTitle("编辑任务");
+            toolbar.setTitle(LocaleUtils.getString(R.string.edit_rule));
             this.uiSetRule(ruleToEdit);
-            createOrSave.setText("保存");
+            createOrSave.setText(LocaleUtils.getString(R.string.save));
         } else { // 新建任务
             isEdit = false;
-            toolbar.setTitle("新建任务");
-            createOrSave.setText("创建");
+            toolbar.setTitle(LocaleUtils.getString(R.string.new_rule));
+            createOrSave.setText(LocaleUtils.getString(R.string.create));
         }
 
         msCategory.setBackgroundColor(getResources().getColor(R.color.ms_background));
@@ -245,7 +244,7 @@ public class CreateOrEditTaskActivity extends AppCompatActivity {
         String durationString = inputduration.getText().toString();
         if (script.length() < 1 || toLoadUrl.length() < 1 ||
                 name.length() < 1 || durationString.length() < 1) {
-            ToastUtils.showShort("请输入完整的规则");
+            ToastUtils.showShort(LocaleUtils.getString(R.string.please_complete_fields));
             return null;
         }
 

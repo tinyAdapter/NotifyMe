@@ -21,12 +21,15 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
+        tvLanguage.setText(
+                LocaleUtils.getLocale().equals(LocaleUtils.EN)
+                        ? LocaleUtils.getString(R.string.english)
+                        : LocaleUtils.getString(R.string.simplified_chinese));
 
         dlliLanguage.setOnClickListener(v -> {
-            LocaleUtils.setLocale(getBaseContext(),
-                    LocaleUtils.getLocale().equals(LocaleUtils.EN)
-                            ? LocaleUtils.ZH_CN
-                            : LocaleUtils.EN);
+            LocaleUtils.setLocale(LocaleUtils.getLocale().equals(LocaleUtils.EN)
+                    ? LocaleUtils.ZH_CN
+                    : LocaleUtils.EN);
 
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
