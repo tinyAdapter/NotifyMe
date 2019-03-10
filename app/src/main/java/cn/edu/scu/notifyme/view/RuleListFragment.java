@@ -93,6 +93,10 @@ public class RuleListFragment extends Fragment {
                     }
                     theRule.setActive(!theRule.isActive());
                     DatabaseManager.getInstance().updateRule(category, theRule);
+                    this.rules = DatabaseManager.getInstance()
+                            .getCategoryById(this.category.getId()).getRule();
+                    this.adapter.setItems(this.rules);
+                    this.adapter.notifyDataSetChanged();
                     break;
             }
         });
@@ -101,7 +105,7 @@ public class RuleListFragment extends Fragment {
         rvRules.setAdapter(adapter);
 
         uiUpdateNoCardHint();
-        
+
         return view;
     }
 
@@ -116,7 +120,22 @@ public class RuleListFragment extends Fragment {
                 this.adapter.notifyDataSetChanged();
                 uiUpdateNoCardHint();
                 break;
+            case EventID.EVENT_TASKS_STARTED:
+                uiSetModifications(false);
+                break;
+            case EventID.EVENT_TASKS_STOPED:
+                uiSetModifications(true);
+                break;
         }
+    }
+
+    private void uiSetModifications(boolean on) {
+        if (on) {
+            this.adapter.setButtonsEnable(true);
+        } else {
+            this.adapter.setButtonsEnable(false);
+        }
+        this.adapter.notifyDataSetChanged();
     }
 
     private void uiUpdateNoCardHint() {

@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -121,8 +123,14 @@ public class CategoryRulesFragment extends Fragment {
             case R.id.switch_total:
                 if (App.isTasksRunning()) {
                     App.stopTasks();
+                    uiFabAnimation(0, 1);
+                    EventBus.getDefault().post(
+                            new MessageEvent(EventID.EVENT_TASKS_STOPED, null));
                 } else {
                     App.startTasks();
+                    uiFabAnimation(1, 0);
+                    EventBus.getDefault().post(
+                            new MessageEvent(EventID.EVENT_TASKS_STARTED, null));
                 }
                 break;
             case R.id.fab_add_rule:
@@ -130,6 +138,16 @@ public class CategoryRulesFragment extends Fragment {
                 startActivity(intent);
                 break;
         }
+    }
+
+    private void uiFabAnimation(int from, int to) {
+        ScaleAnimation anim = new ScaleAnimation(from, to, from, to, 50, 50);
+        anim.setFillBefore(true);
+        anim.setFillAfter(true);
+        anim.setFillEnabled(true);
+        anim.setDuration(250);
+        anim.setInterpolator(new OvershootInterpolator());
+        fabAddRule.startAnimation(anim);
     }
 
     private class TabOnLongClickListener implements View.OnLongClickListener {
