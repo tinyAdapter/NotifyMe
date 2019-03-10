@@ -43,4 +43,5 @@
     <string name="are_you_sure_to_remove_category">确认要删除分组</string>
     <string name="new_name">新名称</string>
     <string name="link">链接</string>
+    <string name="confirm">确认</string>
 </resources>

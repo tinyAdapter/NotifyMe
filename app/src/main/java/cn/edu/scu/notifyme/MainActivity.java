@@ -1,5 +1,6 @@
 package cn.edu.scu.notifyme;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -78,5 +79,10 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.replace(R.id.fm_main, fragment);
         transaction.commit();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleUtils.onAttach(newBase));
     }
 }

@@ -253,7 +253,7 @@ public class CategoryRulesFragment extends Fragment {
 
     private void showDeleteDialog(int index) {
         new AlertDialog.Builder(this.getContext())
-                .setTitle(LocaleUtils.getString(R.string.ok))
+                .setTitle(LocaleUtils.getString(R.string.confirm))
                 .setMessage(
                         LocaleUtils.getString(R.string.are_you_sure_to_remove_category)
                                 + " " + categories.get(index).getName() + " ?")

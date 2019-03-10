@@ -1,5 +1,6 @@
 package cn.edu.scu.notifyme;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -262,5 +263,10 @@ public class CreateOrEditTaskActivity extends AppCompatActivity {
         rule.setDuration(duration);
 
         return rule;
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleUtils.onAttach(newBase));
     }
 }

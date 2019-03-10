@@ -1,5 +1,6 @@
 package cn.edu.scu.notifyme;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
@@ -27,7 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
                         : LocaleUtils.getString(R.string.simplified_chinese));
 
         dlliLanguage.setOnClickListener(v -> {
-            LocaleUtils.setLocale(LocaleUtils.getLocale().equals(LocaleUtils.EN)
+            LocaleUtils.store(LocaleUtils.getLocale().equals(LocaleUtils.EN)
                     ? LocaleUtils.ZH_CN
                     : LocaleUtils.EN);
 
@@ -35,5 +36,10 @@ public class SettingsActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleUtils.onAttach(newBase));
     }
 }
