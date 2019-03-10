@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -11,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginHorizontal="20dp"
-        android:hint="@string/rename"
+        android:hint="@string/new_name"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -35,17 +34,17 @@
             android:id="@+id/save_rename_category"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="保存"
+            android:text="@string/save"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textSize="20dp"/>
+            android:textSize="20dp" />
 
         <Button
             android:id="@+id/cancel_rename_category"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="取消"
+            android:text="@string/cancel"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textSize="20dp"/>
+            android:textSize="20dp" />
 
     </LinearLayout>
 

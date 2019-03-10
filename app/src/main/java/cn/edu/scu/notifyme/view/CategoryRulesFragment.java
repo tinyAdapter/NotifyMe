@@ -38,6 +38,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.edu.scu.notifyme.CreateOrEditTaskActivity;
 import cn.edu.scu.notifyme.DatabaseManager;
+import cn.edu.scu.notifyme.LocaleUtils;
 import cn.edu.scu.notifyme.R;
 import cn.edu.scu.notifyme.event.EventID;
 import cn.edu.scu.notifyme.event.MessageEvent;
@@ -226,11 +227,11 @@ public class CategoryRulesFragment extends Fragment {
                         renameDialog.dismiss();
                         return;
                     } else {
-                        ToastUtils.showShort("名称重复");
+                        ToastUtils.showShort(LocaleUtils.getString(R.string.duplicate_name));
                         return;
                     }
                 } else {
-                    ToastUtils.showShort("不能为空");
+                    ToastUtils.showShort(LocaleUtils.getString(R.string.no_empty));
                     return;
                 }
             }
@@ -252,12 +253,14 @@ public class CategoryRulesFragment extends Fragment {
 
     private void showDeleteDialog(int index) {
         new AlertDialog.Builder(this.getContext())
-                .setTitle("确认")
-                .setMessage("确认要删除分组 " + categories.get(index).getName() + " ?")
-                .setNegativeButton("否", (dialog, which) -> {
+                .setTitle(LocaleUtils.getString(R.string.ok))
+                .setMessage(
+                        LocaleUtils.getString(R.string.are_you_sure_to_remove_category)
+                                + " " + categories.get(index).getName() + " ?")
+                .setNegativeButton(LocaleUtils.getString(R.string.no), (dialog, which) -> {
                     dialog.dismiss();
                 })
-                .setPositiveButton("是", (dialog, which) -> {
+                .setPositiveButton(LocaleUtils.getString(R.string.yes), (dialog, which) -> {
                     DatabaseManager.getInstance().deleteCategory(categories.get(index).getName());
                     fragments.remove(index);
                     EventBus.getDefault().post(new MessageEvent(
@@ -289,11 +292,11 @@ public class CategoryRulesFragment extends Fragment {
                                 EventID.CATEGORY_HAS_ADDED, null));
                         renameDialog.dismiss();
                     } else {
-                        ToastUtils.showShort("名称重复");
+                        ToastUtils.showShort(LocaleUtils.getString(R.string.duplicate_name));
                         return;
                     }
                 } else {
-                    ToastUtils.showShort("不能为空");
+                    ToastUtils.showShort(LocaleUtils.getString(R.string.no_empty));
                     return;
                 }
             }

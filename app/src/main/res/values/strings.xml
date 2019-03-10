@@ -33,7 +33,14 @@
     <string name="content">正文</string>
     <string name="image">图像</string>
     <string name="ok">确定</string>
-    <string name="rename">请输入新名称</string>
+    <string name="rename">重命名</string>
     <string name="category_name">分类名称</string>
-    <string name="new_category_name">请输入新分组的名称</string>
+    <string name="new_category_name">新分组名</string>
+    <string name="no_empty">不能为空</string>
+    <string name="duplicate_name">名称重复</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="are_you_sure_to_remove_category">确认要删除分组</string>
+    <string name="new_name">新名称</string>
+    <string name="link">链接</string>
 </resources>

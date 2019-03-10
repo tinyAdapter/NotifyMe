@@ -23,7 +23,7 @@
     <string name="save">Save</string>
     <string name="new_rule">New Rule</string>
     <string name="create">Create</string>
-    <string name="please_complete_fields">Please Complete Fields</string>
+    <string name="please_complete_fields">Please complete fields</string>
     <string name="test">Test</string>
     <string name="cancel">Cancel</string>
     <string name="testing">Testing</string>
@@ -33,4 +33,14 @@
     <string name="content">Content</string>
     <string name="image">Image</string>
     <string name="ok">OK</string>
+    <string name="rename">Rename</string>
+    <string name="category_name">Category Name</string>
+    <string name="new_category_name">Name of The New Category</string>
+    <string name="no_empty">No empty</string>
+    <string name="duplicate_name">Duplicate name</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="are_you_sure_to_remove_category">Are you sure to remove category</string>
+    <string name="new_name">New Name</string>
+    <string name="link">Link</string>
 </resources>
