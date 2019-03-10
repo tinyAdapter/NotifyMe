@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -27,6 +29,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -36,6 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import cn.edu.scu.notifyme.App;
 import cn.edu.scu.notifyme.CreateOrEditTaskActivity;
 import cn.edu.scu.notifyme.DatabaseManager;
 import cn.edu.scu.notifyme.LocaleUtils;
@@ -47,6 +51,8 @@ import cn.edu.scu.notifyme.model.Category;
 public class CategoryRulesFragment extends Fragment {
 
     private static final int REQUEST_CREATE_RULE = 30001;
+    @BindView(R.id.switch_total)
+    SwitchCompat switchTotal;
     private Unbinder unbinder;
     private AlertDialog renameDialog;
 
@@ -106,7 +112,42 @@ public class CategoryRulesFragment extends Fragment {
             }
         });
 
+        switchTotal.setChecked(App.isTasksRunning());
+
         return view;
+    }
+
+    @OnClick({R.id.switch_total, R.id.fab_add_rule})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.switch_total:
+                if (App.isTasksRunning()) {
+                    App.stopTasks();
+                    uiFabAnimation(0, 1);
+                    EventBus.getDefault().post(
+                            new MessageEvent(EventID.EVENT_TASKS_STOPED, null));
+                } else {
+                    App.startTasks();
+                    uiFabAnimation(1, 0);
+                    EventBus.getDefault().post(
+                            new MessageEvent(EventID.EVENT_TASKS_STARTED, null));
+                }
+                break;
+            case R.id.fab_add_rule:
+                Intent intent = new Intent(getContext(), CreateOrEditTaskActivity.class);
+                startActivity(intent);
+                break;
+        }
+    }
+
+    private void uiFabAnimation(int from, int to) {
+        ScaleAnimation anim = new ScaleAnimation(from, to, from, to, 50, 50);
+        anim.setFillBefore(true);
+        anim.setFillAfter(true);
+        anim.setFillEnabled(true);
+        anim.setDuration(250);
+        anim.setInterpolator(new OvershootInterpolator());
+        fabAddRule.startAnimation(anim);
     }
 
     private class TabOnLongClickListener implements View.OnLongClickListener {
@@ -147,12 +188,6 @@ public class CategoryRulesFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @OnClick(R.id.fab_add_rule)
-    public void onViewClicked() {
-        Intent intent = new Intent(getContext(), CreateOrEditTaskActivity.class);
-        startActivity(intent);
     }
 
     private class MainFragmentPagerAdapter extends FragmentStatePagerAdapter {

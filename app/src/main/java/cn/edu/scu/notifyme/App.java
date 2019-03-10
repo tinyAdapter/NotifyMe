@@ -2,14 +2,11 @@ package cn.edu.scu.notifyme;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.LongSparseArray;
 
 import com.blankj.utilcode.util.Utils;
 
 import org.litepal.LitePal;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import cn.edu.scu.notifyme.interfaces.IStateMachine;
 import cn.edu.scu.notifyme.model.Message;
@@ -28,7 +25,7 @@ public class App extends Application {
     private static IStateMachine taskManager;
 
     public static void init(Context context) {
-        Map<Rule, Message> map_latestMsg = new HashMap<>();
+        LongSparseArray<Message> map_latestMsg = new LongSparseArray<>();
         for (Rule rule : DatabaseManager.getInstance().getRules()) {
             if (rule.getMsg().isEmpty())
                 continue;
@@ -37,7 +34,7 @@ public class App extends Application {
                 if (latestMsg.getUpdateTime().getTime() <
                         rule.getMsg().get(i).getUpdateTime().getTime())
                     latestMsg = rule.getMsg().get(i);
-            map_latestMsg.put(rule, latestMsg);
+            map_latestMsg.put(rule.getId(), latestMsg);
         }
 
         BackgroundWorker.getInstance().bind(context);
@@ -45,15 +42,15 @@ public class App extends Application {
         messageFilter = new MessageFilter(map_latestMsg)
                 .bind(DatabaseManager.getInstance(), context);
         messageFilter.start();
-//        startTasks(DatabaseManager.getInstance().getRules());
     }
 
-    public static void startTasks(List<Rule> rules) {
+    public static void startTasks() {
         if (taskManager != null) return;
 
-        taskManager = new TaskManager(rules)
+        taskManager = new TaskManager(DatabaseManager.getInstance().getRules())
                 .bind(BackgroundWorker.getInstance());
         taskManager.start();
+        isTasksRunning = true;
     }
 
     public static void stopTasks() {
@@ -61,6 +58,13 @@ public class App extends Application {
 
         taskManager.destroy();
         taskManager = null;
+        isTasksRunning = false;
+    }
+
+    private static boolean isTasksRunning = false;
+
+    public static boolean isTasksRunning() {
+        return isTasksRunning;
     }
 
     @Override
