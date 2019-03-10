@@ -26,7 +26,9 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.edu.scu.notifyme.CreateOrEditTaskActivity;
 import cn.edu.scu.notifyme.DatabaseManager;
+import cn.edu.scu.notifyme.MainActivity;
 import cn.edu.scu.notifyme.R;
+import cn.edu.scu.notifyme.RuleMessageList;
 import cn.edu.scu.notifyme.adapter.RulesAdapter;
 import cn.edu.scu.notifyme.event.EventID;
 import cn.edu.scu.notifyme.event.MessageEvent;
@@ -93,6 +95,11 @@ public class RuleListFragment extends Fragment {
                     }
                     theRule.setActive(!theRule.isActive());
                     DatabaseManager.getInstance().updateRule(category, theRule);
+                    break;
+                case R.id.layout_rule_card:
+                    Intent intent = new Intent(getActivity(), RuleMessageList.class);
+                    intent.putExtra("ruleId", theRule.getId());
+                    startActivity(intent);
                     break;
             }
         });
