@@ -1,5 +1,7 @@
 package cn.edu.scu.notifyme.event;
 
+import java.util.List;
+
 import cn.edu.scu.notifyme.model.Message;
 
 /**
@@ -8,9 +10,9 @@ import cn.edu.scu.notifyme.model.Message;
  */
 public class MessageEvent {
 
-    public MessageEvent(int id, Message message) {
+    public MessageEvent(int id, List<Message> messages) {
         this.id = id;
-        this.message = message;
+        this.messages = messages;
     }
 
     /**
@@ -20,7 +22,15 @@ public class MessageEvent {
     /**
      * 消息内容
      */
-    private Message message;
+    private List<Message> messages;
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
 
     public int getId() {
         return id;
@@ -28,13 +38,5 @@ public class MessageEvent {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public Message getMessage() {
-        return message;
-    }
-
-    public void setMessage(Message message) {
-        this.message = message;
     }
 }
