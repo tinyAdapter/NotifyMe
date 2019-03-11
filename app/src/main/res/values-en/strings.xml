@@ -45,4 +45,6 @@
     <string name="link">Link</string>
     <string name="confirm">Confirm</string>
     <string name="under_construction">Under Construction m( _ _ )m</string>
+    <string name="clear_all">Clear All Messages</string>
+    <string name="amount_of_messages">Amount</string>
 </resources>
