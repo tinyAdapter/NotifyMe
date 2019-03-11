@@ -8,6 +8,8 @@ import com.blankj.utilcode.util.Utils;
 
 import org.litepal.LitePal;
 
+import java.util.HashMap;
+
 import cn.edu.scu.notifyme.interfaces.IStateMachine;
 import cn.edu.scu.notifyme.model.Message;
 import cn.edu.scu.notifyme.model.Rule;
@@ -25,21 +27,23 @@ public class App extends Application {
     private static IStateMachine taskManager;
 
     public static void init(Context context) {
-        LongSparseArray<Message> map_latestMsg = new LongSparseArray<>();
+        LongSparseArray<HashMap<String, Message>> map_ruleMsgList = new LongSparseArray<>();
+
         for (Rule rule : DatabaseManager.getInstance().getRules()) {
-            if (rule.getMsg().isEmpty())
+            HashMap<String, Message> map_msgList = new HashMap<>();
+            if (rule.getMsg().isEmpty()){
+                map_ruleMsgList.put(rule.getId(), map_msgList);
                 continue;
-            Message latestMsg = rule.getMsg().get(0);
-            for (int i = 1; i < rule.getMsg().size(); i++)
-                if (latestMsg.getUpdateTime().getTime() <
-                        rule.getMsg().get(i).getUpdateTime().getTime())
-                    latestMsg = rule.getMsg().get(i);
-            map_latestMsg.put(rule.getId(), latestMsg);
+            }
+            for (Message message : rule.getMsg()){
+                map_msgList.put(message.getTitle()+message.getContent(), message);
+            }
+            map_ruleMsgList.put(rule.getId(), map_msgList);
         }
 
         BackgroundWorker.getInstance().bind(context);
         DatabaseManager.getInstance().initial();
-        messageFilter = new MessageFilter(map_latestMsg)
+        messageFilter = new MessageFilter(map_ruleMsgList)
                 .bind(DatabaseManager.getInstance(), context);
         messageFilter.start();
     }
