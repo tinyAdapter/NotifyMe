@@ -48,7 +48,7 @@ fetch("https://v1.hitokoto.cn")
     taskResult.messages.push(result);
   })
   .then(() => {
-    console.log(taskResult);
+    App.Return(JSON.stringify(taskResult));
   });
 
 // G-CORES
