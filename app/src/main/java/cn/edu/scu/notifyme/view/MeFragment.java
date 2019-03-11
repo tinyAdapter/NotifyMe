@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.edu.scu.notifyme.R;
 import cn.edu.scu.notifyme.SettingsActivity;
+import cn.edu.scu.notifyme.WebViewActivity;
 
 public class MeFragment extends Fragment {
     private Unbinder unbinder;
@@ -27,6 +28,8 @@ public class MeFragment extends Fragment {
     TextView tvUsername;
     @BindView(R.id.slli_settings)
     LinearLayout slliSettings;
+    @BindView(R.id.slli_internal_browser)
+    SingleLineListItem slliInternalBrowser;
 
     @Nullable
     @Override
@@ -36,6 +39,10 @@ public class MeFragment extends Fragment {
 
         slliSettings.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), SettingsActivity.class);
+            startActivity(intent);
+        });
+        slliInternalBrowser.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), WebViewActivity.class);
             startActivity(intent);
         });
 

@@ -9,4 +9,5 @@ public class EventID {
     public static final int CATEGORY_HAS_ADDED = 10006;
     public static final int EVENT_TASKS_STARTED = 10007;
     public static final int EVENT_TASKS_STOPED = 10008;
+    public static final int EVENT_WEBVIEW_URL_CHANGED = 10009;
 }

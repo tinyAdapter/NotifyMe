@@ -46,4 +46,6 @@
     <string name="link">Link</string>
     <string name="confirm">Confirm</string>
     <string name="under_construction">Under Construction m( _ _ )m</string>
+    <string name="internal_browser">Internal Browser</string>
+    <string name="address">Address</string>
 </resources>

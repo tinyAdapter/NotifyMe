@@ -46,4 +46,6 @@
     <string name="link">链接</string>
     <string name="confirm">确认</string>
     <string name="under_construction">建设中 m( _ _ )m</string>
+    <string name="internal_browser">内置浏览器</string>
+    <string name="address">地址</string>
 </resources>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WebViewActivity"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb_notification"
+        app:title="@string/internal_browser"
+        app:titleTextColor="@color/white"
+        style="@style/TranslucentToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:hint="@string/address">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_go"
+            android:minWidth="20dp"
+            android:text="GO"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_margin="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/fl_internal_browser"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>
