@@ -81,7 +81,7 @@ public class DatabaseManager {
                 "    taskResult.messages.push(result);\n" +
                 "  })\n" +
                 "  .then(() => {\n" +
-                "    console.log(taskResult);\n" +
+                "    App.Return(JSON.stringify(taskResult));\n" +
                 "  });");
         rule.setToLoadUrl("https://hitokoto.cn");
         rule.setActive(true);
