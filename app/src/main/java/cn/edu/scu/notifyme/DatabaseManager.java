@@ -42,15 +42,70 @@ public class DatabaseManager {
 
         rule = new Rule();
         rule.setName("Hitokoto - 一言");
-        rule.setScript("fetch(\"https://v1.hitokoto.cn\").then((response) => {return response.json();}).then((json) => {return {iconUrl: 'https://hitokoto.cn/favicon.ico',title: 'Hitokoto',imgUrl: 'https://piccdn.freejishu.com/images/2016/09/25/930f5212c99ccc71accd4615cb03e255.jpg',content: `${json.hitokoto} - ${json.from}`,targetUrl: 'https://hitokoto.cn'};}).then((result) => {App.Return(JSON.stringify(result));});");
-        rule.setToLoadUrl("https://www.baidu.com");
+        rule.setScript("var taskResult = {};\n" +
+                "taskResult.messages = [];\n" +
+                "fetch(\"https://v1.hitokoto.cn\")\n" +
+                "  .then(response => {\n" +
+                "    return response.json();\n" +
+                "  })\n" +
+                "  .then(json => {\n" +
+                "    taskResult.iconUrl = \"https://hitokoto.cn/favicon.ico\";\n" +
+                "    return {\n" +
+                "      title: \"Hitokoto\",\n" +
+                "      imgUrl:\n" +
+                "        \"https://piccdn.freejishu.com/images/2016/09/25/930f5212c99ccc71accd4615cb03e255.jpg\",\n" +
+                "      content: `${json.hitokoto} - ${json.from}`,\n" +
+                "      targetUrl: \"https://hitokoto.cn\"\n" +
+                "    };\n" +
+                "  })\n" +
+                "  .then(result => {\n" +
+                "    taskResult.messages.push(result);\n" +
+                "  })\n" +
+                "  .then(() => {\n" +
+                "    return fetch(\"https://v1.hitokoto.cn\");\n" +
+                "  })\n" +
+                "  .then(response => {\n" +
+                "    return response.json();\n" +
+                "  })\n" +
+                "  .then(json => {\n" +
+                "    taskResult.iconUrl = \"https://hitokoto.cn/favicon.ico\";\n" +
+                "    return {\n" +
+                "      title: \"Hitokoto\",\n" +
+                "      imgUrl:\n" +
+                "        \"https://piccdn.freejishu.com/images/2016/09/25/930f5212c99ccc71accd4615cb03e255.jpg\",\n" +
+                "      content: `${json.hitokoto} - ${json.from}`,\n" +
+                "      targetUrl: \"https://hitokoto.cn\"\n" +
+                "    };\n" +
+                "  })\n" +
+                "  .then(result => {\n" +
+                "    taskResult.messages.push(result);\n" +
+                "  })\n" +
+                "  .then(() => {\n" +
+                "    console.log(taskResult);\n" +
+                "  });");
+        rule.setToLoadUrl("https://hitokoto.cn");
         rule.setActive(true);
         rule.setDuration(15);
         addRule(defaultCategory, rule);
 
         rule = new Rule();
         rule.setName("机核网 - 最新资讯");
-        rule.setScript("var articleDiv = document.querySelector(\".showcase-article\");App.Return(JSON.stringify({title: articleDiv.querySelector(\"h4 a\").innerHTML,content: articleDiv.querySelector(\".showcase_info\").innerHTML,imgUrl: articleDiv.querySelector(\".showcase_img a img\").src,targetUrl: articleDiv.querySelector(\"h4 a\").href,iconUrl: document.querySelector(\".navbar_brand-affix_white\").src}));");
+        rule.setScript("var taskResult = {};\n" +
+                "taskResult.iconUrl = document.querySelector(\".navbar_brand-affix_white\").src;\n" +
+                "taskResult.messages = [];\n" +
+                "var trIndex = 0;\n" +
+                "document.querySelectorAll(\".showcase-article\").forEach(articleDiv => {\n" +
+                "  if (trIndex < 5) {\n" +
+                "    taskResult.messages.push({\n" +
+                "      title: articleDiv.querySelector(\"h4 a\").innerHTML.trim(),\n" +
+                "      content: articleDiv.querySelector(\".showcase_info\").innerHTML.trim(),\n" +
+                "      imgUrl: articleDiv.querySelector(\".showcase_img a img\").src,\n" +
+                "      targetUrl: articleDiv.querySelector(\"h4 a\").href\n" +
+                "    });\n" +
+                "    trIndex++;\n" +
+                "  }\n" +
+                "});\n" +
+                "App.Return(JSON.stringify(taskResult));");
         rule.setToLoadUrl("https://www.gcores.com");
         rule.setActive(true);
         rule.setDuration(10);

@@ -13,7 +13,9 @@ import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.Semaphore;
@@ -88,20 +90,26 @@ public class BackgroundWorker {
             }
 
             TaskResult taskResult = new Gson().fromJson(result, TaskResult.class);
+            List<TaskResult.MessagesBean> messagesBeans = taskResult.getMessages();
 
             if (taskResult.getIconUrl() != null) {
                 currentRule.setIconUrl(taskResult.getIconUrl());
             }
 
-            Message msg = new Message();
-            msg.setUpdateTime(new Date());
-            msg.setTitle(taskResult.getTitle().trim());
-            msg.setContent(taskResult.getContent().trim());
-            msg.setImgUrl(taskResult.getImgUrl());
-            msg.setTargetUrl(taskResult.getTargetUrl());
-            msg.setRule(currentRule);
+            List<Message> messages = new ArrayList<>();
+            for (TaskResult.MessagesBean messagesBean : messagesBeans) {
+                Message msg = new Message();
+                msg.setUpdateTime(new Date());
+                msg.setTitle(messagesBean.getTitle().trim());
+                msg.setContent(messagesBean.getContent().trim());
+                msg.setImgUrl(messagesBean.getImgUrl());
+                msg.setTargetUrl(messagesBean.getTargetUrl());
+                msg.setRule(currentRule);
+                messages.add(msg);
+            }
+
             EventBus.getDefault().post(
-                    new MessageEvent(EventID.EVENT_HAS_FETCHED_RESULT, msg));
+                    new MessageEvent(EventID.EVENT_HAS_FETCHED_RESULT, messages));
 
             timeoutHandler.removeCallbacks(timeoutTask);
             if (webviewSemaphore != null) webviewSemaphore.release();

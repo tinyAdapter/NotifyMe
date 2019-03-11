@@ -128,7 +128,7 @@ public class CreateOrEditTaskActivity extends AppCompatActivity {
             case EventID.EVENT_HAS_FETCHED_RESULT:
                 if (testprogress.isShowing()) {
                     testprogress.dismiss();
-                    showresult(event.getMessage());
+                    showresult(event.getMessages().get(0));
                 }
                 break;
             case EventID.EVENT_FETCH_TIMEOUT:
