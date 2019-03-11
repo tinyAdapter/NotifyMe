@@ -51,4 +51,9 @@
     <string name="internal_browser">内置浏览器</string>
     <string name="address">地址</string>
     <string name="are_you_sure_to_clear_all_messages">确认要清除所有已推送消息</string>
+    <string name="sign_in">登录</string>
+    <string name="sign_up">注册</string>
+    <string name="password">密码</string>
+    <string name="username">用户名</string>
+    <string name="repeat_password">重复密码</string>
 </resources>
