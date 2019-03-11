@@ -69,3 +69,22 @@ document.querySelectorAll(".showcase-article").forEach(articleDiv => {
   }
 });
 App.Return(JSON.stringify(taskResult));
+
+// SMZDM
+
+var taskResult = {};
+taskResult.iconUrl = "https://www.smzdm.com/favicon.ico";
+taskResult.messages = [];
+var trIndex = 0;
+document.querySelectorAll("li.card-group-list").forEach(div => {
+  if (trIndex < 4) {
+    taskResult.messages.push({
+      title: div.querySelector("img").alt,
+      content: div.querySelector(".zm-card-price").innerHTML.trim(),
+      imgUrl: div.querySelector("img").src,
+      targetUrl: div.querySelector("a").href
+    });
+    trIndex++;
+  }
+});
+App.Return(JSON.stringify(taskResult));

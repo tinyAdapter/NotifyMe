@@ -34,9 +34,9 @@ public class DatabaseManager {
         Category defaultCategory = new Category();
         defaultCategory.setName("Default");
         addCategory(defaultCategory);
-        Category codeCategory = new Category();
-        codeCategory.setName("主页代码");
-        addCategory(codeCategory);
+        Category lifeCategory = new Category();
+        lifeCategory.setName("生活");
+        addCategory(lifeCategory);
 
         Rule rule;
 
@@ -110,6 +110,29 @@ public class DatabaseManager {
         rule.setActive(true);
         rule.setDuration(10);
         addRule(defaultCategory, rule);
+
+        rule = new Rule();
+        rule.setName("什么值得买 - 发现");
+        rule.setScript("var taskResult = {};\n" +
+                "taskResult.iconUrl = \"https://www.smzdm.com/favicon.ico\";\n" +
+                "taskResult.messages = [];\n" +
+                "var trIndex = 0;\n" +
+                "document.querySelectorAll(\"li.card-group-list\").forEach(div => {\n" +
+                "  if (trIndex < 4) {\n" +
+                "    taskResult.messages.push({\n" +
+                "      title: div.querySelector(\"img\").alt,\n" +
+                "      content: div.querySelector(\".zm-card-price\").innerHTML.trim(),\n" +
+                "      imgUrl: div.querySelector(\"img\").src,\n" +
+                "      targetUrl: div.querySelector(\"a\").href\n" +
+                "    });\n" +
+                "    trIndex++;\n" +
+                "  }\n" +
+                "});\n" +
+                "App.Return(JSON.stringify(taskResult));");
+        rule.setToLoadUrl("https://faxian.m.smzdm.com");
+        rule.setActive(true);
+        rule.setDuration(20);
+        addRule(lifeCategory, rule);
     }
 
     public void updateList() {
