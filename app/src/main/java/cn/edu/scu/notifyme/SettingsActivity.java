@@ -47,12 +47,13 @@ public class SettingsActivity extends AppCompatActivity {
             if (Integer.valueOf(String.valueOf(msgAmount.getText())) < 1)
                 return;
             new AlertDialog.Builder(SettingsActivity.this)
-                    .setTitle("确认")
-                    .setMessage("确认要清除所有已推送消息?")
-                    .setNegativeButton("否", (dialog, which) -> {
+                    .setTitle(LocaleUtils.getString(R.string.confirm))
+                    .setMessage(LocaleUtils.getString(
+                            R.string.are_you_sure_to_clear_all_messages) + "?")
+                    .setNegativeButton(LocaleUtils.getString(R.string.no), (dialog, which) -> {
                         dialog.dismiss();
                     })
-                    .setPositiveButton("是", (dialog, which) -> {
+                    .setPositiveButton(LocaleUtils.getString(R.string.yes), (dialog, which) -> {
                         DatabaseManager.getInstance().clearMessages();
                         refreshamount();
                         dialog.dismiss();
