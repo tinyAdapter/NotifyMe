@@ -2,9 +2,11 @@ package cn.edu.scu.notifyme;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -18,6 +20,7 @@ import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.Semaphore;
 
+import androidx.annotation.RequiresApi;
 import cn.edu.scu.notifyme.event.EventID;
 import cn.edu.scu.notifyme.event.MessageEvent;
 import cn.edu.scu.notifyme.model.Message;
@@ -70,6 +73,7 @@ public class BackgroundWorker {
         webview.getSettings().setLoadsImagesAutomatically(false);
         jsInterface = new JSInterface();
         webview.addJavascriptInterface(jsInterface, "App");
+        webview.setWebViewClient(new OverrideUrlLoadingWebViewClient());
     }
 
     private class JSInterface {
@@ -154,7 +158,7 @@ public class BackgroundWorker {
     }
 
     private void process(Rule rule) {
-        webview.setWebViewClient(new WebViewClient() {
+        webview.setWebViewClient(new OverrideUrlLoadingWebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
@@ -187,5 +191,25 @@ public class BackgroundWorker {
         });
         webview.loadUrl(rule.getToLoadUrl());
         LogUtils.d("Loading " + rule.getToLoadUrl() + " ...");
+    }
+
+    private class OverrideUrlLoadingWebViewClient extends WebViewClient {
+        @SuppressWarnings("deprecation")
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            Message msg = new Message();
+            msg.setTargetUrl(url);
+            EventBus.getDefault().post(new MessageEvent(EventID.EVENT_WEBVIEW_URL_CHANGED, msg));
+            return false;
+        }
+
+        @RequiresApi(Build.VERSION_CODES.N)
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            Message msg = new Message();
+            msg.setTargetUrl(request.getUrl().toString());
+            EventBus.getDefault().post(new MessageEvent(EventID.EVENT_WEBVIEW_URL_CHANGED, msg));
+            return false;
+        }
     }
 }
