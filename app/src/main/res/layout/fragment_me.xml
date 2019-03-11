@@ -43,4 +43,11 @@
         app:itemIcon="@drawable/ic_settings_black_24dp"
         app:itemText="@string/settings" />
 
+    <cn.edu.scu.notifyme.view.SingleLineListItem
+        android:id="@+id/slli_internal_browser"
+        android:layout_height="56dp"
+        android:layout_width="match_parent"
+        app:itemIcon="@drawable/ic_web_black_24dp"
+        app:itemText="@string/internal_browser" />
+
 </LinearLayout>

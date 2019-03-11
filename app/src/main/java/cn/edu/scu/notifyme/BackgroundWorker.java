@@ -44,6 +44,10 @@ public class BackgroundWorker {
     }
 
 
+    public WebView getWebview() {
+        return webview;
+    }
+
     private WebView webview;
     private JSInterface jsInterface;
 
