@@ -7,12 +7,9 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.List;
-
 import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.edu.scu.notifyme.model.Message;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -47,7 +44,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         refreshamount();
         clearCache.setOnClickListener(view -> {
-            if(Integer.valueOf(String.valueOf(msgAmount.getText())) < 1)
+            if (Integer.valueOf(String.valueOf(msgAmount.getText())) < 1)
                 return;
             new AlertDialog.Builder(SettingsActivity.this)
                     .setTitle("确认")
@@ -56,12 +53,9 @@ public class SettingsActivity extends AppCompatActivity {
                         dialog.dismiss();
                     })
                     .setPositiveButton("是", (dialog, which) -> {
-                        for (Message message : DatabaseManager.getInstance().getMessages()) {
-                            DatabaseManager.getInstance().deleteMessage(message.getId());
-                        }
+                        DatabaseManager.getInstance().clearMessages();
                         refreshamount();
                         dialog.dismiss();
-
                     })
                     .show();
         });
@@ -72,7 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.attachBaseContext(LocaleUtils.onAttach(newBase));
     }
 
-    private void refreshamount(){
-        msgAmount.setText(DatabaseManager.getInstance().getMessages().size()+"");
+    private void refreshamount() {
+        msgAmount.setText(DatabaseManager.getInstance().getMessages().size() + "");
     }
 }
