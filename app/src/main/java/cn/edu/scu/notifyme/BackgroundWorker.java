@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.BlockingDeque;
@@ -207,7 +208,8 @@ public class BackgroundWorker {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Message msg = new Message();
             msg.setTargetUrl(url);
-            EventBus.getDefault().post(new MessageEvent(EventID.EVENT_WEBVIEW_URL_CHANGED, msg));
+            EventBus.getDefault().post(new MessageEvent(EventID.EVENT_WEBVIEW_URL_CHANGED,
+                    Collections.singletonList(msg)));
             return false;
         }
 
@@ -216,7 +218,8 @@ public class BackgroundWorker {
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
             Message msg = new Message();
             msg.setTargetUrl(request.getUrl().toString());
-            EventBus.getDefault().post(new MessageEvent(EventID.EVENT_WEBVIEW_URL_CHANGED, msg));
+            EventBus.getDefault().post(new MessageEvent(EventID.EVENT_WEBVIEW_URL_CHANGED,
+                    Collections.singletonList(msg)));
             return false;
         }
     }

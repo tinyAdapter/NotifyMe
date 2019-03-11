@@ -78,7 +78,7 @@ public class WebViewActivity extends AppCompatActivity {
     public void onMessageEvent(MessageEvent event) {
         switch (event.getId()) {
             case EventID.EVENT_WEBVIEW_URL_CHANGED:
-                etAddress.setText(event.getMessage().getTargetUrl());
+                etAddress.setText(event.getMessages().get(0).getTargetUrl());
                 break;
         }
     }
