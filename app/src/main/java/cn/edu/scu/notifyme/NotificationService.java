@@ -1,6 +1,7 @@
 package cn.edu.scu.notifyme;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -10,6 +11,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -30,6 +32,7 @@ import cn.edu.scu.notifyme.model.Rule;
 public class NotificationService extends Service {
 
     private static final int NOTIFICATION_ID = 20001;
+    private static final String CHANNEL_ID = "notifyme_channel_01";
 
     private NotificationManager notificationManager;
 
@@ -72,6 +75,13 @@ public class NotificationService extends Service {
                         NotificationDismissedBroadcastReceiver.class),
                 0);
         clearUnreadNotificationCount();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+            this.notificationManager.createNotificationChannel(mChannel);
+        }
 
         LogUtils.d("started");
     }
@@ -120,15 +130,21 @@ public class NotificationService extends Service {
     }
 
     private void notifyWithNoIcon(PendingIntent contentIntent, Message msg) {
-        Notification notification =
-                new Notification.Builder(this)
-                        .setSmallIcon(R.drawable.ic_launcher_foreground)
-                        .setAutoCancel(true)
-                        .setContentTitle(msg.getTitle())
-                        .setContentText(msg.getContent())
-                        .setContentIntent(contentIntent)
-                        .setDeleteIntent(this.dismissIntent)
-                        .build();
+        Notification.Builder notificationBuilder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationBuilder = new Notification.Builder(this, CHANNEL_ID);
+        } else {
+            notificationBuilder = new Notification.Builder(this);
+        }
+        Notification notification = notificationBuilder
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setAutoCancel(true)
+                .setContentTitle(msg.getTitle())
+                .setContentText(msg.getContent())
+                .setContentIntent(contentIntent)
+                .setDeleteIntent(this.dismissIntent)
+                .build();
+
 
         this.notificationManager.notify(NOTIFICATION_ID, notification);
     }
@@ -139,16 +155,21 @@ public class NotificationService extends Service {
                         .load(msg.getRule().getIconUrl()).submit();
 
         LoadImageTask task = new LoadImageTask(icon -> {
-            Notification notification =
-                    new Notification.Builder(this)
-                            .setSmallIcon(R.drawable.ic_launcher_foreground)
-                            .setAutoCancel(true)
-                            .setContentTitle(msg.getTitle())
-                            .setContentText(msg.getContent())
-                            .setContentIntent(contentIntent)
-                            .setLargeIcon(icon)
-                            .setDeleteIntent(this.dismissIntent)
-                            .build();
+            Notification.Builder notificationBuilder;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                notificationBuilder = new Notification.Builder(this, CHANNEL_ID);
+            } else {
+                notificationBuilder = new Notification.Builder(this);
+            }
+            Notification notification = notificationBuilder
+                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setAutoCancel(true)
+                    .setContentTitle(msg.getTitle())
+                    .setContentText(msg.getContent())
+                    .setContentIntent(contentIntent)
+                    .setLargeIcon(icon)
+                    .setDeleteIntent(this.dismissIntent)
+                    .build();
 
             this.notificationManager.notify(NOTIFICATION_ID, notification);
         });
@@ -161,15 +182,20 @@ public class NotificationService extends Service {
         PendingIntent contentIntent = PendingIntent.getActivity(
                 this, 0, intent, 0);
 
-        Notification notification =
-                new Notification.Builder(this)
-                        .setSmallIcon(R.drawable.ic_launcher_foreground)
-                        .setAutoCancel(true)
-                        .setContentTitle(String.format("您有%d条新通知", messageCount))
-                        .setContentText("点击查看")
-                        .setContentIntent(contentIntent)
-                        .setDeleteIntent(this.dismissIntent)
-                        .build();
+        Notification.Builder notificationBuilder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationBuilder = new Notification.Builder(this, CHANNEL_ID);
+        } else {
+            notificationBuilder = new Notification.Builder(this);
+        }
+        Notification notification = notificationBuilder
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setAutoCancel(true)
+                .setContentTitle(String.format("您有%d条新通知", messageCount))
+                .setContentText("点击查看")
+                .setContentIntent(contentIntent)
+                .setDeleteIntent(this.dismissIntent)
+                .build();
 
         this.notificationManager.notify(NOTIFICATION_ID, notification);
     }
