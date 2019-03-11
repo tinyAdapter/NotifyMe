@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Notify Me!</string>
+    <string name="channel_name">Notify Me! Notification Channel</string>
 
     <string name="edit_category">Edit Category</string>
     <string name="category">Category</string>
@@ -47,4 +48,6 @@
     <string name="under_construction">Under Construction m( _ _ )m</string>
     <string name="clear_all">Clear All Messages</string>
     <string name="amount_of_messages">Amount</string>
+    <string name="internal_browser">Internal Browser</string>
+    <string name="address">Address</string>
 </resources>

@@ -2,27 +2,28 @@ package cn.edu.scu.notifyme;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.blankj.utilcode.util.JsonUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.List;
 import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 
+import androidx.annotation.RequiresApi;
 import cn.edu.scu.notifyme.event.EventID;
 import cn.edu.scu.notifyme.event.MessageEvent;
 import cn.edu.scu.notifyme.model.Message;
@@ -37,14 +38,21 @@ import cn.edu.scu.notifyme.model.TaskResult;
  */
 public class BackgroundWorker {
     private static BackgroundWorker instance;
+
     public static synchronized BackgroundWorker getInstance() {
         if (instance == null) {
-            instance  = new BackgroundWorker();
+            instance = new BackgroundWorker();
         }
         return instance;
     }
-    private BackgroundWorker() {}
 
+    private BackgroundWorker() {
+    }
+
+
+    public WebView getWebview() {
+        return webview;
+    }
 
     private WebView webview;
     private JSInterface jsInterface;
@@ -68,6 +76,7 @@ public class BackgroundWorker {
         webview.getSettings().setLoadsImagesAutomatically(false);
         jsInterface = new JSInterface();
         webview.addJavascriptInterface(jsInterface, "App");
+        webview.setWebViewClient(new OverrideUrlLoadingWebViewClient());
     }
 
     private class JSInterface {
@@ -90,20 +99,26 @@ public class BackgroundWorker {
             }
 
             TaskResult taskResult = new Gson().fromJson(result, TaskResult.class);
+            List<TaskResult.MessagesBean> messagesBeans = taskResult.getMessages();
 
             if (taskResult.getIconUrl() != null) {
                 currentRule.setIconUrl(taskResult.getIconUrl());
             }
 
-            Message msg = new Message();
-            msg.setUpdateTime(new Date());
-            msg.setTitle(taskResult.getTitle().trim());
-            msg.setContent(taskResult.getContent().trim());
-            msg.setImgUrl(taskResult.getImgUrl());
-            msg.setTargetUrl(taskResult.getTargetUrl());
-            msg.setRule(currentRule);
+            List<Message> messages = new ArrayList<>();
+            for (TaskResult.MessagesBean messagesBean : messagesBeans) {
+                Message msg = new Message();
+                msg.setUpdateTime(new Date());
+                msg.setTitle(messagesBean.getTitle().trim());
+                msg.setContent(messagesBean.getContent().trim());
+                msg.setImgUrl(messagesBean.getImgUrl());
+                msg.setTargetUrl(messagesBean.getTargetUrl());
+                msg.setRule(currentRule);
+                messages.add(msg);
+            }
+
             EventBus.getDefault().post(
-                    new MessageEvent(EventID.EVENT_HAS_FETCHED_RESULT, msg));
+                    new MessageEvent(EventID.EVENT_HAS_FETCHED_RESULT, messages));
 
             timeoutHandler.removeCallbacks(timeoutTask);
             if (webviewSemaphore != null) webviewSemaphore.release();
@@ -114,7 +129,9 @@ public class BackgroundWorker {
         this.toProcessRules.addLast(rule);
     }
 
-    public void insertTask(Rule rule) { this.toProcessRules.addFirst(rule); }
+    public void insertTask(Rule rule) {
+        this.toProcessRules.addFirst(rule);
+    }
 
     public void stop() {
         isThreadStopping = true;
@@ -150,7 +167,7 @@ public class BackgroundWorker {
     }
 
     private void process(Rule rule) {
-        webview.setWebViewClient(new WebViewClient() {
+        webview.setWebViewClient(new OverrideUrlLoadingWebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
@@ -164,14 +181,8 @@ public class BackgroundWorker {
                         BackgroundWorker.this.webview.stopLoading();
                         LogUtils.w("Timeout loading " + rule.getToLoadUrl());
 
-                        //TODO: 按照规范构造消息对象
-                        Message msg = new Message();
-                        msg.setUpdateTime(new Date());
-                        msg.setTitle(rule.getName());
-                        msg.setContent("");
-                        msg.setRule(rule);
                         EventBus.getDefault().post(
-                                new MessageEvent(EventID.EVENT_FETCH_TIMEOUT, msg));
+                                new MessageEvent(EventID.EVENT_FETCH_TIMEOUT, null));
 
                         if (webviewSemaphore != null) webviewSemaphore.release();
                     });
@@ -189,5 +200,27 @@ public class BackgroundWorker {
         });
         webview.loadUrl(rule.getToLoadUrl());
         LogUtils.d("Loading " + rule.getToLoadUrl() + " ...");
+    }
+
+    private class OverrideUrlLoadingWebViewClient extends WebViewClient {
+        @SuppressWarnings("deprecation")
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            Message msg = new Message();
+            msg.setTargetUrl(url);
+            EventBus.getDefault().post(new MessageEvent(EventID.EVENT_WEBVIEW_URL_CHANGED,
+                    Collections.singletonList(msg)));
+            return false;
+        }
+
+        @RequiresApi(Build.VERSION_CODES.N)
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            Message msg = new Message();
+            msg.setTargetUrl(request.getUrl().toString());
+            EventBus.getDefault().post(new MessageEvent(EventID.EVENT_WEBVIEW_URL_CHANGED,
+                    Collections.singletonList(msg)));
+            return false;
+        }
     }
 }

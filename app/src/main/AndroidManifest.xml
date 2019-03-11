@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ruleMessageList" />
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask">
@@ -24,7 +25,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RulesActivity" />
         <activity android:name=".CreateOrEditTaskActivity" />
         <activity android:name=".BackgroundWorkerAndroidUnitTest$TestActivity" />
 
@@ -32,7 +32,9 @@
 
         <receiver android:name=".NotificationService$NotificationDismissedBroadcastReceiver" />
 
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".RuleMessageList" />
+        <activity android:name=".WebViewActivity"></activity>
     </application>
 
 </manifest>

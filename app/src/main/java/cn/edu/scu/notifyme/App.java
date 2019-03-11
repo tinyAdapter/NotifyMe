@@ -2,14 +2,13 @@ package cn.edu.scu.notifyme;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.LongSparseArray;
 
 import com.blankj.utilcode.util.Utils;
 
 import org.litepal.LitePal;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import cn.edu.scu.notifyme.interfaces.IStateMachine;
 import cn.edu.scu.notifyme.model.Message;
@@ -28,32 +27,34 @@ public class App extends Application {
     private static IStateMachine taskManager;
 
     public static void init(Context context) {
-        Map<Rule, Message> map_latestMsg = new HashMap<>();
+        LongSparseArray<HashMap<String, Message>> map_ruleMsgList = new LongSparseArray<>();
+
         for (Rule rule : DatabaseManager.getInstance().getRules()) {
-            if (rule.getMsg().isEmpty())
+            HashMap<String, Message> map_msgList = new HashMap<>();
+            if (rule.getMsg().isEmpty()){
+                map_ruleMsgList.put(rule.getId(), map_msgList);
                 continue;
-            Message latestMsg = rule.getMsg().get(0);
-            for (int i = 1; i < rule.getMsg().size(); i++)
-                if (latestMsg.getUpdateTime().getTime() <
-                        rule.getMsg().get(i).getUpdateTime().getTime())
-                    latestMsg = rule.getMsg().get(i);
-            map_latestMsg.put(rule, latestMsg);
+            }
+            for (Message message : rule.getMsg()){
+                map_msgList.put(message.getTitle()+message.getContent(), message);
+            }
+            map_ruleMsgList.put(rule.getId(), map_msgList);
         }
 
         BackgroundWorker.getInstance().bind(context);
         DatabaseManager.getInstance().initial();
-        messageFilter = new MessageFilter(map_latestMsg)
+        messageFilter = new MessageFilter(map_ruleMsgList)
                 .bind(DatabaseManager.getInstance(), context);
         messageFilter.start();
-//        startTasks(DatabaseManager.getInstance().getRules());
     }
 
-    public static void startTasks(List<Rule> rules) {
+    public static void startTasks() {
         if (taskManager != null) return;
 
-        taskManager = new TaskManager(rules)
+        taskManager = new TaskManager(DatabaseManager.getInstance().getRules())
                 .bind(BackgroundWorker.getInstance());
         taskManager.start();
+        isTasksRunning = true;
     }
 
     public static void stopTasks() {
@@ -61,6 +62,13 @@ public class App extends Application {
 
         taskManager.destroy();
         taskManager = null;
+        isTasksRunning = false;
+    }
+
+    private static boolean isTasksRunning = false;
+
+    public static boolean isTasksRunning() {
+        return isTasksRunning;
     }
 
     @Override

@@ -1,23 +1,22 @@
 package cn.edu.scu.notifyme;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.FutureTarget;
-import com.bumptech.glide.request.target.NotificationTarget;
 
 import java.util.concurrent.ExecutionException;
 
@@ -33,16 +32,21 @@ import cn.edu.scu.notifyme.model.Rule;
 public class NotificationService extends Service {
 
     private static final int NOTIFICATION_ID = 20001;
+    private static final String CHANNEL_ID = "notifyme_channel_01";
 
     private NotificationManager notificationManager;
 
     private static int unreadNotificationCount;
     private PendingIntent dismissIntent;
 
+    public static void clearUnreadNotificationCount() {
+        unreadNotificationCount = 0;
+    }
+
     public static class NotificationDismissedBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            unreadNotificationCount = 0;
+            clearUnreadNotificationCount();
         }
     }
 
@@ -63,14 +67,21 @@ public class NotificationService extends Service {
     public void onCreate() {
         super.onCreate();
         this.notificationManager = (NotificationManager) getSystemService(
-                this.NOTIFICATION_SERVICE);
+                NOTIFICATION_SERVICE);
         this.dismissIntent = PendingIntent.getBroadcast(
                 this.getApplicationContext(),
                 0,
                 new Intent(this,
                         NotificationDismissedBroadcastReceiver.class),
                 0);
-        this.unreadNotificationCount = 0;
+        clearUnreadNotificationCount();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+            this.notificationManager.createNotificationChannel(mChannel);
+        }
 
         LogUtils.d("started");
     }
@@ -87,18 +98,24 @@ public class NotificationService extends Service {
         Message msg = intent.getParcelableExtra("message");
 
         unreadNotificationCount++;
-        if (this.unreadNotificationCount <= 1) {
+        if (unreadNotificationCount <= 1) {
             pushNotificationOnOneMessage(msg);
         } else {
-            pushNotificationOnMultipleMessages(this.unreadNotificationCount);
+            pushNotificationOnMultipleMessages(unreadNotificationCount);
         }
 
         return START_NOT_STICKY;
     }
 
     private void pushNotificationOnOneMessage(Message msg) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(msg.getTargetUrl()));
+//        // 点击直接跳转到对应网站
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        intent.setData(Uri.parse(msg.getTargetUrl()));
+//        PendingIntent contentIntent = PendingIntent.getActivity(
+//                this, 0, intent, 0);
+
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra(MainActivity.NAVIGATE_TO_NOTIFICATION_FRAGMENT, true);
         PendingIntent contentIntent = PendingIntent.getActivity(
                 this, 0, intent, 0);
 
@@ -113,16 +130,23 @@ public class NotificationService extends Service {
     }
 
     private void notifyWithNoIcon(PendingIntent contentIntent, Message msg) {
-        Notification notification =
-                new Notification.Builder(this)
-                        .setSmallIcon(R.drawable.ic_launcher_foreground)
-                        .setContentTitle(msg.getTitle())
-                        .setContentText(msg.getContent())
-                        .setContentIntent(contentIntent)
-                        .setDeleteIntent(this.dismissIntent)
-                        .build();
+        Notification.Builder notificationBuilder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationBuilder = new Notification.Builder(this, CHANNEL_ID);
+        } else {
+            notificationBuilder = new Notification.Builder(this);
+        }
+        Notification notification = notificationBuilder
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setAutoCancel(true)
+                .setContentTitle(msg.getTitle())
+                .setContentText(msg.getContent())
+                .setContentIntent(contentIntent)
+                .setDeleteIntent(this.dismissIntent)
+                .build();
 
-        this.notificationManager.notify(this.NOTIFICATION_ID, notification);
+
+        this.notificationManager.notify(NOTIFICATION_ID, notification);
     }
 
     private void notifyWithIcon(PendingIntent contentIntent, Message msg) {
@@ -131,38 +155,49 @@ public class NotificationService extends Service {
                         .load(msg.getRule().getIconUrl()).submit();
 
         LoadImageTask task = new LoadImageTask(icon -> {
-            Notification notification =
-                    new Notification.Builder(this)
-                            .setSmallIcon(R.drawable.ic_launcher_foreground)
-                            .setContentTitle(msg.getTitle())
-                            .setContentText(msg.getContent())
-                            .setContentIntent(contentIntent)
-                            .setLargeIcon(icon)
-                            .setDeleteIntent(this.dismissIntent)
-                            .build();
+            Notification.Builder notificationBuilder;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                notificationBuilder = new Notification.Builder(this, CHANNEL_ID);
+            } else {
+                notificationBuilder = new Notification.Builder(this);
+            }
+            Notification notification = notificationBuilder
+                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setAutoCancel(true)
+                    .setContentTitle(msg.getTitle())
+                    .setContentText(msg.getContent())
+                    .setContentIntent(contentIntent)
+                    .setLargeIcon(icon)
+                    .setDeleteIntent(this.dismissIntent)
+                    .build();
 
-            this.notificationManager.notify(this.NOTIFICATION_ID, notification);
+            this.notificationManager.notify(NOTIFICATION_ID, notification);
         });
         task.execute(futureTarget);
     }
 
     private void pushNotificationOnMultipleMessages(int messageCount) {
-        //TODO: 引导至正确的Activity
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra(MainActivity.NAVIGATE_TO_NOTIFICATION_FRAGMENT, true);
         PendingIntent contentIntent = PendingIntent.getActivity(
                 this, 0, intent, 0);
 
-        Notification notification =
-                new Notification.Builder(this)
-                        .setSmallIcon(R.drawable.ic_launcher_foreground)
-                        .setContentTitle(String.format("您有%d条新通知", messageCount))
-                        .setContentText("点击查看")
-                        .setContentIntent(contentIntent)
-                        .setDeleteIntent(this.dismissIntent)
-                        .build();
+        Notification.Builder notificationBuilder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationBuilder = new Notification.Builder(this, CHANNEL_ID);
+        } else {
+            notificationBuilder = new Notification.Builder(this);
+        }
+        Notification notification = notificationBuilder
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setAutoCancel(true)
+                .setContentTitle(String.format("您有%d条新通知", messageCount))
+                .setContentText("点击查看")
+                .setContentIntent(contentIntent)
+                .setDeleteIntent(this.dismissIntent)
+                .build();
 
-        this.notificationManager.notify(this.NOTIFICATION_ID, notification);
+        this.notificationManager.notify(NOTIFICATION_ID, notification);
     }
 
     public static void newMessage(Context context, Message msg) {
@@ -187,9 +222,7 @@ public class NotificationService extends Service {
         protected final Bitmap doInBackground(FutureTarget<Bitmap>... futureTargets) {
             try {
                 return futureTargets[0].get();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
             return null;

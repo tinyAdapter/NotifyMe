@@ -10,6 +10,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +26,8 @@ public class NotificationFragment extends Fragment {
 
     @BindView(R.id.no_card_hint)
     RelativeLayout noCardHint;
+    @BindView(R.id.tb_notification)
+    Toolbar tbNotification;
     private List<Message> messages;
     private MessageAdapter adapter;
 
@@ -68,7 +71,16 @@ public class NotificationFragment extends Fragment {
 
 
 //        this.messages = test;
-        this.messages = DatabaseManager.getInstance().getMessages();
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            long ruleId = bundle.getLong("ruleId");
+            this.messages = DatabaseManager.getInstance().getMessageByRuleId(ruleId);
+            tbNotification.setTitle(DatabaseManager.getInstance().getRuleById(ruleId).getName());
+            if (this.messages == null)
+                return view;
+        } else
+            this.messages = DatabaseManager.getInstance().getMessages();
 
 
         this.adapter = new MessageAdapter(R.layout.item_message_card, messages, this.getContext());

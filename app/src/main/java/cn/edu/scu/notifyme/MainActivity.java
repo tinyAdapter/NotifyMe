@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         super.onNewIntent(intent);
         setIntent(intent);
 
+        NotificationService.clearUnreadNotificationCount();
         uiCheckNavigation();
     }
 

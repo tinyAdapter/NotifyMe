@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Notify Me!</string>
+    <string name="channel_name">Notify Me! 通知频道</string>
 
     <string name="edit_category">编辑分类</string>
     <string name="category">分类</string>
@@ -47,4 +48,6 @@
     <string name="under_construction">建设中 m( _ _ )m</string>
     <string name="clear_all">清除所有消息</string>
     <string name="amount_of_messages">消息数</string>
+    <string name="internal_browser">内置浏览器</string>
+    <string name="address">地址</string>
 </resources>

@@ -19,6 +19,16 @@
             app:titleTextColor="@color/white"
             style="@style/TranslucentToolbar">
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="12dp"
+                android:theme="@style/SCBSwitch"
+                android:scaleX="1.2"
+                android:scaleY="1.2" />
+
         </androidx.appcompat.widget.Toolbar>
 
         <LinearLayout
@@ -44,10 +54,12 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="+"
-                android:textSize="25dp"
+                android:textSize="25sp"
                 android:textColor="@color/white"
                 android:clickable="true"
-                android:gravity="center"/>
+                android:focusable="true"
+                android:background="?selectableItemBackground"
+                android:gravity="center" />
 
 
         </LinearLayout>

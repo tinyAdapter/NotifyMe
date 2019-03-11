@@ -9,33 +9,82 @@
 })();
 
 // HITOKOTO
-
-fetch("https://v1.hitokoto.cn").then((response) => {
+var taskResult = {};
+taskResult.messages = [];
+fetch("https://v1.hitokoto.cn")
+  .then(response => {
     return response.json();
-}).then((json) => {
-	return {
-		iconUrl: 'https://hitokoto.cn/favicon.ico',
-		title: 'Hitokoto',
-		imgUrl: 'https://piccdn.freejishu.com/images/2016/09/25/930f5212c99ccc71accd4615cb03e255.jpg',
-		content: `${json.hitokoto} - ${json.from}`,
-		targetUrl: 'https://hitokoto.cn'
-	};
-}).then((result) => {
-	App.Return(result);
-});
-
-fetch("https://v1.hitokoto.cn").then((response) => {return response.json();}).then((json) => {return {iconUrl: 'https://hitokoto.cn/favicon.ico',title: 'Hitokoto',imgUrl: 'https://piccdn.freejishu.com/images/2016/09/25/930f5212c99ccc71accd4615cb03e255.jpg',content: `${json.hitokoto} - ${json.from}`,targetUrl: 'https://hitokoto.cn'};}).then((result) => {App.Return(JSON.stringify(result));});
+  })
+  .then(json => {
+    taskResult.iconUrl = "https://hitokoto.cn/favicon.ico";
+    return {
+      title: "Hitokoto",
+      imgUrl:
+        "https://piccdn.freejishu.com/images/2016/09/25/930f5212c99ccc71accd4615cb03e255.jpg",
+      content: `${json.hitokoto} - ${json.from}`,
+      targetUrl: "https://hitokoto.cn"
+    };
+  })
+  .then(result => {
+    taskResult.messages.push(result);
+  })
+  .then(() => {
+    return fetch("https://v1.hitokoto.cn");
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(json => {
+    taskResult.iconUrl = "https://hitokoto.cn/favicon.ico";
+    return {
+      title: "Hitokoto",
+      imgUrl:
+        "https://piccdn.freejishu.com/images/2016/09/25/930f5212c99ccc71accd4615cb03e255.jpg",
+      content: `${json.hitokoto} - ${json.from}`,
+      targetUrl: "https://hitokoto.cn"
+    };
+  })
+  .then(result => {
+    taskResult.messages.push(result);
+  })
+  .then(() => {
+    App.Return(JSON.stringify(taskResult));
+  });
 
 // G-CORES
 
-var articleDiv = document.querySelector(".showcase-article");
+var taskResult = {};
+taskResult.iconUrl = document.querySelector(".navbar_brand-affix_white").src;
+taskResult.messages = [];
+var trIndex = 0;
+document.querySelectorAll(".showcase-article").forEach(articleDiv => {
+  if (trIndex < 5) {
+    taskResult.messages.push({
+      title: articleDiv.querySelector("h4 a").innerHTML.trim(),
+      content: articleDiv.querySelector(".showcase_info").innerHTML.trim(),
+      imgUrl: articleDiv.querySelector(".showcase_img a img").src,
+      targetUrl: articleDiv.querySelector("h4 a").href
+    });
+    trIndex++;
+  }
+});
+App.Return(JSON.stringify(taskResult));
 
-App.Return(JSON.stringify({
-    title: articleDiv.querySelector("h4 a").innerHTML.trim(),
-    content: articleDiv.querySelector(".showcase_info").innerHTML.trim(),
-    imgUrl: articleDiv.querySelector(".showcase_img a img").src,
-    targetUrl: articleDiv.querySelector("h4 a").href,
-    iconUrl: document.querySelector(".navbar_brand-affix_white").src
-}));
+// SMZDM
 
-var articleDiv = document.querySelector(".showcase-article");App.Return(JSON.stringify({title: articleDiv.querySelector("h4 a").innerHTML,content: articleDiv.querySelector(".showcase_info").innerHTML,imgUrl: articleDiv.querySelector(".showcase_img a img").src,targetUrl: articleDiv.querySelector("h4 a").href,iconUrl: document.querySelector(".navbar_brand-affix_white").src}));
+var taskResult = {};
+taskResult.iconUrl = "https://www.smzdm.com/favicon.ico";
+taskResult.messages = [];
+var trIndex = 0;
+document.querySelectorAll("li.card-group-list").forEach(div => {
+  if (trIndex < 4) {
+    taskResult.messages.push({
+      title: div.querySelector("img").alt,
+      content: div.querySelector(".zm-card-price").innerHTML.trim(),
+      imgUrl: div.querySelector("img").src,
+      targetUrl: div.querySelector("a").href
+    });
+    trIndex++;
+  }
+});
+App.Return(JSON.stringify(taskResult));

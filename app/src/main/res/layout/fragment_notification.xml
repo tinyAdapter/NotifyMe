@@ -10,6 +10,7 @@
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_notification"
             app:title="@string/notification"
             app:titleTextColor="@color/white"
             style="@style/TranslucentToolbar"
