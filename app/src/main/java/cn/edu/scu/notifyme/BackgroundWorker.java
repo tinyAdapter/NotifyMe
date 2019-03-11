@@ -8,19 +8,14 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.blankj.utilcode.util.JsonUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 
 import cn.edu.scu.notifyme.event.EventID;
@@ -37,13 +32,16 @@ import cn.edu.scu.notifyme.model.TaskResult;
  */
 public class BackgroundWorker {
     private static BackgroundWorker instance;
+
     public static synchronized BackgroundWorker getInstance() {
         if (instance == null) {
-            instance  = new BackgroundWorker();
+            instance = new BackgroundWorker();
         }
         return instance;
     }
-    private BackgroundWorker() {}
+
+    private BackgroundWorker() {
+    }
 
 
     private WebView webview;
@@ -114,7 +112,9 @@ public class BackgroundWorker {
         this.toProcessRules.addLast(rule);
     }
 
-    public void insertTask(Rule rule) { this.toProcessRules.addFirst(rule); }
+    public void insertTask(Rule rule) {
+        this.toProcessRules.addFirst(rule);
+    }
 
     public void stop() {
         isThreadStopping = true;
@@ -164,14 +164,8 @@ public class BackgroundWorker {
                         BackgroundWorker.this.webview.stopLoading();
                         LogUtils.w("Timeout loading " + rule.getToLoadUrl());
 
-                        //TODO: 按照规范构造消息对象
-                        Message msg = new Message();
-                        msg.setUpdateTime(new Date());
-                        msg.setTitle(rule.getName());
-                        msg.setContent("");
-                        msg.setRule(rule);
                         EventBus.getDefault().post(
-                                new MessageEvent(EventID.EVENT_FETCH_TIMEOUT, msg));
+                                new MessageEvent(EventID.EVENT_FETCH_TIMEOUT, null));
 
                         if (webviewSemaphore != null) webviewSemaphore.release();
                     });
