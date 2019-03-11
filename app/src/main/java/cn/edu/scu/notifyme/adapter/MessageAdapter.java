@@ -32,8 +32,7 @@ public class MessageAdapter extends BaseQuickAdapter<Message, BaseViewHolder> {
                 .setImageResource(R.id.msg_icon, R.mipmap.ic_launcher)
                 .setText(R.id.msg_title, item.getTitle())
                 .setText(R.id.msg_date, String.valueOf(item.getUpdateTime()))
-                .setText(R.id.msg_content, item.getContent())
-                .setText(R.id.msg_toloadurl, item.getTargetUrl());
+                .setText(R.id.msg_content, item.getContent());
 
         if (item.getImgUrl().length() > 0)
             Glide.with(context)
@@ -46,11 +45,10 @@ public class MessageAdapter extends BaseQuickAdapter<Message, BaseViewHolder> {
                     .apply(new RequestOptions().error(R.mipmap.ic_launcher))
                     .into((ImageView) helper.getView(R.id.msg_icon));
 
-        TextView targetUrl = helper.getView(R.id.msg_toloadurl);
 
         helper.itemView.setOnClickListener(view -> {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(String.valueOf(targetUrl.getText())));
+            intent.setData(Uri.parse(String.valueOf(item.getTargetUrl())));
             context.startActivity(intent);
         });
     }
