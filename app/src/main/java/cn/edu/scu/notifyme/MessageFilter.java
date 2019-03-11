@@ -63,12 +63,18 @@ public class MessageFilter implements IStateMachine {
     private List<Message> doFiltering(List<Message> messages, HashMap<String, Message> map_msgs) {
         List<Message> msg_filtered = new ArrayList<>();
         if (messages.size() == 0) return msg_filtered;
-        else if(map_msgs.size() == 0){
-            for (Message message: messages)
-                map_msgs.put(message.getTitle()+message.getContent(), message);
+        else if (map_msgs == null) {
+            HashMap<String, Message> map_new = new HashMap<>();
+            for (Message message : messages)
+                map_new.put(message.getTitle() + message.getContent(), message);
+            map_rule.put(messages.get(0).getRule().getId(), map_new);
+            return messages;
+        } else if(map_msgs.size() == 0){
+            for (Message message : messages)
+                map_msgs.put(message.getTitle() + message.getContent(), message);
             return messages;
         }
-        else{
+        else {
             for (Message message : messages) {
                 Message msg = map_msgs.get(message.getTitle() + message.getContent());
                 if (msg == null)
@@ -84,7 +90,7 @@ public class MessageFilter implements IStateMachine {
         HashMap<String, Message> map = this.map_rule.get(messages.get(0).getRule().getId());
 
         for (Message message : messages) {
-            map.put(message.getTitle()+message.getContent(), message);
+            map.put(message.getTitle() + message.getContent(), message);
             databaseManager.addMessage(message.getRule(), message);
 
             message.setRule(databaseManager.getRuleById(message.getRule().getId()));
