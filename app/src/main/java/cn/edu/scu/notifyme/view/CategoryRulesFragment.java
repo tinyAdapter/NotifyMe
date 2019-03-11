@@ -112,9 +112,18 @@ public class CategoryRulesFragment extends Fragment {
             }
         });
 
-        switchTotal.setChecked(App.isTasksRunning());
+        uiSetTaskRunning(App.isTasksRunning());
 
         return view;
+    }
+
+    void uiSetTaskRunning(boolean isRunning) {
+        switchTotal.setChecked(isRunning);
+        if (isRunning) {
+            uiFabAnimation(1, 0);
+        } else {
+            uiFabAnimation(0, 1);
+        }
     }
 
     @OnClick({R.id.switch_total, R.id.fab_add_rule})

@@ -24,9 +24,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cn.edu.scu.notifyme.App;
 import cn.edu.scu.notifyme.CreateOrEditTaskActivity;
 import cn.edu.scu.notifyme.DatabaseManager;
-import cn.edu.scu.notifyme.MainActivity;
 import cn.edu.scu.notifyme.R;
 import cn.edu.scu.notifyme.RuleMessageList;
 import cn.edu.scu.notifyme.adapter.RulesAdapter;
@@ -112,6 +112,11 @@ public class RuleListFragment extends Fragment {
         rvRules.setAdapter(adapter);
 
         uiUpdateNoCardHint();
+        if (App.isTasksRunning()) {
+            uiSetModifications(false);
+        } else {
+            uiSetModifications(true);
+        }
 
         return view;
     }
