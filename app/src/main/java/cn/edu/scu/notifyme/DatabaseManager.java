@@ -180,7 +180,7 @@ public class DatabaseManager {
 
     public List<Message> getMessageByRuleId(long ruleId) {
         List<Message> result = LitePal.order("updatetime DESC").where("rule_id = ?",
-                String.valueOf(ruleId)).find(Message.class, false);
+                String.valueOf(ruleId)).find(Message.class, true);
         if (result.size() < 1) return null;
         else return result;
     }
