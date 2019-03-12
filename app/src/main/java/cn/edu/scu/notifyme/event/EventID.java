@@ -10,4 +10,5 @@ public class EventID {
     public static final int EVENT_TASKS_STARTED = 10007;
     public static final int EVENT_TASKS_STOPED = 10008;
     public static final int EVENT_WEBVIEW_URL_CHANGED = 10009;
+    public static final int EVENT_JS_ERROR = 10010;
 }

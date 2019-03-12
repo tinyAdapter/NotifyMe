@@ -51,5 +51,7 @@
     <string name="internal_browser">Internal Browser</string>
     <string name="address">Address</string>
     <string name="are_you_sure_to_clear_all_messages">Are you sure to clear all messages</string>
+    <string name="script_error">Script Error</string>
+    <string name="error_message">Error Information</string>
 
 </resources>

@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -66,6 +68,10 @@ public class BackgroundWorker {
     private Handler timeoutHandler = new Handler();
     private Runnable timeoutTask;
 
+    private WebChromeClient defaultWebChromeClient = new WebChromeClient();
+    private WebChromeClient handleConsoleMessageWebChromeClient =
+            new HandleConsoleMessageWebChromeClient();
+
     public void bind(Context context) {
         if (this.webview != null) {
             this.webview.destroy();
@@ -77,6 +83,7 @@ public class BackgroundWorker {
         jsInterface = new JSInterface();
         webview.addJavascriptInterface(jsInterface, "App");
         webview.setWebViewClient(new OverrideUrlLoadingWebViewClient());
+        webview.setWebChromeClient(defaultWebChromeClient);
     }
 
     private class JSInterface {
@@ -90,11 +97,11 @@ public class BackgroundWorker {
         public void Return(String result) {
             LogUtils.d(currentRule.getToLoadUrl() + " JS executed");
             if (!result.startsWith("{")) {
-                if (webviewSemaphore != null) webviewSemaphore.release();
+                releaseCurrentTask();
                 return;
             }
             if (BackgroundWorker.this.isThreadStopping) {
-                if (webviewSemaphore != null) webviewSemaphore.release();
+                releaseCurrentTask();
                 return;
             }
 
@@ -120,8 +127,12 @@ public class BackgroundWorker {
             EventBus.getDefault().post(
                     new MessageEvent(EventID.EVENT_HAS_FETCHED_RESULT, messages));
 
-            timeoutHandler.removeCallbacks(timeoutTask);
-            if (webviewSemaphore != null) webviewSemaphore.release();
+            LogUtils.d("Resetting web Chrome client...");
+            webview.post(() -> {
+                webview.setWebChromeClient(defaultWebChromeClient);
+            });
+
+            releaseCurrentTask();
         }
     }
 
@@ -184,7 +195,7 @@ public class BackgroundWorker {
                         EventBus.getDefault().post(
                                 new MessageEvent(EventID.EVENT_FETCH_TIMEOUT, null));
 
-                        if (webviewSemaphore != null) webviewSemaphore.release();
+                        releaseCurrentTask();
                     });
                 };
                 timeoutHandler.postDelayed(timeoutTask, TIMEOUT);
@@ -198,6 +209,9 @@ public class BackgroundWorker {
                     LogUtils.d("But this task has been canceled. Abort");
                     return;
                 }
+
+                LogUtils.d("Mounting web Chrome client to handle console messages...");
+                webview.setWebChromeClient(handleConsoleMessageWebChromeClient);
 
                 jsInterface.setRule(rule);
                 webview.loadUrl("javascript:" + rule.getScript());
@@ -233,9 +247,31 @@ public class BackgroundWorker {
         }
     }
 
+    private class HandleConsoleMessageWebChromeClient extends WebChromeClient {
+        @Override
+        public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+            if (consoleMessage.messageLevel() == ConsoleMessage.MessageLevel.ERROR) {
+                LogUtils.e(consoleMessage.message());
+                Message msg = new Message();
+                msg.setContent(consoleMessage.message());
+                EventBus.getDefault().post(new MessageEvent(EventID.EVENT_JS_ERROR,
+                        Collections.singletonList(msg)));
+
+                releaseCurrentTask();
+            }
+            return true;
+        }
+    }
+
     public void cancelCurrentTask() {
         LogUtils.d("Stop loading");
-        webview.stopLoading();
+        webview.post(() -> {
+            webview.stopLoading();
+        });
+        releaseCurrentTask();
+    }
+
+    private void releaseCurrentTask() {
         timeoutHandler.removeCallbacks(timeoutTask);
         timeoutTask = null;
         if (webviewSemaphore != null) webviewSemaphore.release();
