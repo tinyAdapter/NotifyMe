@@ -206,21 +206,25 @@ public class BackgroundWorker {
         @SuppressWarnings("deprecation")
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Message msg = new Message();
-            msg.setTargetUrl(url);
-            EventBus.getDefault().post(new MessageEvent(EventID.EVENT_WEBVIEW_URL_CHANGED,
-                    Collections.singletonList(msg)));
+            checkPatternAndSendToInternalBrowser(url);
             return false;
         }
 
         @RequiresApi(Build.VERSION_CODES.N)
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-            Message msg = new Message();
-            msg.setTargetUrl(request.getUrl().toString());
-            EventBus.getDefault().post(new MessageEvent(EventID.EVENT_WEBVIEW_URL_CHANGED,
-                    Collections.singletonList(msg)));
+            String url = request.getUrl().toString();
+            checkPatternAndSendToInternalBrowser(url);
             return false;
+        }
+
+        private void checkPatternAndSendToInternalBrowser(String url) {
+            if (url.startsWith("http://") || url.startsWith("https://")) {
+                Message msg = new Message();
+                msg.setTargetUrl(url);
+                EventBus.getDefault().post(new MessageEvent(EventID.EVENT_WEBVIEW_URL_CHANGED,
+                        Collections.singletonList(msg)));
+            }
         }
     }
 }
