@@ -20,6 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import cn.edu.scu.notifyme.LogsActivity;
 import cn.edu.scu.notifyme.R;
 import cn.edu.scu.notifyme.SettingsActivity;
 import cn.edu.scu.notifyme.SignInSignUpActivity;
@@ -81,7 +82,7 @@ public class MeFragment extends Fragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.iv_avatar, R.id.slli_settings, R.id.slli_internal_browser})
+    @OnClick({R.id.iv_avatar, R.id.slli_settings, R.id.slli_internal_browser, R.id.slli_logs})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_avatar: {
@@ -98,6 +99,11 @@ public class MeFragment extends Fragment {
             }
             case R.id.slli_internal_browser: {
                 Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.slli_logs: {
+                Intent intent = new Intent(getActivity(), LogsActivity.class);
                 startActivity(intent);
                 break;
             }

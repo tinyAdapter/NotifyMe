@@ -35,7 +35,8 @@
         <activity android:name=".SettingsActivity" />
         <activity android:name=".RuleMessageList" />
         <activity android:name=".WebViewActivity" />
-        <activity android:name=".SignInSignUpActivity"></activity>
+        <activity android:name=".SignInSignUpActivity" />
+        <activity android:name=".LogsActivity"></activity>
     </application>
 
 </manifest>

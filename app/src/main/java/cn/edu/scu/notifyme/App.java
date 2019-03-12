@@ -22,6 +22,7 @@ public class App extends Application {
         Utils.init(this);
         LitePal.initialize(this);
         LocaleUtils.setBaseContext(getBaseContext());
+        LogSystem.getInstance().d("App started");
     }
 
     private static IStateMachine messageFilter;

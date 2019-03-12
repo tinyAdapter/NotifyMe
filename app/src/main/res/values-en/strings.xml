@@ -69,5 +69,7 @@
     <string name="sign_in_canceled">Sign in canceled</string>
     <string name="sign_out">Sign Out</string>
     <string name="are_you_sure_to_sign_out">Are you sure to sign out</string>
+    <string name="logs">Logs</string>
+    <string name="clear">Clear</string>
 
 </resources>
