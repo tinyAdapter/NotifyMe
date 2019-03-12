@@ -61,5 +61,6 @@
     <string name="incoherence_passwords">Incoherence passwords</string>
     <string name="sign_up_succeeded_please_sign_in">Sign up succeeded, please sign in</string>
     <string name="sign_in_succeeded">Sign in succeeded</string>
+    <string name="sign_in_canceled">Sign in canceled</string>
 
 </resources>

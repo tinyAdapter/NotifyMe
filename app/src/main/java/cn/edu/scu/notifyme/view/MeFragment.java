@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.SPUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -24,7 +25,11 @@ import cn.edu.scu.notifyme.SettingsActivity;
 import cn.edu.scu.notifyme.SignInSignUpActivity;
 import cn.edu.scu.notifyme.WebViewActivity;
 
+import static android.app.Activity.RESULT_OK;
+import static cn.edu.scu.notifyme.SignInSignUpActivity.REQUEST_SIGN_IN_RESULT;
+
 public class MeFragment extends Fragment {
+
     private Unbinder unbinder;
 
     @BindView(R.id.iv_avatar)
@@ -42,13 +47,28 @@ public class MeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_me, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        Glide.with(this.getContext())
-                .load(R.mipmap.ic_default_avatar)
-                .apply(new RequestOptions()
-                        .placeholder(R.mipmap.ic_default_avatar))
-                .into(ivAvatar);
+        uiRefreshUserInfo();
 
         return view;
+    }
+
+    private void uiRefreshUserInfo() {
+        String username = SPUtils.getInstance().getString("username");
+        if (!username.isEmpty()) {
+            tvUsername.setText(username);
+        }
+        String avatarUrl = SPUtils.getInstance().getString("avatarUrl");
+        if (!avatarUrl.isEmpty()) {
+            Glide.with(this.getContext())
+                    .load(SPUtils.getInstance().getString("avatarUrl"))
+                    .into(ivAvatar);
+        } else {
+            Glide.with(this.getContext())
+                    .load(R.mipmap.ic_default_avatar)
+                    .apply(new RequestOptions()
+                            .placeholder(R.mipmap.ic_default_avatar))
+                    .into(ivAvatar);
+        }
     }
 
     @Override
@@ -62,7 +82,7 @@ public class MeFragment extends Fragment {
         switch (view.getId()) {
             case R.id.iv_avatar: {
                 Intent intent = new Intent(getActivity(), SignInSignUpActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_SIGN_IN_RESULT);
                 break;
             }
             case R.id.slli_settings: {
@@ -75,6 +95,19 @@ public class MeFragment extends Fragment {
                 startActivity(intent);
                 break;
             }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQUEST_SIGN_IN_RESULT:
+                if (resultCode == RESULT_OK) {
+                    uiRefreshUserInfo();
+                }
+                break;
         }
     }
 }

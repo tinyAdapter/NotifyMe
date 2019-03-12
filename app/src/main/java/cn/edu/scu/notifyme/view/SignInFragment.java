@@ -1,11 +1,13 @@
 package cn.edu.scu.notifyme.view;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.blankj.utilcode.util.RegexUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -71,6 +73,13 @@ public class SignInFragment extends Fragment {
 
     private void onSignInSuccess() {
         ToastUtils.showShort(LocaleUtils.getString(R.string.sign_in_succeeded));
+        storeUserInfo();
+        getActivity().setResult(Activity.RESULT_OK);
         getActivity().finish();
+    }
+
+    private void storeUserInfo() {
+        SPUtils.getInstance().put("username", etUsername.getText().toString());
+        SPUtils.getInstance().put("avatarUrl", "https://www.2dfan.com/assets/title-94788316db9095cd858669609cff52a101b06da29ae78bbe129c3cdf68a6aee8.gif");
     }
 }

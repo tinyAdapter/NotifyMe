@@ -3,6 +3,8 @@ package cn.edu.scu.notifyme;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.blankj.utilcode.util.ToastUtils;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -11,6 +13,8 @@ import butterknife.ButterKnife;
 import cn.edu.scu.notifyme.view.SignInFragment;
 
 public class SignInSignUpActivity extends AppCompatActivity {
+
+    public static final int REQUEST_SIGN_IN_RESULT = 30002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,5 +35,13 @@ public class SignInSignUpActivity extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleUtils.onAttach(newBase));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ToastUtils.showShort(LocaleUtils.getString(R.string.sign_in_canceled));
+        setResult(RESULT_CANCELED);
+        finish();
     }
 }
