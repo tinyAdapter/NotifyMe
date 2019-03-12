@@ -56,4 +56,17 @@
     <string name="every">间隔</string>
     <string name="minutes">分钟</string>
     <string name="enable_image_loading_invalid_when_exiting">启用图片加载（退出失效）</string>
+    <string name="sign_in">登录</string>
+    <string name="sign_up">注册</string>
+    <string name="password">密码</string>
+    <string name="username">用户名</string>
+    <string name="repeat_password">重复密码</string>
+    <string name="please_input_username_and_password">请输入用户名和密码</string>
+    <string name="please_input_valid_username">请输入有效的用户名</string>
+    <string name="incoherence_passwords">两次输入的密码不一致</string>
+    <string name="sign_up_succeeded_please_sign_in">注册成功，请登录</string>
+    <string name="sign_in_succeeded">登录成功</string>
+    <string name="sign_in_canceled">登录取消</string>
+    <string name="sign_out">退出登录</string>
+    <string name="are_you_sure_to_sign_out">确定要退出登录</string>
 </resources>

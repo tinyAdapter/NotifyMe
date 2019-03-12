@@ -50,9 +50,11 @@ public class SingleLineListItem extends LinearLayout {
                 R.styleable.SingleLineListItem_itemIcon, -1);
         if (iconResourceId != -1) {
             ivIcon.setImageResource(iconResourceId);
+            ivIcon.setColorFilter(
+                    getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        } else {
+            removeView(ivIcon);
         }
-        ivIcon.setColorFilter(
-                getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
         attributes.recycle();
     }
 }
