@@ -127,13 +127,15 @@ public class BackgroundWorker {
             EventBus.getDefault().post(
                     new MessageEvent(EventID.EVENT_HAS_FETCHED_RESULT, messages));
 
-            LogUtils.d("Resetting web Chrome client...");
-            webview.post(() -> {
-                webview.setWebChromeClient(defaultWebChromeClient);
-            });
-
             releaseCurrentTask();
         }
+    }
+
+    private void resetWebChromeClient() {
+        LogUtils.d("Resetting web Chrome client...");
+        webview.post(() -> {
+            webview.setWebChromeClient(defaultWebChromeClient);
+        });
     }
 
     public void newTask(Rule rule) {
@@ -272,6 +274,7 @@ public class BackgroundWorker {
     }
 
     private void releaseCurrentTask() {
+        resetWebChromeClient();
         timeoutHandler.removeCallbacks(timeoutTask);
         timeoutTask = null;
         if (webviewSemaphore != null) webviewSemaphore.release();
