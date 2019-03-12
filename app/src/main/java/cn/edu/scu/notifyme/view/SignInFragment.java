@@ -60,11 +60,17 @@ public class SignInFragment extends Fragment {
                     return;
                 }
                 //TODO: 向服务器发送登录请求
+                onSignInSuccess();
                 break;
             }
             case R.id.btn_sign_up:
                 ((SignInSignUpActivity) getActivity()).setMainFragment(new SignUpFragment());
                 break;
         }
+    }
+
+    private void onSignInSuccess() {
+        ToastUtils.showShort(LocaleUtils.getString(R.string.sign_in_succeeded));
+        getActivity().finish();
     }
 }

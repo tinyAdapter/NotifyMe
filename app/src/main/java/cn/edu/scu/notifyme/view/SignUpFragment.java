@@ -72,8 +72,14 @@ public class SignUpFragment extends Fragment {
                     return;
                 }
                 //TODO: 向服务器发送注册请求
+                onSignUpSuccess();
                 break;
             }
         }
+    }
+
+    private void onSignUpSuccess() {
+        ToastUtils.showShort(LocaleUtils.getString(R.string.sign_up_succeeded_please_sign_in));
+        ((SignInSignUpActivity) getActivity()).setMainFragment(new SignInFragment());
     }
 }

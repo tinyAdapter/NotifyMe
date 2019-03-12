@@ -59,5 +59,7 @@
     <string name="please_input_username_and_password">Please input username and password</string>
     <string name="please_input_valid_username">Please input valid username</string>
     <string name="incoherence_passwords">Incoherence passwords</string>
+    <string name="sign_up_succeeded_please_sign_in">Sign up succeeded, please sign in</string>
+    <string name="sign_in_succeeded">Sign in succeeded</string>
 
 </resources>
