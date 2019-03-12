@@ -39,7 +39,8 @@
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:maxLines="1"
-                android:inputType="text" />
+                android:inputType="text"
+                android:imeOptions="actionGo" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

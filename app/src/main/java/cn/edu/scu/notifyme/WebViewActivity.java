@@ -2,7 +2,6 @@ package cn.edu.scu.notifyme;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.WebView;
@@ -53,8 +52,7 @@ public class WebViewActivity extends AppCompatActivity {
         parent.addView(BackgroundWorker.getInstance().getWebview(), index);
 
         etAddress.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_NULL
-                    && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (actionId == EditorInfo.IME_ACTION_GO) {
                 onViewClicked();
             }
             return true;
