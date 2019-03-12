@@ -62,4 +62,6 @@
     <string name="sign_up_succeeded_please_sign_in">注册成功，请登录</string>
     <string name="sign_in_succeeded">登录成功</string>
     <string name="sign_in_canceled">登录取消</string>
+    <string name="sign_out">退出登录</string>
+    <string name="are_you_sure_to_sign_out">确定要退出登录</string>
 </resources>

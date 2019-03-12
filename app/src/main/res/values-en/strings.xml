@@ -62,5 +62,7 @@
     <string name="sign_up_succeeded_please_sign_in">Sign up succeeded, please sign in</string>
     <string name="sign_in_succeeded">Sign in succeeded</string>
     <string name="sign_in_canceled">Sign in canceled</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="are_you_sure_to_sign_out">Are you sure to sign out</string>
 
 </resources>
