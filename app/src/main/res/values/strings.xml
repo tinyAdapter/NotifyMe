@@ -56,4 +56,7 @@
     <string name="password">密码</string>
     <string name="username">用户名</string>
     <string name="repeat_password">重复密码</string>
+    <string name="please_input_username_and_password">请输入用户名和密码</string>
+    <string name="please_input_valid_username">请输入有效的用户名</string>
+    <string name="incoherence_passwords">两次输入的密码不一致</string>
 </resources>

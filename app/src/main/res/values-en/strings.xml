@@ -56,5 +56,8 @@
     <string name="password">Password</string>
     <string name="username">Username</string>
     <string name="repeat_password">Repeat Password</string>
+    <string name="please_input_username_and_password">Please input username and password</string>
+    <string name="please_input_valid_username">Please input valid username</string>
+    <string name="incoherence_passwords">Incoherence passwords</string>
 
 </resources>
