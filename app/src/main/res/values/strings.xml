@@ -53,4 +53,6 @@
     <string name="are_you_sure_to_clear_all_messages">确认要清除所有已推送消息</string>
     <string name="script_error">脚本错误</string>
     <string name="error_message">错误信息</string>
+    <string name="every">间隔</string>
+    <string name="minutes">分钟</string>
 </resources>
