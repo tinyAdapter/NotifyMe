@@ -72,6 +72,17 @@ public class BackgroundWorker {
     private WebChromeClient handleConsoleMessageWebChromeClient =
             new HandleConsoleMessageWebChromeClient();
 
+    private boolean imageShown = false;
+
+    public boolean isImageShown() {
+        return imageShown;
+    }
+
+    public void setImageShown(boolean imageShown) {
+        this.imageShown = imageShown;
+        webview.getSettings().setLoadsImagesAutomatically(imageShown);
+    }
+
     public void bind(Context context) {
         if (this.webview != null) {
             this.webview.destroy();
@@ -79,7 +90,7 @@ public class BackgroundWorker {
         }
         this.webview = new WebView(context);
         webview.getSettings().setJavaScriptEnabled(true);
-        webview.getSettings().setLoadsImagesAutomatically(false);
+        setImageShown(false);
         jsInterface = new JSInterface();
         webview.addJavascriptInterface(jsInterface, "App");
         webview.setWebViewClient(new OverrideUrlLoadingWebViewClient());

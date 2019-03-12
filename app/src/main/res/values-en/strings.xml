@@ -55,4 +55,5 @@
     <string name="error_message">Error Information</string>
     <string name="every">Every</string>
     <string name="minutes">minutes</string>
+    <string name="enable_image_loading_invalid_when_exiting">Enable Image Loading (Invalid When Exiting)</string>
 </resources>
