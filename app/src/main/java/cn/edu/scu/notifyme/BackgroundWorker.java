@@ -106,8 +106,10 @@ public class BackgroundWorker {
 
         @JavascriptInterface
         public void Return(String result) {
-            LogUtils.d(currentRule.getToLoadUrl() + " JS executed");
+            LogUtils.d(currentRule.getToLoadUrl() + " script executed");
+            LogSystem.getInstance().d(currentRule.getToLoadUrl() + " script executed");
             if (!result.startsWith("{")) {
+                LogSystem.getInstance().d("but result is not a JS object. Ignore");
                 releaseCurrentTask();
                 return;
             }
@@ -164,6 +166,7 @@ public class BackgroundWorker {
         toProcessRules.clear();
         webviewSemaphore.release();
         webviewSemaphore = null;
+        LogSystem.getInstance().d("Background worker stopped");
     }
 
     public void start() {
@@ -173,12 +176,14 @@ public class BackgroundWorker {
         webviewSemaphore = new Semaphore(1);
         workerThread = new Thread(() -> {
             LogUtils.d("Now in worker thread...");
+            LogSystem.getInstance().d("Background worker started");
             while (!isThreadStopping) {
                 try {
                     Rule aRule = toProcessRules.takeFirst();
                     LogUtils.d("Take a new task: " + aRule.getName());
                     webviewSemaphore.acquire();
                     LogUtils.d("WebView semaphore acquired");
+                    LogSystem.getInstance().d("Take a new task: " + aRule.getName());
                     new Handler(Looper.getMainLooper()).post(() -> {
                         this.process(aRule);
                     });
@@ -204,6 +209,7 @@ public class BackgroundWorker {
                     new Handler(Looper.getMainLooper()).post(() -> {
                         BackgroundWorker.this.webview.stopLoading();
                         LogUtils.w("Timeout loading " + rule.getToLoadUrl());
+                        LogSystem.getInstance().d("Timeout loading " + rule.getToLoadUrl());
 
                         EventBus.getDefault().post(
                                 new MessageEvent(EventID.EVENT_FETCH_TIMEOUT, null));
@@ -217,6 +223,7 @@ public class BackgroundWorker {
             @Override
             public void onPageFinished(WebView view, String url) {
                 LogUtils.d(rule.getToLoadUrl() + " loaded");
+                LogSystem.getInstance().d(rule.getToLoadUrl() + " loaded");
 
                 if (timeoutTask == null) {
                     LogUtils.d("But this task has been canceled. Abort");
@@ -232,6 +239,7 @@ public class BackgroundWorker {
         });
         webview.loadUrl(rule.getToLoadUrl());
         LogUtils.d("Loading " + rule.getToLoadUrl() + " ...");
+        LogSystem.getInstance().d("Loading " + rule.getToLoadUrl() + " ...");
     }
 
     private class OverrideUrlLoadingWebViewClient extends WebViewClient {
@@ -265,6 +273,8 @@ public class BackgroundWorker {
         public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
             if (consoleMessage.messageLevel() == ConsoleMessage.MessageLevel.ERROR) {
                 LogUtils.e(consoleMessage.message());
+                LogSystem.getInstance().d(
+                        "ERROR executing script: " + consoleMessage.message());
                 Message msg = new Message();
                 msg.setContent(consoleMessage.message());
                 EventBus.getDefault().post(new MessageEvent(EventID.EVENT_JS_ERROR,

@@ -54,6 +54,8 @@ public class LogsActivity extends AppCompatActivity implements ILogListener {
     @Override
     public void onLog(Log log) {
         logsString.append(String.format("[%s] %s\n", log.getDate(), log.getMessage()));
-        tvLogs.setText(logsString);
+        runOnUiThread(() -> {
+            tvLogs.setText(logsString);
+        });
     }
 }

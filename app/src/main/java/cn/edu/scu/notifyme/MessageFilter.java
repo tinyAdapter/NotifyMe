@@ -1,6 +1,5 @@
 package cn.edu.scu.notifyme;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.util.LongSparseArray;
 
@@ -58,6 +57,7 @@ public class MessageFilter implements IStateMachine {
 
     private void updateIconOfRule(Rule rule) {
         databaseManager.updateRule(databaseManager.getCategoryByRuleId(rule.getId()), rule);
+        LogSystem.getInstance().d("icon updated: " + rule.getName());
     }
 
     private List<Message> doFiltering(List<Message> messages, HashMap<String, Message> map_msgs) {
@@ -69,12 +69,11 @@ public class MessageFilter implements IStateMachine {
                 map_new.put(message.getTitle() + message.getContent(), message);
             map_rule.put(messages.get(0).getRule().getId(), map_new);
             return messages;
-        } else if(map_msgs.size() == 0){
+        } else if (map_msgs.size() == 0) {
             for (Message message : messages)
                 map_msgs.put(message.getTitle() + message.getContent(), message);
             return messages;
-        }
-        else {
+        } else {
             for (Message message : messages) {
                 Message msg = map_msgs.get(message.getTitle() + message.getContent());
                 if (msg == null)
@@ -95,6 +94,10 @@ public class MessageFilter implements IStateMachine {
 
             message.setRule(databaseManager.getRuleById(message.getRule().getId()));
             NotificationService.newMessage(context, message);
+
+            LogSystem.getInstance().d(
+                    String.format("new message: [%s] %s",
+                            message.getTitle(), message.getContent()));
         }
     }
 
