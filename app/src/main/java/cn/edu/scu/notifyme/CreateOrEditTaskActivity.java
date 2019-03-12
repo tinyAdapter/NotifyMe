@@ -168,6 +168,7 @@ public class CreateOrEditTaskActivity extends AppCompatActivity {
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                BackgroundWorker.getInstance().cancelCurrentTask();
                 testprogress.dismiss();
             }
         });

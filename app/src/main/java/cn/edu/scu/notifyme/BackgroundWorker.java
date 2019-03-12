@@ -62,7 +62,7 @@ public class BackgroundWorker {
     private Semaphore webviewSemaphore;
     private boolean isThreadStopping = false;
 
-    private static long TIMEOUT = 20000;
+    private static long TIMEOUT = 10000;
     private Handler timeoutHandler = new Handler();
     private Runnable timeoutTask;
 
@@ -152,7 +152,7 @@ public class BackgroundWorker {
             while (!isThreadStopping) {
                 try {
                     Rule aRule = toProcessRules.takeFirst();
-                    LogUtils.d("Take a new task");
+                    LogUtils.d("Take a new task: " + aRule.getName());
                     webviewSemaphore.acquire();
                     LogUtils.d("WebView semaphore acquired");
                     new Handler(Looper.getMainLooper()).post(() -> {
@@ -194,6 +194,11 @@ public class BackgroundWorker {
             public void onPageFinished(WebView view, String url) {
                 LogUtils.d(rule.getToLoadUrl() + " loaded");
 
+                if (timeoutTask == null) {
+                    LogUtils.d("But this task has been canceled. Abort");
+                    return;
+                }
+
                 jsInterface.setRule(rule);
                 webview.loadUrl("javascript:" + rule.getScript());
             }
@@ -226,5 +231,13 @@ public class BackgroundWorker {
                         Collections.singletonList(msg)));
             }
         }
+    }
+
+    public void cancelCurrentTask() {
+        LogUtils.d("Stop loading");
+        webview.stopLoading();
+        timeoutHandler.removeCallbacks(timeoutTask);
+        timeoutTask = null;
+        if (webviewSemaphore != null) webviewSemaphore.release();
     }
 }
