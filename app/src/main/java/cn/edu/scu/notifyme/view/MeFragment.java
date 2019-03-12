@@ -71,6 +71,10 @@ public class MeFragment extends Fragment {
         }
     }
 
+    private boolean isUserSignedIn() {
+        return !SPUtils.getInstance().getString("username").isEmpty();
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -81,8 +85,10 @@ public class MeFragment extends Fragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_avatar: {
-                Intent intent = new Intent(getActivity(), SignInSignUpActivity.class);
-                startActivityForResult(intent, REQUEST_SIGN_IN_RESULT);
+                if (!isUserSignedIn()) {
+                    Intent intent = new Intent(getActivity(), SignInSignUpActivity.class);
+                    startActivityForResult(intent, REQUEST_SIGN_IN_RESULT);
+                }
                 break;
             }
             case R.id.slli_settings: {
