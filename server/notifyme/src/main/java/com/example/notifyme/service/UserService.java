@@ -2,8 +2,6 @@ package com.example.notifyme.service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.ThreadLocalRandom;
-
 import javax.xml.bind.DatatypeConverter;
 
 import com.example.notifyme.entity.Category;
