@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-NotifymeApplication<notifyme>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.example.notifyme.NotifymeApplication",
+            "projectName": "notifyme",
+            "args": ""
+        }
+    ]
+}
