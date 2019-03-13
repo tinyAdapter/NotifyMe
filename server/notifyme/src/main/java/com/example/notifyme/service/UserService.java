@@ -18,7 +18,7 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
-    public boolean login(long account, int token, String sign) throws NoSuchAlgorithmException {
+    public boolean isLegalUser(long account, int token, String sign) throws NoSuchAlgorithmException {
         String password = userMapper.getUserByAccount(account).getPassword();
         MessageDigest md = MessageDigest.getInstance("MD5");
         md.update((password + String.valueOf(token)).getBytes());

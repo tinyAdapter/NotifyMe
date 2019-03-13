@@ -16,43 +16,41 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/getuser", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public boolean getUserByAccount(@RequestBody JSONObject jsonObject) throws NoSuchAlgorithmException {
-        JSONObject jsonObjectReturn = new JSONObject();
-        long account = Long.parseLong(jsonObject.get("account").toString());
-        String sign = jsonObject.get("sign").toString();
-        int token = Integer.parseInt(jsonObject.get("token").toString());
-        // int status = 200;
-        // String message = "hello world.";
-        // long account = Long.parseLong(jsonObject.get("account").toString());
-
-        // jsonObjectReturn.put("status", status);
-        // jsonObjectReturn.put("message", message);
-        // jsonObjectReturn.put("account", account);
-        // return jsonObjectReturn.toJSONString();
-        // jsonObjectReturn.put("code", userService.insertNewUser(13909075176L, "34567",
-        // "born"));
-        return userService.login(account, token, sign);
+    @PostMapping(value = "/login", produces = "application/json;charset=UTF-8")
+    public String getUserByAccount(@RequestParam(required = true) Long account,
+            @RequestParam(required = true) String sign, @RequestParam(required = true) Integer token)
+            throws NoSuchAlgorithmException {
+        JSONObject result = new JSONObject();
+        if (userService.isLegalUser(account, token, sign)) {
+            result.put("status", 200);
+            result.put("message", "OK");
+        } else {
+            result.put("status", 403);
+            result.put("message", "wrong username or password");
+        }
+        return result.toJSONString();
     }
 
-    @RequestMapping(value = "/rename", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public String renameUser(@RequestBody JSONObject jsonObject) {
+    @PostMapping(value = "/rename", produces = "application/json;charset=UTF-8")
+    public String renameUser(@RequestParam(required = true) Long account, @RequestParam(required = true) String sign,
+            @RequestParam(required = true) String name) throws NoSuchAlgorithmException {
+        JSONObject result = new JSONObject();
         int status = 200;
-        String message = "";
-        long account = Long.parseLong(jsonObject.get("account").toString());
-        JSONObject jsonObjectReturn = new JSONObject();
-        String newName = jsonObject.get("name").toString();
+        String message = "OK";
+        if (!userService.isLegalUser(account, 1/* TODO: add real token read from database */, sign)) {
+            status = 403;
+            message = "user unauthorized";
+        }
         if (userService.getUserByAccount(account) == null) {
             status = 401;
-            message = "Can not find the user.";
+            message = "user does not exist";
         }
-        if (!userService.updateUserName(account, newName)) {
+        if (!userService.updateUserName(account, name)) {
             status = 402;
-            message = "The name is duplicated.";
+            message = "duplicate username";
         }
-        jsonObjectReturn.put("status", status);
-        jsonObjectReturn.put("message", message);
-        return jsonObjectReturn.toJSONString();
+        result.put("status", status);
+        result.put("message", message);
+        return result.toJSONString();
     }
-
 }
