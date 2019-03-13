@@ -2,9 +2,7 @@ package com.example.notifyme.controller;
 
 import java.security.NoSuchAlgorithmException;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.example.notifyme.entity.User;
 import com.example.notifyme.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -23,16 +21,17 @@ public class UserController {
         JSONObject jsonObjectReturn = new JSONObject();
         long account = Long.parseLong(jsonObject.get("account").toString());
         String sign = jsonObject.get("sign").toString();
-        int token = Integer.parseInt(jsonObject.get("token").toString()); 
-//        int status = 200;
-//        String message = "hello world.";
-    //    long account = Long.parseLong(jsonObject.get("account").toString());
-        
-//        jsonObjectReturn.put("status", status);
-//        jsonObjectReturn.put("message", message);
-//        jsonObjectReturn.put("account", account);
-//        return jsonObjectReturn.toJSONString();
-        // jsonObjectReturn.put("code", userService.insertNewUser(13909075176L, "34567", "born"));
+        int token = Integer.parseInt(jsonObject.get("token").toString());
+        // int status = 200;
+        // String message = "hello world.";
+        // long account = Long.parseLong(jsonObject.get("account").toString());
+
+        // jsonObjectReturn.put("status", status);
+        // jsonObjectReturn.put("message", message);
+        // jsonObjectReturn.put("account", account);
+        // return jsonObjectReturn.toJSONString();
+        // jsonObjectReturn.put("code", userService.insertNewUser(13909075176L, "34567",
+        // "born"));
         return userService.login(account, token, sign);
     }
 
