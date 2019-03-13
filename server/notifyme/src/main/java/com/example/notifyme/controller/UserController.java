@@ -2,10 +2,11 @@ package com.example.notifyme.controller;
 
 import java.security.NoSuchAlgorithmException;
 
-import com.alibaba.fastjson.JSONObject;
 import com.example.notifyme.entity.User;
 import com.example.notifyme.service.TokenService;
 import com.example.notifyme.service.UserService;
+import com.example.notifyme.util.ResultMaker;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
@@ -25,47 +26,39 @@ public class UserController {
     public String getUserByAccount(@RequestParam(required = true) Long account,
             @RequestParam(required = true) String sign, @RequestParam(required = true) Integer token)
             throws NoSuchAlgorithmException {
-        JSONObject result = new JSONObject();
+        ResultMaker resultMaker = new ResultMaker(tokenService);
         User checkUser = userService.getUserByAccount(account);
         if (checkUser == null) {
-            result.put("status", 401);
-            result.put("message", "user does not exist");
+            resultMaker.makeResult(401, "user does not exist");
         } else if (!userService.isLegalUser(account, token, sign)) {
-            result.put("status", 403);
-            result.put("message", "wrong password");
+            resultMaker.makeResult(403, "wrong password");
         } else {
-            result.put("status", 200);
-            result.put("message", "OK");
-            result.put("token", tokenService.generateNewToken(checkUser.getUserId()));
+            resultMaker.setUser(checkUser);
+            resultMaker.makeOKResult();
         }
 
-        return result.toJSONString();
+        return resultMaker.get();
     }
 
     @PostMapping(value = "/rename", produces = "application/json;charset=UTF-8")
     public String renameUser(@RequestParam(required = true) Long account, @RequestParam(required = true) String sign,
             @RequestParam(required = true) String name) throws NoSuchAlgorithmException {
-        JSONObject result = new JSONObject();
+        ResultMaker resultMaker = new ResultMaker(tokenService);
         User checkUser = userService.getUserByAccount(account);
         if (checkUser == null) {
-            result.put("status", 401);
-            result.put("message", "user does not exist");
+            resultMaker.makeResult(401, "user does not exist");
         } else {
+            resultMaker.setUser(checkUser);
             Integer token = tokenService.getTokenByUserId(checkUser.getUserId());
             if (token == null || !userService.isLegalUser(account, token, sign)) {
-                result.put("status", 403);
-                result.put("message", "user unauthorized");
+                resultMaker.makeResult(403, "user unauthorized");
             } else if (!userService.updateUserName(account, name)) {
-                result.put("status", 402);
-                result.put("message", "duplicate username");
-                result.put("token", tokenService.generateNewToken(checkUser.getUserId()));
+                resultMaker.makeResultWithNewToken(402, "duplicate username");
             } else {
-                result.put("status", 200);
-                result.put("message", "OK");
-                result.put("token", tokenService.generateNewToken(checkUser.getUserId()));
+                resultMaker.makeOKResult();
             }
         }
 
-        return result.toJSONString();
+        return resultMaker.get();
     }
 }
