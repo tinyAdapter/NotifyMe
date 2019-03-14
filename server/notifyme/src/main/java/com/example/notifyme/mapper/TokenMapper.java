@@ -17,6 +17,6 @@ public interface TokenMapper {
     @Insert("insert into token(user_id, token) values(#{user_id}, #{token})")
     void insert(@Param("user_id") Long userId, @Param("token") Integer token);
 
-    @Delete("delete from token where user_id = $#{user_id}")
+    @Delete("delete from token where user_id = #{user_id}")
     void deleteByUserId(@Param("user_id") Long userId);
 }
