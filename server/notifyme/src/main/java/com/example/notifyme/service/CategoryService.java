@@ -15,6 +15,6 @@ public class CategoryService {
     private CategoryMapper categoryMapper;
 
     public List<Category> getCategoriesByUserId(Long account) {
-        return categoryMapper.getCategoriesByUserId(userId)
+        return categoryMapper.getCategoriesByUserName(account);
     }
 }
