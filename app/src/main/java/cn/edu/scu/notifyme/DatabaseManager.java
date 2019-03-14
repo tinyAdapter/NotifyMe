@@ -245,6 +245,12 @@ public class DatabaseManager {
         LitePal.deleteAll(Message.class);
     }
 
+    public void clearAll() {
+        LitePal.deleteAll(Message.class);
+        LitePal.deleteAll(Rule.class);
+        LitePal.deleteAll(Category.class);
+    }
+
     public Category getCategoryByRuleId(long ruleId) {
         return this.getRuleById(ruleId).getCategory();
     }

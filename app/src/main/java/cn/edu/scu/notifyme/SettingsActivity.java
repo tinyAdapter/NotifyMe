@@ -29,6 +29,8 @@ public class SettingsActivity extends AppCompatActivity {
     LinearLayout llSettings;
     @BindView(R.id.slli_backup)
     SingleLineListItem slliBackup;
+    @BindView(R.id.slli_restore)
+    SingleLineListItem slliRestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,50 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         slliBackup.setOnClickListener(v -> {
-            BackupUtils.backup();
+            try {
+                BackupUtils.backup();
+                new AlertDialog.Builder(SettingsActivity.this)
+                        .setTitle(LocaleUtils.getString(R.string.confirm))
+                        .setMessage(LocaleUtils.getString(
+                                R.string.backup_succeed) + "!")
+                        .setPositiveButton(LocaleUtils.getString(R.string.ok), (dialog, which) -> {
+                            dialog.dismiss();
+                        })
+                        .show();
+            } catch (Exception e) {
+                new AlertDialog.Builder(SettingsActivity.this)
+                        .setTitle(LocaleUtils.getString(R.string.confirm))
+                        .setMessage(LocaleUtils.getString(
+                                R.string.backup_failed) + "!")
+                        .setPositiveButton(LocaleUtils.getString(R.string.ok), (dialog, which) -> {
+                            dialog.dismiss();
+                        })
+                        .show();
+            }
+        });
+
+        slliRestore.setOnClickListener(v -> {
+            try {
+                BackupUtils.restore();
+                new AlertDialog.Builder(SettingsActivity.this)
+                        .setTitle(LocaleUtils.getString(R.string.confirm))
+                        .setMessage(LocaleUtils.getString(
+                                R.string.restore_succeed) + "!")
+                        .setPositiveButton(LocaleUtils.getString(R.string.ok), (dialog, which) -> {
+                            dialog.dismiss();
+                            App.restart();
+                        })
+                        .show();
+            } catch (Exception e) {
+                new AlertDialog.Builder(SettingsActivity.this)
+                        .setTitle(LocaleUtils.getString(R.string.confirm))
+                        .setMessage(LocaleUtils.getString(
+                                R.string.restore_failed) + "!")
+                        .setPositiveButton(LocaleUtils.getString(R.string.ok), (dialog, which) -> {
+                            dialog.dismiss();
+                        })
+                        .show();
+            }
         });
 
         uiSetMessagesCount();

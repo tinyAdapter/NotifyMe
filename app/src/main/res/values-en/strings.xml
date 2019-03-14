@@ -72,5 +72,9 @@
     <string name="logs">Logs</string>
     <string name="clear">Clear</string>
     <string name="backup">Backup</string>
-
+    <string name="restore">Restore</string>
+    <string name="backup_succeed">Backup succeed</string>
+    <string name="backup_failed">Backup failed</string>
+    <string name="restore_succeed">Restore succeed</string>
+    <string name="restore_failed">Restore failed</string>
 </resources>
