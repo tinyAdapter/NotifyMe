@@ -17,6 +17,11 @@ public interface CategoryMapper {
     })
     List<Category> getCategoriesByUserId(@Param("user_id") Long userId);
 
+    @Select("select * from category where user_id = #{user_id} and category_name = #{category_name}")
+    @ResultMap("categoryMap")
+    Category getCategoryByUserIdAndCategoryName(
+        @Param("user_id") Long userId, @Param("category_name") String categoryName);
+
     @Insert("insert into category(category_name, user_id) values(#{category_name}, #{user_id})")
     void insert(@Param("user_id") Long userId, @Param("category_name") String categoryName);
 

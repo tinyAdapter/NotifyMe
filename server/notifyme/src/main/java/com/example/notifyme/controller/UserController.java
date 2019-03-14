@@ -1,8 +1,11 @@
 package com.example.notifyme.controller;
 
-import java.security.NoSuchAlgorithmException;
-
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.example.notifyme.entity.Category;
 import com.example.notifyme.entity.User;
+import com.example.notifyme.mapper.CategoryMapper;
+import com.example.notifyme.mapper.RuleMapper;
 import com.example.notifyme.service.TokenService;
 import com.example.notifyme.service.UserService;
 import com.example.notifyme.util.ResultMaker;
@@ -22,10 +25,15 @@ public class UserController {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private CategoryMapper categoryMapper;
+
+    @Autowired
+    private RuleMapper ruleMapper;
+
     @PostMapping(value = "/login", produces = "application/json;charset=UTF-8")
     public String getUserByAccount(@RequestParam(required = true) Long account,
-            @RequestParam(required = true) String sign, @RequestParam(required = true) Integer token)
-            throws NoSuchAlgorithmException {
+            @RequestParam(required = true) String sign, @RequestParam(required = true) Integer token) {
         ResultMaker resultMaker = new ResultMaker(tokenService);
         User checkUser = userService.getUserByAccount(account);
         if (checkUser == null) {
@@ -42,7 +50,7 @@ public class UserController {
 
     @PostMapping(value = "/rename", produces = "application/json;charset=UTF-8")
     public String renameUser(@RequestParam(required = true) Long account, @RequestParam(required = true) String sign,
-            @RequestParam(required = true) String name) throws NoSuchAlgorithmException {
+            @RequestParam(required = true) String name) {
         ResultMaker resultMaker = new ResultMaker(tokenService);
         User checkUser = userService.getUserByAccount(account);
         if (checkUser == null) {
@@ -80,6 +88,49 @@ public class UserController {
         case 0:
             resultMaker.makeOKResult();
             break;
+        }
+
+        return resultMaker.get();
+    }
+
+    @PostMapping(value = "/backup", produces = "application/json;charset=UTF-8")
+    public String backup(@RequestParam(required = true) Long account, @RequestParam(required = true) String sign,
+            @RequestParam(required = true) String data) {
+        ResultMaker resultMaker = new ResultMaker(tokenService);
+        User checkUser = userService.getUserByAccount(account);
+        if (checkUser == null) {
+            resultMaker.makeResult(401, "user does not exist");
+        } else {
+            resultMaker.setUser(checkUser);
+            Integer token = tokenService.getTokenByUserId(checkUser.getUserId());
+            if (token == null || !userService.isLegalUser(account, token, sign)) {
+                resultMaker.makeResult(403, "user unauthorized");
+            } else {
+                JSONObject dataObject = JSONObject.parseObject(data);
+                JSONArray categories = dataObject.getJSONArray("categories");
+                for (Object co : categories) {
+                    JSONObject categoryObject = (JSONObject) co;
+                    String categoryName = categoryObject.getString("name");
+                    categoryMapper.insert(checkUser.getUserId(), categoryName);
+                    Category category = categoryMapper.getCategoryByUserIdAndCategoryName(
+                        checkUser.getUserId(), categoryName);
+                    long categoryId = category.getCategoryId();
+                    JSONArray rules = categoryObject.getJSONArray("rules");
+                    for (Object ro : rules) {
+                        JSONObject ruleObject = (JSONObject) ro;
+                        ruleMapper.insert(
+                            ruleObject.getString("name"), 
+                            Boolean.parseBoolean(ruleObject.getString("isActive")), 
+                            Integer.parseInt(ruleObject.getString("duration")), 
+                            ruleObject.getString("iconUrl"), 
+                            ruleObject.getString("toLoadUrl"), 
+                            ruleObject.getString("script"), 
+                            categoryId);
+                    }
+                }
+
+                resultMaker.makeOKResultWithNewToken();
+            }
         }
 
         return resultMaker.get();

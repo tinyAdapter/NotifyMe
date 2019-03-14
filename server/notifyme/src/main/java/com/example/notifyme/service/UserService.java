@@ -16,17 +16,22 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
-    public boolean isLegalUser(long account, int token, String sign) throws NoSuchAlgorithmException {
+    public boolean isLegalUser(long account, int token, String sign) {
         String password = userMapper.getUserByAccount(account).getPassword();
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update((password + String.valueOf(token)).getBytes());
-        byte[] digest = md.digest();
-        String mySign = DatatypeConverter.printHexBinary(digest).toLowerCase();
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("MD5");
+            md.update((password + String.valueOf(token)).getBytes());
+            byte[] digest = md.digest();
+            String mySign = DatatypeConverter.printHexBinary(digest).toLowerCase();
 
-        if (mySign.equals(sign))
-            return true;
-        else
+            if (mySign.equals(sign))
+                return true;
+            else
+                return false;
+        } catch (NoSuchAlgorithmException nsae) {
             return false;
+        }
     }
 
     /**
