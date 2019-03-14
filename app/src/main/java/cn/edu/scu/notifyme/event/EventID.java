@@ -11,4 +11,10 @@ public class EventID {
     public static final int EVENT_TASKS_STOPED = 10008;
     public static final int EVENT_WEBVIEW_URL_CHANGED = 10009;
     public static final int EVENT_JS_ERROR = 10010;
+    public static final int EVENT_BACKUP_SUCCEED = 10011;
+    public static final int EVENT_BACKUP_FAILED = 10012;
+    public static final int EVENT_RESTORE_SUCCEED = 10013;
+    public static final int EVENT_RESTORE_FAILED = 10014;
+    public static final int EVENT_LOGIN_SUCCEED = 10015;
+    public static final int EVENT_LOGIN_FAILED = 10016;
 }

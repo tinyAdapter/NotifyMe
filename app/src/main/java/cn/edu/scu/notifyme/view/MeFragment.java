@@ -20,6 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import cn.edu.scu.notifyme.AccountUtils;
 import cn.edu.scu.notifyme.LogsActivity;
 import cn.edu.scu.notifyme.R;
 import cn.edu.scu.notifyme.SettingsActivity;
@@ -54,9 +55,9 @@ public class MeFragment extends Fragment {
     }
 
     private void uiRefreshUserInfo() {
-        String username = SPUtils.getInstance().getString("username");
-        if (!username.isEmpty()) {
-            tvUsername.setText(username);
+        Long account = AccountUtils.getAccount();
+        if (AccountUtils.hasSignedIn()) {
+            tvUsername.setText(Long.toString(account));
         }
         String avatarUrl = SPUtils.getInstance().getString("avatarUrl");
         if (!avatarUrl.isEmpty()) {
@@ -72,10 +73,6 @@ public class MeFragment extends Fragment {
         }
     }
 
-    private boolean isUserSignedIn() {
-        return !SPUtils.getInstance().getString("username").isEmpty();
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -86,7 +83,7 @@ public class MeFragment extends Fragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_avatar: {
-                if (!isUserSignedIn()) {
+                if (!AccountUtils.hasSignedIn()) {
                     Intent intent = new Intent(getActivity(), SignInSignUpActivity.class);
                     startActivityForResult(intent, REQUEST_SIGN_IN_RESULT);
                 }

@@ -62,7 +62,7 @@
     <string name="username">用户名</string>
     <string name="repeat_password">重复密码</string>
     <string name="please_input_username_and_password">请输入用户名和密码</string>
-    <string name="please_input_valid_username">请输入有效的用户名</string>
+    <string name="please_input_valid_username">请输入有效的手机号</string>
     <string name="incoherence_passwords">两次输入的密码不一致</string>
     <string name="sign_up_succeeded_please_sign_in">注册成功，请登录</string>
     <string name="sign_in_succeeded">登录成功</string>
@@ -77,4 +77,5 @@
     <string name="backup_failed">备份失败</string>
     <string name="restore_succeed">还原成功</string>
     <string name="restore_failed">还原失败</string>
+    <string name="sign_in_failed">登录失败</string>
 </resources>

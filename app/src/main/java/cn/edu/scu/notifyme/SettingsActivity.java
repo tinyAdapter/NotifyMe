@@ -8,9 +8,15 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.SPUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.edu.scu.notifyme.event.EventID;
+import cn.edu.scu.notifyme.event.MessageEvent;
 import cn.edu.scu.notifyme.view.SingleLineListItem;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -37,6 +43,9 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
+
+        EventBus.getDefault().register(this);
+
         tvLanguage.setText(
                 LocaleUtils.getLocale().equals(LocaleUtils.EN)
                         ? LocaleUtils.getString(R.string.english)
@@ -51,50 +60,11 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         slliBackup.setOnClickListener(v -> {
-            try {
-                BackupUtils.backup();
-                new AlertDialog.Builder(SettingsActivity.this)
-                        .setTitle(LocaleUtils.getString(R.string.confirm))
-                        .setMessage(LocaleUtils.getString(
-                                R.string.backup_succeed) + "!")
-                        .setPositiveButton(LocaleUtils.getString(R.string.ok), (dialog, which) -> {
-                            dialog.dismiss();
-                        })
-                        .show();
-            } catch (Exception e) {
-                new AlertDialog.Builder(SettingsActivity.this)
-                        .setTitle(LocaleUtils.getString(R.string.confirm))
-                        .setMessage(LocaleUtils.getString(
-                                R.string.backup_failed) + "!")
-                        .setPositiveButton(LocaleUtils.getString(R.string.ok), (dialog, which) -> {
-                            dialog.dismiss();
-                        })
-                        .show();
-            }
+            BackupUtils.backup();
         });
 
         slliRestore.setOnClickListener(v -> {
-            try {
-                BackupUtils.restore();
-                new AlertDialog.Builder(SettingsActivity.this)
-                        .setTitle(LocaleUtils.getString(R.string.confirm))
-                        .setMessage(LocaleUtils.getString(
-                                R.string.restore_succeed) + "!")
-                        .setPositiveButton(LocaleUtils.getString(R.string.ok), (dialog, which) -> {
-                            dialog.dismiss();
-                            App.restart();
-                        })
-                        .show();
-            } catch (Exception e) {
-                new AlertDialog.Builder(SettingsActivity.this)
-                        .setTitle(LocaleUtils.getString(R.string.confirm))
-                        .setMessage(LocaleUtils.getString(
-                                R.string.restore_failed) + "!")
-                        .setPositiveButton(LocaleUtils.getString(R.string.ok), (dialog, which) -> {
-                            dialog.dismiss();
-                        })
-                        .show();
-            }
+            BackupUtils.restore();
         });
 
         uiSetMessagesCount();
@@ -116,7 +86,7 @@ public class SettingsActivity extends AppCompatActivity {
                     .show();
         });
 
-        if (isUserSignedIn()) {
+        if (AccountUtils.hasSignedIn()) {
             slliSignOut.setOnClickListener(view -> {
                 new AlertDialog.Builder(SettingsActivity.this)
                         .setTitle(LocaleUtils.getString(R.string.confirm))
@@ -126,7 +96,7 @@ public class SettingsActivity extends AppCompatActivity {
                             dialog.dismiss();
                         })
                         .setPositiveButton(LocaleUtils.getString(R.string.yes), (dialog, which) -> {
-                            SPUtils.getInstance().remove("username");
+                            AccountUtils.logout();
                             SPUtils.getInstance().remove("avatarUrl");
                             dialog.dismiss();
                             App.restart();
@@ -135,11 +105,56 @@ public class SettingsActivity extends AppCompatActivity {
             });
         } else {
             llSettings.removeView(slliSignOut);
+            llSettings.removeView(slliBackup);
+            llSettings.removeView(slliRestore);
         }
     }
 
-    private boolean isUserSignedIn() {
-        return !SPUtils.getInstance().getString("username").isEmpty();
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        switch (event.getId()) {
+            case EventID.EVENT_BACKUP_SUCCEED:
+                new AlertDialog.Builder(SettingsActivity.this)
+                        .setTitle(LocaleUtils.getString(R.string.confirm))
+                        .setMessage(LocaleUtils.getString(
+                                R.string.backup_succeed) + "!")
+                        .setPositiveButton(LocaleUtils.getString(R.string.ok), (dialog, which) -> {
+                            dialog.dismiss();
+                        })
+                        .show();
+                break;
+            case EventID.EVENT_BACKUP_FAILED:
+                new AlertDialog.Builder(SettingsActivity.this)
+                        .setTitle(LocaleUtils.getString(R.string.confirm))
+                        .setMessage(LocaleUtils.getString(
+                                R.string.backup_failed) + "!")
+                        .setPositiveButton(LocaleUtils.getString(R.string.ok), (dialog, which) -> {
+                            dialog.dismiss();
+                        })
+                        .show();
+                break;
+            case EventID.EVENT_RESTORE_SUCCEED:
+                new AlertDialog.Builder(SettingsActivity.this)
+                        .setTitle(LocaleUtils.getString(R.string.confirm))
+                        .setMessage(LocaleUtils.getString(
+                                R.string.restore_succeed) + "!")
+                        .setPositiveButton(LocaleUtils.getString(R.string.ok), (dialog, which) -> {
+                            dialog.dismiss();
+                            App.restart();
+                        })
+                        .show();
+                break;
+            case EventID.EVENT_RESTORE_FAILED:
+                new AlertDialog.Builder(SettingsActivity.this)
+                        .setTitle(LocaleUtils.getString(R.string.confirm))
+                        .setMessage(LocaleUtils.getString(
+                                R.string.restore_failed) + "!")
+                        .setPositiveButton(LocaleUtils.getString(R.string.ok), (dialog, which) -> {
+                            dialog.dismiss();
+                        })
+                        .show();
+                break;
+        }
     }
 
     @Override
