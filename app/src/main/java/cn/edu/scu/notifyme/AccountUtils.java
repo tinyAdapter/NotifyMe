@@ -16,6 +16,28 @@ import cn.edu.scu.notifyme.event.MessageEvent;
 import cn.edu.scu.notifyme.model.RestoreObject;
 
 public class AccountUtils {
+
+    public static void signUp(Long account, String passwordMd5) {
+        OkGo.<String>post("https://caoyu.online/notifyme/user/register")
+                .params("account", account)
+                .params("password", passwordMd5)
+                .params("name", account)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        RestoreObject ro = new Gson().fromJson(response.body(), RestoreObject.class);
+                        if (ro.getStatus() != 200) {
+                            EventBus.getDefault().post(
+                                    new MessageEvent(EventID.EVENT_REGISTER_FAILED, null));
+                            return;
+                        }
+
+                        EventBus.getDefault().post(
+                                new MessageEvent(EventID.EVENT_REGISTER_SUCCEED, null));
+                    }
+                });
+    }
+
     public static void login(Long account, String passwordMd5) {
         int token = new Random().nextInt();
         String sign = EncryptUtils.encryptMD5ToString(passwordMd5 + token).toLowerCase();

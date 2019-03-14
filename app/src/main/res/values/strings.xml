@@ -78,4 +78,5 @@
     <string name="restore_succeed">还原成功</string>
     <string name="restore_failed">还原失败</string>
     <string name="sign_in_failed">登录失败</string>
+    <string name="sign_up_failed">注册失败，该账号可能已被注册</string>
 </resources>

@@ -5,9 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.blankj.utilcode.util.RegexUtils;
+import com.blankj.utilcode.util.EncryptUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.android.material.textfield.TextInputEditText;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,9 +20,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import cn.edu.scu.notifyme.AccountUtils;
 import cn.edu.scu.notifyme.LocaleUtils;
 import cn.edu.scu.notifyme.R;
 import cn.edu.scu.notifyme.SignInSignUpActivity;
+import cn.edu.scu.notifyme.event.EventID;
+import cn.edu.scu.notifyme.event.MessageEvent;
 
 public class SignUpFragment extends Fragment {
     private Unbinder unbinder;
@@ -29,6 +36,18 @@ public class SignUpFragment extends Fragment {
     TextInputEditText etPassword;
     @BindView(R.id.et_repeat_password)
     TextInputEditText etRepeatPassword;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
     @Nullable
     @Override
@@ -52,29 +71,36 @@ public class SignUpFragment extends Fragment {
                 ((SignInSignUpActivity) getActivity()).setMainFragment(new SignInFragment());
                 break;
             case R.id.btn_sign_up: {
-                String username = etUsername.getText().toString();
-                String password = etPassword.getText().toString();
-                String repeatPassword = etRepeatPassword.getText().toString();
-                if (username.isEmpty() || password.isEmpty() || repeatPassword.isEmpty()) {
-                    ToastUtils.showShort(LocaleUtils.getString(
-                            R.string.please_input_username_and_password));
-                    return;
-                }
-                if (!RegexUtils.isUsername(username)) {
+                Long username;
+                try {
+                    username = Long.parseLong(etUsername.getText().toString());
+                } catch (NumberFormatException nfe) {
                     ToastUtils.showShort(LocaleUtils.getString(
                             R.string.please_input_valid_username));
                     return;
                 }
-                if (!password.equals(repeatPassword)) {
+                String password = etPassword.getText().toString();
+                if (password.isEmpty()) {
                     ToastUtils.showShort(LocaleUtils.getString(
-                            R.string.incoherence_passwords
-                    ));
+                            R.string.please_input_username_and_password));
                     return;
                 }
-                //TODO: 向服务器发送注册请求
-                onSignUpSuccess();
+                AccountUtils.signUp(
+                        username, EncryptUtils.encryptMD5ToString(password).toLowerCase());
                 break;
             }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        switch (event.getId()) {
+            case EventID.EVENT_REGISTER_SUCCEED:
+                onSignUpSuccess();
+                break;
+            case EventID.EVENT_REGISTER_FAILED:
+                ToastUtils.showShort(LocaleUtils.getString(R.string.sign_up_failed));
+                break;
         }
     }
 

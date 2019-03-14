@@ -78,4 +78,5 @@
     <string name="restore_succeed">Restore succeed</string>
     <string name="restore_failed">Restore failed</string>
     <string name="sign_in_failed">Sign in failed</string>
+    <string name="sign_up_failed">Sign up failed, possibly duplicate phone number</string>
 </resources>

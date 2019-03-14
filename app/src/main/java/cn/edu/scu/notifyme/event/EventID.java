@@ -17,4 +17,6 @@ public class EventID {
     public static final int EVENT_RESTORE_FAILED = 10014;
     public static final int EVENT_LOGIN_SUCCEED = 10015;
     public static final int EVENT_LOGIN_FAILED = 10016;
+    public static final int EVENT_REGISTER_SUCCEED = 10017;
+    public static final int EVENT_REGISTER_FAILED = 10018;
 }
