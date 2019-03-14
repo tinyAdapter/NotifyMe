@@ -6,12 +6,12 @@ import com.example.notifyme.service.TokenService;
 
 public class ResultMaker {
 
-    private JSONObject object;
+    private JSONObject jsonObject;
     private TokenService tokenService;
     private User user;
 
     public ResultMaker(TokenService tokenService) {
-        this.object = new JSONObject();
+        this.jsonObject = new JSONObject();
         this.tokenService = tokenService;
     }
 
@@ -28,16 +28,24 @@ public class ResultMaker {
     }
 
     public void makeResult(int statusCode, String message) {
-        object.put("status", statusCode);
-        object.put("message", message);
+        jsonObject.put("status", statusCode);
+        jsonObject.put("message", message);
     }
 
     public void makeResultWithNewToken(int statusCode, String message) {
         makeResult(statusCode, message);
-        object.put("token", tokenService.generateNewToken(user.getUserId()));
+        jsonObject.put("token", tokenService.generateNewToken(user.getUserId()));
     }
 
     public String get() {
-        return object.toJSONString();
+        return jsonObject.toJSONString();
+    }
+
+    public void put(String key, Object value) {
+        jsonObject.put(key, value);
+    }
+
+    public JSONObject getJsonObject(){
+        return this.jsonObject;
     }
 }

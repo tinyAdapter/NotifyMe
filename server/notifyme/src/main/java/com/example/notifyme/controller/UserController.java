@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.notifyme.entity.Category;
 import com.example.notifyme.entity.User;
-import com.example.notifyme.mapper.CategoryMapper;
-import com.example.notifyme.mapper.RuleMapper;
+import com.example.notifyme.service.CategoryService;
+import com.example.notifyme.service.RuleService;
 import com.example.notifyme.service.TokenService;
 import com.example.notifyme.service.UserService;
 import com.example.notifyme.util.ResultMaker;
@@ -13,6 +13,7 @@ import com.example.notifyme.util.ResultMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @RequestMapping("/user")
@@ -26,10 +27,10 @@ public class UserController {
     private TokenService tokenService;
 
     @Autowired
-    private CategoryMapper categoryMapper;
+    private CategoryService categoryService;
 
     @Autowired
-    private RuleMapper ruleMapper;
+    private RuleService ruleService;
 
     @PostMapping(value = "/login", produces = "application/json;charset=UTF-8")
     public String getUserByAccount(@RequestParam(required = true) Long account,
@@ -106,19 +107,21 @@ public class UserController {
             if (token == null || !userService.isLegalUser(account, token, sign)) {
                 resultMaker.makeResult(403, "user unauthorized");
             } else {
+                categoryService.deleteAllByUserId(checkUser.getUserId());
+
                 JSONObject dataObject = JSONObject.parseObject(data);
                 JSONArray categories = dataObject.getJSONArray("categories");
                 for (Object co : categories) {
                     JSONObject categoryObject = (JSONObject) co;
                     String categoryName = categoryObject.getString("name");
-                    categoryMapper.insert(checkUser.getUserId(), categoryName);
-                    Category category = categoryMapper.getCategoryByUserIdAndCategoryName(
+                    categoryService.insertNewCategory(checkUser.getUserId(), categoryName);
+                    Category category = categoryService.getCategoryByUserIdAndCategoryName(
                         checkUser.getUserId(), categoryName);
                     long categoryId = category.getCategoryId();
                     JSONArray rules = categoryObject.getJSONArray("rules");
                     for (Object ro : rules) {
                         JSONObject ruleObject = (JSONObject) ro;
-                        ruleMapper.insert(
+                        ruleService.insertRule(
                             ruleObject.getString("name"), 
                             Boolean.parseBoolean(ruleObject.getString("isActive")), 
                             Integer.parseInt(ruleObject.getString("duration")), 

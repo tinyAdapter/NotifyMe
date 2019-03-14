@@ -4,7 +4,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.xml.bind.DatatypeConverter;
 
-import com.example.notifyme.entity.Category;
 import com.example.notifyme.entity.User;
 import com.example.notifyme.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,7 @@ public class UserService {
      * @param account
      * @return User
      */
-    public User getUserByAccount(long account) {
+    public User getUserByAccount(Long account) {
         return userMapper.getUserByAccount(account);
     }
 
@@ -48,20 +47,10 @@ public class UserService {
      * 根据昵称获取用户对象
      *
      * @param name
-     * @return
+     * @return User
      */
     public User getUserByName(String name) {
         return userMapper.getUserByName(name);
-    }
-
-    /**
-     * 根据账户获取用户分类对象
-     *
-     * @param account
-     * @return Category
-     */
-    public Category getUserCategoryByAccount(long account) {
-        return userMapper.getUserCategoryByAccount(account);
     }
 
     /**
@@ -69,9 +58,9 @@ public class UserService {
      *
      * @param account
      * @param name
-     * @return true:更新成功 false：更新失败，昵称重复
+     * @return boolean true:更新成功 false：更新失败，昵称重复
      */
-    public boolean updateUserName(long account, String name) {
+    public boolean updateUserName(Long account, String name) {
         if (getUserByName(name) == null) {
             userMapper.updateUserName(account, name);
             return true;
@@ -86,7 +75,7 @@ public class UserService {
      * @param account
      * @param password
      */
-    public void updateUserPassword(long account, String password) {
+    public void updateUserPassword(Long account, String password) {
         userMapper.updateUserPassword(account, password);
     }
 
@@ -96,9 +85,9 @@ public class UserService {
      * @param account
      * @param password
      * @param name
-     * @return 0：注册成功 1：注册失败，账号重复 2：注册失败，昵称重复
+     * @return int 0：注册成功 1：注册失败，账号重复 2：注册失败，昵称重复
      */
-    public int insertNewUser(long account, String password, String name) {
+    public int insertNewUser(Long account, String password, String name) {
         if (getUserByAccount(account) != null)
             return 1;
         else if (getUserByName(name) != null)
