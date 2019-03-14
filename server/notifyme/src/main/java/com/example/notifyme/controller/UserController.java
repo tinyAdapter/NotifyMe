@@ -34,7 +34,7 @@ public class UserController {
             resultMaker.makeResult(403, "wrong password");
         } else {
             resultMaker.setUser(checkUser);
-            resultMaker.makeOKResult();
+            resultMaker.makeOKResultWithNewToken();
         }
 
         return resultMaker.get();
@@ -55,8 +55,31 @@ public class UserController {
             } else if (!userService.updateUserName(account, name)) {
                 resultMaker.makeResultWithNewToken(402, "duplicate username");
             } else {
-                resultMaker.makeOKResult();
+                resultMaker.makeOKResultWithNewToken();
             }
+        }
+
+        return resultMaker.get();
+    }
+
+    @PostMapping(value = "/register", produces = "application/json;charset=UTF-8")
+    public String register(@RequestParam(required = true) Long account, @RequestParam(required = true) String name,
+            @RequestParam(required = true) String password) {
+        ResultMaker resultMaker = new ResultMaker(tokenService);
+        if (account < 10000000000L || account > 19999999999L) {
+            resultMaker.makeResult(403, "account must be valid phone number");
+        }
+        int result = userService.insertNewUser(account, password, name);
+        switch (result) {
+        case 1:
+            resultMaker.makeResult(401, "duplicate account");
+            break;
+        case 2:
+            resultMaker.makeResult(402, "duplicate username");
+            break;
+        case 0:
+            resultMaker.makeOKResult();
+            break;
         }
 
         return resultMaker.get();

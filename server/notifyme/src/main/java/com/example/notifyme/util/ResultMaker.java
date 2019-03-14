@@ -20,6 +20,10 @@ public class ResultMaker {
     }
 
     public void makeOKResult() {
+        makeResult(200, "OK");
+    }
+
+    public void makeOKResultWithNewToken() {
         makeResultWithNewToken(200, "OK");
     }
 
