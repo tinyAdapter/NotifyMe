@@ -40,4 +40,12 @@ public class ResultMaker {
     public String get() {
         return jsonObject.toJSONString();
     }
+
+    public void put(String key, Object value) {
+        jsonObject.put(key, value);
+    }
+
+    public JSONObject getJsonObject(){
+        return this.jsonObject;
+    }
 }

@@ -4,7 +4,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.example.notifyme.entity.Category;
+import com.example.notifyme.entity.Rule;
 import com.example.notifyme.entity.User;
 import com.example.notifyme.service.CategoryService;
 import com.example.notifyme.service.TokenService;
@@ -108,7 +111,17 @@ public class UserController {
             } else {
                 List<Category> categories = new ArrayList<>();
                 categories = categoryService.getCategoriesByUserId(checkUser.getUserId());
-                
+                if(categories != null && categories.size() > 0){
+                    JSONArray josnArrayCategories = new JSONArray();
+                    for (Category category : categories) {
+                        List<Rule> rules = new ArrayList<>();
+                        
+                        for (Rule rule : rules) {
+                            
+                        }
+                    }
+                    resultMaker.put("categories", josnArrayCategories);
+                }
                 resultMaker.makeOKResultWithNewToken();
             }
         }
