@@ -136,7 +136,7 @@ public class UserController {
                         }
                     }
                     resultMaker.put("categories", jsonArrayCategories);
-                categoryService.deleteAllByUserId(checkUser.getUserId());
+                }
                 
                 resultMaker.makeOKResultWithNewToken();
             }
@@ -158,6 +158,8 @@ public class UserController {
             if (token == null || !userService.isLegalUser(account, token, sign)) {
                 resultMaker.makeResult(403, "user unauthorized");
             } else {
+                categoryService.deleteAllByUserId(checkUser.getUserId());
+
                 JSONObject dataObject = JSONObject.parseObject(data);
                 JSONArray categories = dataObject.getJSONArray("categories");
                 for (Object co : categories) {
