@@ -1,7 +1,6 @@
 package com.example.notifyme.controller;
 
 import java.security.NoSuchAlgorithmException;
-
 import com.example.notifyme.entity.User;
 import com.example.notifyme.service.TokenService;
 import com.example.notifyme.service.UserService;
@@ -10,6 +9,7 @@ import com.example.notifyme.util.ResultMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @RequestMapping("/user")
@@ -84,4 +84,13 @@ public class UserController {
 
         return resultMaker.get();
     }
+
+    @PostMapping(value = "/restore", produces = "application/json;charset=UTF8")
+    public String restore(@RequestParam(required = true) Long account, @RequestParam(required = true) String sign) {
+        ResultMaker resultMaker = new ResultMaker(tokenService);
+        
+
+        return "";
+    }
+
 }
