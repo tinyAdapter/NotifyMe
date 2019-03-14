@@ -14,7 +14,33 @@ public class CategoryService {
     @Autowired
     private CategoryMapper categoryMapper;
 
+
+    /**
+     * 获取指定账户下的所有分类对象
+     * 
+     * @param account
+     * @return List<Category>
+     */
     public List<Category> getCategoriesByUserId(Long account) {
         return categoryMapper.getCategoriesByUserName(account);
+    }
+
+    /**
+     * 插入新的分类信息
+     * 
+     * @param userId
+     * @param category
+     */
+    public void insertNewCategory(Long userId, String categoryName) {
+        categoryMapper.insert(userId, categoryName);
+    }
+
+    /**
+     * 清空指定用户下所有的分类和规则信息
+     * 
+     * @param userID
+     */
+    public void deleteAllByUserId(Long userId) {
+        categoryMapper.deleteAllByUserId(userId);
     }
 }

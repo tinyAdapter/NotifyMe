@@ -15,6 +15,14 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
+    /**
+     * 判断账户、token和sign三者是否满足加密规则
+     * 
+     * @param account
+     * @param token
+     * @param sign
+     * @return boolean true:满足加密规则 false:不满足加密规则
+     */
     public boolean isLegalUser(Long account, int token, String sign) throws NoSuchAlgorithmException {
         String password = userMapper.getUserByAccount(account).getPassword();
         MessageDigest md = MessageDigest.getInstance("MD5");
@@ -42,7 +50,7 @@ public class UserService {
      * 根据昵称获取用户对象
      *
      * @param name
-     * @return
+     * @return User
      */
     public User getUserByName(String name) {
         return userMapper.getUserByName(name);
@@ -53,7 +61,7 @@ public class UserService {
      *
      * @param account
      * @param name
-     * @return true:更新成功 false：更新失败，昵称重复
+     * @return boolean true:更新成功 false：更新失败，昵称重复
      */
     public boolean updateUserName(Long account, String name) {
         if (getUserByName(name) == null) {
@@ -80,7 +88,7 @@ public class UserService {
      * @param account
      * @param password
      * @param name
-     * @return 0：注册成功 1：注册失败，账号重复 2：注册失败，昵称重复
+     * @return int 0：注册成功 1：注册失败，账号重复 2：注册失败，昵称重复
      */
     public int insertNewUser(Long account, String password, String name) {
         if (getUserByAccount(account) != null)

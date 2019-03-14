@@ -9,7 +9,9 @@ import java.util.List;
 @Mapper
 public interface CategoryMapper {
 
-    @Select("select categoryId, categoryName, userId from category natural join user where account = #{account}")
+    @Select("select categoryId, categoryName, userId" + 
+            "from category natural join user" + 
+            "where account = #{account}")
     @Results(id = "categoryMap", value = { 
         @Result(property = "categoryId", column = "category_id"),
         @Result(property = "categoryName", column = "category_name"),
@@ -20,6 +22,7 @@ public interface CategoryMapper {
     @Insert("insert into category(category_name, user_id) values(#{category_name}, #{user_id})")
     void insert(@Param("user_id") Long userId, @Param("category_name") String categoryName);
 
-    @Delete("delete from category where user_id = #{user_id}")
-    void deleteByUserId(@Param("user_id") Long userId);
+    @Delete("delete from category natural join rule" +
+            "where user_id = #{user_id}")
+    void deleteAllByUserId(@Param("user_id") Long userId);
 }

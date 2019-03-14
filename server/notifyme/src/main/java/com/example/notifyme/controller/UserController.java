@@ -1,7 +1,12 @@
 package com.example.notifyme.controller;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.example.notifyme.entity.Category;
 import com.example.notifyme.entity.User;
+import com.example.notifyme.service.CategoryService;
 import com.example.notifyme.service.TokenService;
 import com.example.notifyme.service.UserService;
 import com.example.notifyme.util.ResultMaker;
@@ -21,6 +26,9 @@ public class UserController {
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @PostMapping(value = "/login", produces = "application/json;charset=UTF-8")
     public String getUserByAccount(@RequestParam(required = true) Long account,
@@ -86,9 +94,24 @@ public class UserController {
     }
 
     @PostMapping(value = "/restore", produces = "application/json;charset=UTF8")
-    public String restore(@RequestParam(required = true) Long account, @RequestParam(required = true) String sign) {
+    public String restore(@RequestParam(required = true) Long account, @RequestParam(required = true) String sign)
+            throws NoSuchAlgorithmException {
         ResultMaker resultMaker = new ResultMaker(tokenService);
-        
+        User checkUser = userService.getUserByAccount(account);
+        if (checkUser == null) {
+            resultMaker.makeResult(401, "user does not exist");
+        } else {
+            resultMaker.setUser(checkUser);
+            Integer token = tokenService.getTokenByUserId(checkUser.getUserId());
+            if (token == null || !userService.isLegalUser(account, token, sign)) {
+                resultMaker.makeResult(403, "user unauthorized");
+            } else {
+                List<Category> categories = new ArrayList<>();
+                categories = categoryService.getCategoriesByUserId(checkUser.getUserId());
+                
+                resultMaker.makeOKResultWithNewToken();
+            }
+        }
 
         return "";
     }
