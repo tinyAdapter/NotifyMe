@@ -21,8 +21,8 @@ public class CategoryService {
      * @param account
      * @return List<Category>
      */
-    public List<Category> getCategoriesByUserId(Long account) {
-        return categoryMapper.getCategoriesByUserName(account);
+    public List<Category> getCategoriesByUserAccount(Long account) {
+        return categoryMapper.getCategoriesByUserAccount(account);
     }
 
     /**

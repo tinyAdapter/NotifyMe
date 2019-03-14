@@ -10,6 +10,7 @@ import com.example.notifyme.entity.Category;
 import com.example.notifyme.entity.Rule;
 import com.example.notifyme.entity.User;
 import com.example.notifyme.service.CategoryService;
+import com.example.notifyme.service.RuleService;
 import com.example.notifyme.service.TokenService;
 import com.example.notifyme.service.UserService;
 import com.example.notifyme.util.ResultMaker;
@@ -32,6 +33,9 @@ public class UserController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private RuleService ruleService;
 
     @PostMapping(value = "/login", produces = "application/json;charset=UTF-8")
     public String getUserByAccount(@RequestParam(required = true) Long account,
@@ -110,23 +114,37 @@ public class UserController {
                 resultMaker.makeResult(403, "user unauthorized");
             } else {
                 List<Category> categories = new ArrayList<>();
-                categories = categoryService.getCategoriesByUserId(checkUser.getUserId());
-                if(categories != null && categories.size() > 0){
-                    JSONArray josnArrayCategories = new JSONArray();
+                categories = categoryService.getCategoriesByUserAccount(account);
+                if (categories != null && categories.size() > 0) {
+                    JSONArray jsonArrayCategories = new JSONArray();
                     for (Category category : categories) {
+                        JSONObject theCategory = new JSONObject();
+                        theCategory.put("name", category.getCategoryName());
+                        JSONArray jsonArrayRules = new JSONArray();
                         List<Rule> rules = new ArrayList<>();
-                        
-                        for (Rule rule : rules) {
-                            
+                        rules = ruleService.getRulesByCategoryId(category.getCategoryId());
+                        if (rules != null && rules.size() > 0) {
+                            for (Rule rule : rules) {
+                                JSONObject theRule = new JSONObject();
+                                theRule.put("duration", rule.getDuration());
+                                theRule.put("iconUrl", rule.getIconUrl());
+                                theRule.put("isActive", rule.isActive());
+                                theRule.put("name", rule.getRuleName());
+                                theRule.put("script", rule.getScript());
+                                theRule.put("toLoadUrl", rule.getToLoadUrl());
+                                jsonArrayRules.add(theRule);
+                            }
+                            theCategory.put("rules", jsonArrayRules);
+                            jsonArrayCategories.add(theCategory);
                         }
                     }
-                    resultMaker.put("categories", josnArrayCategories);
+                    resultMaker.put("categories", jsonArrayCategories);
                 }
                 resultMaker.makeOKResultWithNewToken();
             }
         }
 
-        return "";
+        return resultMaker.get();
     }
 
 }
