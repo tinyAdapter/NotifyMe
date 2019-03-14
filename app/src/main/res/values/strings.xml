@@ -49,6 +49,7 @@
     <string name="clear_all">清除所有消息</string>
     <string name="amount_of_messages">消息数</string>
     <string name="internal_browser">内置浏览器</string>
+    <string name="manuals">使用指南</string>
     <string name="address">地址</string>
     <string name="are_you_sure_to_clear_all_messages">确认要清除所有已推送消息</string>
 </resources>

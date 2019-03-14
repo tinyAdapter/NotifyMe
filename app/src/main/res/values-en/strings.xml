@@ -49,6 +49,7 @@
     <string name="clear_all">Clear All Messages</string>
     <string name="amount_of_messages">Amount</string>
     <string name="internal_browser">Internal Browser</string>
+    <string name="manuals">manuals</string>
     <string name="address">Address</string>
     <string name="are_you_sure_to_clear_all_messages">Are you sure to clear all messages</string>
 
