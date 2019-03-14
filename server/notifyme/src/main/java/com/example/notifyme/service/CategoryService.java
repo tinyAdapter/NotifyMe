@@ -26,6 +26,17 @@ public class CategoryService {
     }
 
     /**
+     * 根据用户ID和分类名获取分类对象
+     * 
+     * @param userId
+     * @param categoryName
+     * @return Category
+     */
+    public Category getCategoryByUserIdAndCategoryName(Long userId, String categoryName) {
+        return categoryMapper.getCategoryByUserIdAndCategoryName(userId, categoryName);
+    }
+
+    /**
      * 插入新的分类信息
      * 
      * @param userId
