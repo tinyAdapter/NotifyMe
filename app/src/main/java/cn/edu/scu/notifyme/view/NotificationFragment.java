@@ -50,7 +50,7 @@ public class NotificationFragment extends Fragment {
 //        List<Message> test;
 
 //        test_rule1.setIconUrl("http://i1.hdslb.com/bfs/face/c49eef0123d8e51ee2e5fc249b11937dc970a8b9.jpg");
-//        test_msg1.setRule(test_rule1);
+//        test_msg1.setRules(test_rule1);
 //        test_msg1.setImgUrl("asdasdasdasd");
 //        test_msg1.setTitle("test 1 title");
 //        test_msg1.setUpdateTime(new Date());
@@ -58,7 +58,7 @@ public class NotificationFragment extends Fragment {
 //        test_msg1.setTargetUrl("https://www.baidu.com/");
 //
 //        test_rule2.setIconUrl("asdasdasd");
-//        test_msg2.setRule(test_rule2);
+//        test_msg2.setRules(test_rule2);
 //        test_msg2.setImgUrl("http://i1.hdslb.com/bfs/archive/32fe5bce34d0f2f21a8399d801d5959be2c7d885.jpg");
 //        test_msg2.setTitle("test 2 title");
 //        test_msg2.setUpdateTime(new Date());

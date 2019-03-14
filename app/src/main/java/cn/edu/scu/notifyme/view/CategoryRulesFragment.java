@@ -2,7 +2,6 @@ package cn.edu.scu.notifyme.view;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -86,10 +85,6 @@ public class CategoryRulesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category_rules, container, false);
         unbinder = ButterKnife.bind(this, view);
-
-        //tbBase.inflateMenu(R.menu.base_toolbar_menu);
-        tbBase.getOverflowIcon().setColorFilter(
-                getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
 
         this.categories = DatabaseManager.getInstance().getCategories();
 

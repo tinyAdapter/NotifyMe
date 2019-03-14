@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SettingsActivity"
     android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".SettingsActivity"
+    android:id="@+id/ll_settings">
 
     <androidx.appcompat.widget.Toolbar
-        app:title="@string/settings"
-        app:titleTextColor="@color/white"
         style="@style/TranslucentToolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:title="@string/settings"
+        app:titleTextColor="@color/white">
 
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
         android:id="@+id/dlli_language"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="64dp">
+        android:layout_height="64dp"
+        android:orientation="vertical">
 
         <TextView
-            android:text="@string/language"
-            android:textSize="14sp"
-            android:textColor="@android:color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:text="@string/language"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
 
         <TextView
-            android:text="@string/simplified_chinese"
             android:id="@+id/tv_language"
-            android:textSize="12sp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="16dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/simplified_chinese"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -51,38 +52,53 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="16dp"
             android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
             android:text="@string/clear_all"
             android:textColor="@android:color/black"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="@string/amount_of_messages"
-                android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
-                android:layout_marginStart="16dp"/>
+                android:text="@string/amount_of_messages"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/msg_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:layout_marginStart="4dp"
-                android:textSize="12sp"/>
+                android:layout_marginTop="4dp"
+                android:textSize="12sp" />
 
         </LinearLayout>
-
-
-
     </LinearLayout>
 
+    <cn.edu.scu.notifyme.view.SingleLineListItem
+        android:id="@+id/slli_backup"
+        app:itemText="@string/backup"
+        android:layout_width="match_parent"
+        android:layout_height="56dp" />
+
+    <cn.edu.scu.notifyme.view.SingleLineListItem
+        android:id="@+id/slli_restore"
+        app:itemText="@string/restore"
+        android:layout_width="match_parent"
+        android:layout_height="56dp" />
+
+
+    <cn.edu.scu.notifyme.view.SingleLineListItem
+        android:id="@+id/slli_sign_out"
+        app:itemText="@string/sign_out"
+        android:layout_width="match_parent"
+        android:layout_height="56dp" />
 
 </LinearLayout>

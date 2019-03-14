@@ -2,6 +2,7 @@ package cn.edu.scu.notifyme;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.util.LongSparseArray;
 
 import com.blankj.utilcode.util.Utils;
@@ -21,22 +22,26 @@ public class App extends Application {
         Utils.init(this);
         LitePal.initialize(this);
         LocaleUtils.setBaseContext(getBaseContext());
+        LogSystem.getInstance().d("App started");
     }
 
     private static IStateMachine messageFilter;
     private static IStateMachine taskManager;
+    private static Context context;
 
     public static void init(Context context) {
+        App.context = context;
+
         LongSparseArray<HashMap<String, Message>> map_ruleMsgList = new LongSparseArray<>();
 
         for (Rule rule : DatabaseManager.getInstance().getRules()) {
             HashMap<String, Message> map_msgList = new HashMap<>();
-            if (rule.getMsg().isEmpty()){
+            if (rule.getMsg().isEmpty()) {
                 map_ruleMsgList.put(rule.getId(), map_msgList);
                 continue;
             }
-            for (Message message : rule.getMsg()){
-                map_msgList.put(message.getTitle()+message.getContent(), message);
+            for (Message message : rule.getMsg()) {
+                map_msgList.put(message.getTitle() + message.getContent(), message);
             }
             map_ruleMsgList.put(rule.getId(), map_msgList);
         }
@@ -77,5 +82,11 @@ public class App extends Application {
 
         stopTasks();
         messageFilter.destroy();
+    }
+
+    public static void restart() {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
     }
 }

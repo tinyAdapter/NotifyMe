@@ -9,14 +9,12 @@
     android:fitsSystemWindows="true">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/tb_notification"
+        android:id="@+id/tb_internal_browser"
         app:title="@string/internal_browser"
         app:titleTextColor="@color/white"
         style="@style/TranslucentToolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </androidx.appcompat.widget.Toolbar>
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_marginTop="8dp"
@@ -36,7 +34,11 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_address"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:maxLines="1"
+                android:inputType="text"
+                android:imeOptions="actionGo" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

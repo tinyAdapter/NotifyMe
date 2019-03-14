@@ -1,7 +1,8 @@
 package cn.edu.scu.notifyme;
 
+import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.WebView;
@@ -24,8 +25,8 @@ import cn.edu.scu.notifyme.event.MessageEvent;
 
 public class WebViewActivity extends AppCompatActivity {
 
-    @BindView(R.id.tb_notification)
-    Toolbar tbNotification;
+    @BindView(R.id.tb_internal_browser)
+    Toolbar tbInternalBrowser;
     @BindView(R.id.fl_internal_browser)
     FrameLayout flInternalBrowser;
     @BindView(R.id.btn_go)
@@ -41,6 +42,20 @@ public class WebViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_web_view);
         ButterKnife.bind(this);
 
+        tbInternalBrowser.inflateMenu(R.menu.web_view_toolbar_menu);
+        tbInternalBrowser.getOverflowIcon().setColorFilter(
+                getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+        tbInternalBrowser.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.action_enable_image_loading:
+                    BackgroundWorker.getInstance().setImageShown(!item.isChecked());
+                    item.setChecked(BackgroundWorker.getInstance().isImageShown());
+                    return true;
+                default:
+                    return false;
+            }
+        });
+
         webView = BackgroundWorker.getInstance().getWebview();
         if (webView.getParent() != null) {
             ViewGroup parent = (ViewGroup) webView.getParent();
@@ -52,8 +67,7 @@ public class WebViewActivity extends AppCompatActivity {
         parent.addView(BackgroundWorker.getInstance().getWebview(), index);
 
         etAddress.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_NULL
-                    && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (actionId == EditorInfo.IME_ACTION_GO) {
                 onViewClicked();
             }
             return true;
@@ -87,5 +101,12 @@ public class WebViewActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+
+        BackgroundWorker.getInstance().setImageShown(false);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleUtils.onAttach(newBase));
     }
 }

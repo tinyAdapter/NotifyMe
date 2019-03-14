@@ -40,6 +40,7 @@ public class CreateOrEditTaskActivity extends AppCompatActivity {
     private AlertDialog testprogress;
     private AlertDialog testresult;
     private AlertDialog testtimeout;
+    private AlertDialog testerror;
 
     private Category category;
     private Rule ruleToEdit;
@@ -137,7 +138,28 @@ public class CreateOrEditTaskActivity extends AppCompatActivity {
                     timeout();
                 }
                 break;
+            case EventID.EVENT_JS_ERROR:
+                if (testprogress.isShowing()) {
+                    testprogress.dismiss();
+                    error(event.getMessages().get(0).getContent());
+                }
+                break;
         }
+    }
+
+    private void error(String errorMessage) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View v = inflater.inflate(R.layout.test_error, null);
+        Button btnOk = v.findViewById(R.id.btn_ok);
+        TextView tvErrorMessage = v.findViewById(R.id.tv_error_message);
+        tvErrorMessage.setText(errorMessage);
+        btnOk.setOnClickListener(view -> testerror.dismiss());
+        builder.setView(v);
+        testerror = builder.create();
+        testerror.setCancelable(true);
+        testerror.setCanceledOnTouchOutside(false);
+        testerror.show();
     }
 
     @OnClick({R.id.test, R.id.cancel, R.id.create_or_save})
@@ -168,6 +190,7 @@ public class CreateOrEditTaskActivity extends AppCompatActivity {
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                BackgroundWorker.getInstance().cancelCurrentTask();
                 testprogress.dismiss();
             }
         });
