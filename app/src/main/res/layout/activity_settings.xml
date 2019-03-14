@@ -83,8 +83,22 @@
     </LinearLayout>
 
     <cn.edu.scu.notifyme.view.SingleLineListItem
+        android:id="@+id/slli_backup"
+        app:itemText="@string/backup"
+        android:layout_width="match_parent"
+        android:layout_height="56dp" />
+
+    <cn.edu.scu.notifyme.view.SingleLineListItem
+        android:id="@+id/slli_restore"
+        app:itemText="@string/restore"
+        android:layout_width="match_parent"
+        android:layout_height="56dp" />
+
+
+    <cn.edu.scu.notifyme.view.SingleLineListItem
         android:id="@+id/slli_sign_out"
         app:itemText="@string/sign_out"
         android:layout_width="match_parent"
         android:layout_height="56dp" />
+
 </LinearLayout>

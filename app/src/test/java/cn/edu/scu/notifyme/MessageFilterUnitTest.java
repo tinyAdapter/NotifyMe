@@ -38,7 +38,7 @@ package cn.edu.scu.notifyme;
 //        rule.setName("");
 //        rule.setScript("");
 //        map1.put(rule, msg1);
-//        msg2.setRule(rule);
+//        msg2.setRules(rule);
 //
 //        MessageEvent messageEvent = new MessageEvent(EventID.EVENT_HAS_FETCHED_RESULT, msg2);
 //
@@ -66,7 +66,7 @@ package cn.edu.scu.notifyme;
 //        rule.setName("");
 //        rule.setScript("");
 //        map1.put(rule, msg1);
-//        msg2.setRule(rule);
+//        msg2.setRules(rule);
 //
 //        MessageEvent messageEvent = new MessageEvent(EventID.EVENT_HAS_FETCHED_RESULT, msg2);
 //

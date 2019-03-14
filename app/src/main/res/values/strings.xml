@@ -71,4 +71,10 @@
     <string name="are_you_sure_to_sign_out">确定要退出登录</string>
     <string name="logs">日志</string>
     <string name="clear">清除</string>
+    <string name="backup">备份</string>
+    <string name="restore">还原</string>
+    <string name="backup_succeed">备份成功</string>
+    <string name="backup_failed">备份失败</string>
+    <string name="restore_succeed">还原成功</string>
+    <string name="restore_failed">还原失败</string>
 </resources>

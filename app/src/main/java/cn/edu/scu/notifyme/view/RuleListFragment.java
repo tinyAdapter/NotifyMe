@@ -68,7 +68,7 @@ public class RuleListFragment extends Fragment {
         this.category = DatabaseManager.getInstance().getCategoryById(
                 this.getArguments().getLong(PARAM_CATEGORY_ID)
         );
-        this.rules = category.getRule();
+        this.rules = category.getRules();
 
         this.adapter = new RulesAdapter(
                 R.layout.item_rule_card,
@@ -96,7 +96,7 @@ public class RuleListFragment extends Fragment {
                     theRule.setActive(!theRule.isActive());
                     DatabaseManager.getInstance().updateRule(category, theRule);
                     this.rules = DatabaseManager.getInstance()
-                            .getCategoryById(this.category.getId()).getRule();
+                            .getCategoryById(this.category.getId()).getRules();
                     this.adapter.setItems(this.rules);
                     this.adapter.notifyDataSetChanged();
                     break;
@@ -128,7 +128,7 @@ public class RuleListFragment extends Fragment {
                 this.category = DatabaseManager.getInstance().getCategoryById(
                         this.getArguments().getLong(PARAM_CATEGORY_ID)
                 );
-                this.adapter.setItems(this.category.getRule());
+                this.adapter.setItems(this.category.getRules());
                 this.adapter.notifyDataSetChanged();
                 uiUpdateNoCardHint();
                 break;
@@ -151,7 +151,7 @@ public class RuleListFragment extends Fragment {
     }
 
     private void uiUpdateNoCardHint() {
-        if (this.category.getRule().size() > 0) {
+        if (this.category.getRules().size() > 0) {
             noCardHint.setVisibility(View.INVISIBLE);
         } else {
             noCardHint.setVisibility(View.VISIBLE);

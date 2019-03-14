@@ -3,14 +3,11 @@ package cn.edu.scu.notifyme.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.litepal.LitePal;
 import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.edu.scu.notifyme.model.Message;
 
 import androidx.annotation.Nullable;
 
@@ -22,7 +19,7 @@ public class Rule extends LitePalSupport implements Parcelable {
     /**
      * ID，数据库主键
      */
-    private long id;
+    private Long id;
     /**
      * 规则名
      */
@@ -57,13 +54,14 @@ public class Rule extends LitePalSupport implements Parcelable {
 
     private List<Message> msg = new ArrayList<>();
 
-    public Rule() {}
+    public Rule() {
+    }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
