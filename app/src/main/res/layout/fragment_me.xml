@@ -57,4 +57,11 @@
         app:itemIcon="@drawable/ic_note_black_24dp"
         app:itemText="@string/logs" />
 
+    <cn.edu.scu.notifyme.view.SingleLineListItem
+        android:id="@+id/slli_manuals"
+        android:layout_height="56dp"
+        android:layout_width="match_parent"
+        app:itemIcon="@drawable/ic_manuals"
+        app:itemText="@string/manuals" />
+
 </LinearLayout>

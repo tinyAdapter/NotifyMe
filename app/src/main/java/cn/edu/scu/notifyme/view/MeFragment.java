@@ -22,6 +22,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.edu.scu.notifyme.AccountUtils;
 import cn.edu.scu.notifyme.LogsActivity;
+import cn.edu.scu.notifyme.ManualsActivity;
 import cn.edu.scu.notifyme.R;
 import cn.edu.scu.notifyme.SettingsActivity;
 import cn.edu.scu.notifyme.SignInSignUpActivity;
@@ -42,6 +43,8 @@ public class MeFragment extends Fragment {
     LinearLayout slliSettings;
     @BindView(R.id.slli_internal_browser)
     SingleLineListItem slliInternalBrowser;
+    @BindView(R.id.slli_manuals)
+    SingleLineListItem slliManuals;
 
     @Nullable
     @Override
@@ -50,6 +53,18 @@ public class MeFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
 
         uiRefreshUserInfo();
+        slliSettings.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), SettingsActivity.class);
+            startActivity(intent);
+        });
+        slliInternalBrowser.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), WebViewActivity.class);
+            startActivity(intent);
+        });
+        slliManuals.setOnClickListener(view1 -> {
+            Intent intent = new Intent(getActivity(), ManualsActivity.class);
+            startActivity(intent);
+        });
 
         return view;
     }
