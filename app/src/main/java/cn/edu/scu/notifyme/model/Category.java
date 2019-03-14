@@ -1,33 +1,33 @@
 package cn.edu.scu.notifyme.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 public class Category extends LitePalSupport implements Parcelable {
 
-    private long id;
+    private Long id;
 
     @Column(unique = true, nullable = false)
     private String name;
 
     @Column(unique = true)
-    private List<Rule> rule;
+    private List<Rule> rules;
 
     public Category() {
-        rule = new ArrayList<>();
+        rules = new ArrayList<>();
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -39,12 +39,12 @@ public class Category extends LitePalSupport implements Parcelable {
         this.name = name;
     }
 
-    public List<Rule> getRule() {
-        return rule;
+    public List<Rule> getRules() {
+        return rules;
     }
 
-    public void setRule(List<Rule> rule) {
-        this.rule = rule;
+    public void setRules(List<Rule> rules) {
+        this.rules = rules;
     }
 
 

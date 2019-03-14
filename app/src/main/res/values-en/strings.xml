@@ -71,5 +71,6 @@
     <string name="are_you_sure_to_sign_out">Are you sure to sign out</string>
     <string name="logs">Logs</string>
     <string name="clear">Clear</string>
+    <string name="backup">Backup</string>
 
 </resources>

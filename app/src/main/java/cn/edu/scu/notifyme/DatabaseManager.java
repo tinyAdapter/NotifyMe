@@ -183,8 +183,8 @@ public class DatabaseManager {
                 Category category =
                         LitePal.where("name = ?", "Default").find(
                                 Category.class, true).get(0);
-                for (int j = 0; j < categories.get(i).getRule().size(); j++)
-                    categories.get(i).getRule().get(j).setCategory(category);
+                for (int j = 0; j < categories.get(i).getRules().size(); j++)
+                    categories.get(i).getRules().get(j).setCategory(category);
                 LitePal.delete(Category.class, categories.get(i).getId());
                 categories.remove(i);
                 break;

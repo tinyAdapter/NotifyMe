@@ -27,6 +27,8 @@ public class SettingsActivity extends AppCompatActivity {
     SingleLineListItem slliSignOut;
     @BindView(R.id.ll_settings)
     LinearLayout llSettings;
+    @BindView(R.id.slli_backup)
+    SingleLineListItem slliBackup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,10 @@ public class SettingsActivity extends AppCompatActivity {
                     : LocaleUtils.EN);
 
             App.restart();
+        });
+
+        slliBackup.setOnClickListener(v -> {
+            BackupUtils.backup();
         });
 
         uiSetMessagesCount();
