@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,8 @@ import cn.edu.scu.notifyme.view.ShareFragment;
 public class MainActivity extends AppCompatActivity {
 
     public static final String NAVIGATE_TO_NOTIFICATION_FRAGMENT = "navigateToNotificationFragment";
+    public static final String NEED_MANUALS = "needmanuals";
+    private boolean ManualsinCategoryRulesFragment = false;
 
     @BindView(R.id.bn_base)
     BottomNavigationView bnBase;
@@ -34,7 +37,17 @@ public class MainActivity extends AppCompatActivity {
         App.init(this);
 
         uiCheckNavigation();
-        setMainFragment(new CategoryRulesFragment());
+
+        checkhelp();
+
+        CategoryRulesFragment categoryRulesfragment = new CategoryRulesFragment();
+        if(ManualsinCategoryRulesFragment){
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(CategoryRulesFragment.CATEGORY_RULES_NEED_MANUALS,true);
+            categoryRulesfragment.setArguments(bundle);
+            ManualsinCategoryRulesFragment = false;
+        }
+        setMainFragment(categoryRulesfragment);
 
         bnBase.setOnNavigationItemSelectedListener(menuItem -> {
             LogUtils.d("Selected navigation item " + menuItem.getItemId());
@@ -63,6 +76,12 @@ public class MainActivity extends AppCompatActivity {
         } else {
             setMainFragment(new CategoryRulesFragment());
             bnBase.setSelectedItemId(R.id.navigation_category);
+        }
+    }
+
+    private void checkhelp(){
+        if(getIntent().getBooleanExtra(NEED_MANUALS, false)){
+            ManualsinCategoryRulesFragment = true;
         }
     }
 

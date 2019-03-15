@@ -32,6 +32,7 @@ import cn.edu.scu.notifyme.RuleMessageList;
 import cn.edu.scu.notifyme.adapter.RulesAdapter;
 import cn.edu.scu.notifyme.event.EventID;
 import cn.edu.scu.notifyme.event.MessageEvent;
+import cn.edu.scu.notifyme.event.ViewEvent;
 import cn.edu.scu.notifyme.model.Category;
 import cn.edu.scu.notifyme.model.Rule;
 
@@ -44,6 +45,9 @@ public class RuleListFragment extends Fragment {
     RelativeLayout noCardHint;
 
     private Unbinder unbinder;
+    private View rule_item;
+    private boolean item_catched;
+    private Thread catchfirstitem;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,6 +125,12 @@ public class RuleListFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        onDefaultfirstRuleCardCreated();
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         switch (event.getId()) {
@@ -190,5 +200,23 @@ public class RuleListFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    private void onDefaultfirstRuleCardCreated(){
+
+        if(!category.getName().equals("Default"))
+            return;
+
+        item_catched = false;
+        catchfirstitem = new Thread(() -> {
+            while(!item_catched){
+                rule_item = rvRules.getChildAt(0);
+                if(rule_item != null){
+                    EventBus.getDefault().post(new ViewEvent(EventID.DEFAULT_FIRST_RULE_CREATED,rule_item));
+                    item_catched = true;
+                }
+            }
+        });
+        catchfirstitem.start();
     }
 }

@@ -20,6 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import cn.edu.scu.notifyme.MainActivity;
 import cn.edu.scu.notifyme.ManualsActivity;
 import cn.edu.scu.notifyme.LogsActivity;
 import cn.edu.scu.notifyme.R;
@@ -60,7 +61,11 @@ public class MeFragment extends Fragment {
             startActivity(intent);
         });
         slliManuals.setOnClickListener(view1 -> {
-            Intent intent = new Intent(getActivity(), ManualsActivity.class);
+//            Intent intent = new Intent(getActivity(), ManualsActivity.class);
+//            startActivity(intent);
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra(MainActivity.NEED_MANUALS,true);
             startActivity(intent);
         });
         uiRefreshUserInfo();

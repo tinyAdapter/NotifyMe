@@ -45,16 +45,22 @@ import cn.edu.scu.notifyme.LocaleUtils;
 import cn.edu.scu.notifyme.R;
 import cn.edu.scu.notifyme.event.EventID;
 import cn.edu.scu.notifyme.event.MessageEvent;
+import cn.edu.scu.notifyme.event.ViewEvent;
 import cn.edu.scu.notifyme.model.Category;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
+import uk.co.deanwild.materialshowcaseview.shape.RectangleShape;
 
 public class CategoryRulesFragment extends Fragment {
 
+    public static final String CATEGORY_RULES_NEED_MANUALS = "categoryrulesneedhelp";
     private static final int REQUEST_CREATE_RULE = 30001;
-    @BindView(R.id.switch_total)
-    SwitchCompat switchTotal;
     private Unbinder unbinder;
     private AlertDialog renameDialog;
+    private boolean needmanuals = false;
 
+    @BindView(R.id.switch_total)
+    SwitchCompat switchTotal;
     @BindView(R.id.fab_add_rule)
     FloatingActionButton fabAddRule;
     @BindView(R.id.tb_base)
@@ -85,6 +91,10 @@ public class CategoryRulesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category_rules, container, false);
         unbinder = ButterKnife.bind(this, view);
+
+        Bundle bundle = getArguments();
+        if(bundle != null)
+            needmanuals = bundle.getBoolean(CATEGORY_RULES_NEED_MANUALS,false);
 
         this.categories = DatabaseManager.getInstance().getCategories();
 
@@ -391,6 +401,37 @@ public class CategoryRulesFragment extends Fragment {
                 }
                 break;
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onViewEvent(ViewEvent event){
+        switch (event.getId()){
+            case EventID.DEFAULT_FIRST_RULE_CREATED:
+                if(needmanuals){
+                    ShowcaseConfig config = new ShowcaseConfig();
+                    config.setShape(new RectangleShape(1,1));
+                    MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(getActivity());
+                    sequence.setConfig(config);
+                    sequence.addSequenceItem(tlCategories,
+                            "任务分类 长按编辑", "了解");
+                    sequence.addSequenceItem(mTextView,
+                            "添加新分类", "了解");
+                    sequence.addSequenceItem(event.getView(),
+                            "任务卡片 点击卡片查看该任务抓取的信息", "了解");
+                    sequence.addSequenceItem(event.getView().findViewById(R.id.btn_edit),
+                            "编辑任务 包括修改名称、间隔，进行测试", "了解");
+                    sequence.addSequenceItem(event.getView().findViewById(R.id.ss_active),
+                            "任务开关", "了解");
+                    sequence.addSequenceItem(switchTotal,
+                            "总开关 启动/关闭所有任务", "了解");
+                    sequence.addSequenceItem(fabAddRule,
+                            "添加新任务", "了解");
+                    sequence.start();
+                    needmanuals = false;
+                }
+                break;
+        }
+
     }
 
 }
